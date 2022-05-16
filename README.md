@@ -1,4 +1,4 @@
-<h1>NexHealth Appointment Manager</h1>
+<h1>NexHealth QuickStart</h1>
 
 ![app](frontend-app.png)
 
@@ -26,14 +26,14 @@ Once you have access, you can populate the.env file under the server folder with
 
 Following are the Mandatory values you would need to start the Node server successfully:
 
-| Properties  | description                                                       |
-| :---------- | :---------------------------------------------------------------- |
-| API_URL     | This could be the sandbox url, e.g: https://sandbox.nexhealth.com |
-| DOMAIN      | Refers to a specific Institution                                  |
-| LOCATION_ID | Refers to a specific location                                     |
-| API_KEY     |                                                                   |
+| Properties  | description                                                                                 |
+| :---------- | :------------------------------------------------------------------------------------------ |
+| API_URL     | This will be the sandbox url used for testing purposes, e.g: https://sandbox.nexhealth.com |
+| DOMAIN      | Refers to a specific Institution                                                            |
+| LOCATION_ID | Refers to a specific location                                                               |
+| API_KEY     |                                                                                             |
 
-Please contact the NexHealth team if you have any questions.
+Please contact the NexHealth team if you have any questions on these values.
 
 ## Installation
 
