@@ -58,7 +58,7 @@ const AvailabilitiesList = ({ availabilities = [], onDelete }) => {
         <ul className={styles.list}>
           {/* headers */}
           <li className={styles.list_headers}>
-            <div className={styles.list_header}>Provider Id</div>
+            <div className={styles.list_header}>Name</div>
             <div className={styles.list_header}>Days</div>
             <div className={styles.list_header}>Begin Time</div>
             <div className={styles.list_header}>End Time</div>

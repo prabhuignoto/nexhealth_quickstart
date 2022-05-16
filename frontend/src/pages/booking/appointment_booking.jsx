@@ -66,7 +66,7 @@ const AppointmentBookingForm = () => {
       const request = await fetch(
         `${API}/appointments/slots?providerId=${+selectedProvider}&locationId=${LOCATION_ID}&startDate=${selectedDate}`,
         {
-          credentials: "include", 
+          credentials: "include",
           method: "GET",
         }
       );
@@ -229,7 +229,7 @@ const AppointmentBookingForm = () => {
 
         <div className={commonStyles.form_field}>
           <label className={commonStyles.label} htmlFor="notes">
-            Add Note
+            Note
           </label>
           <textarea
             className={commonStyles.textarea}
