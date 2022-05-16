@@ -39,6 +39,8 @@ Please ensure that you have permission to use the NexHealth API. Fill out the [f
 
 Once you have access, you can populate the `.env` file under the `server` folder with the appropriate values.
 
+> Both the front end and the back end apps comes with a sample `.env` file. Please make sure to update the values with your own.
+
 Following are the Mandatory values you would need to start the Node server successfully:
 
 | Properties  | description                                                                                |
@@ -56,6 +58,8 @@ Here is how the Frontend app's env file looks.
   REACT_APP_API=http://localhost:4000/api
   REACT_APP_LOCATION_ID=449
 ```
+
+> Note: .env files are convenient for local development. Do not run production application using .env files.
 
 Please contact the NexHealth team if you have any questions about these values.
 
