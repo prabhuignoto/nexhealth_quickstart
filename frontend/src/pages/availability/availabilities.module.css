@@ -1,0 +1,11 @@
+.availabilities {
+  width: 95%;
+  background: #fff;
+}
+
+.list_wrapper {
+  display: flex;
+  max-height: 600px;
+  overflow: auto;
+  width: 100%;
+}

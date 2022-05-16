@@ -1,0 +1,35 @@
+.wrapper {
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-direction: column;
+  border-radius: 4px;
+  padding: 1rem;
+  width: calc(95% - 2rem);
+}
+
+.days {
+  display: flex;
+  margin: 1rem 0;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.day {
+  margin-right: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.time_slots {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 1rem 0;
+}
+
+.time_slot {
+  margin-right: 1rem;
+}

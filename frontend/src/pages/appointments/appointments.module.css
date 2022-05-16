@@ -1,0 +1,45 @@
+.appointments {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  width: 95%;
+  height: 100%;
+  background: #fff;
+  border-radius:4px;
+  padding:0;
+  margin: 0;
+}
+
+.filter_wrapper {
+  display: flex;
+  width: 100%;
+}
+
+.filter_field {
+  margin: 0 0.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+.filter_fields {
+  display: flex;
+  padding: 0.5rem;
+  width: 100%;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 1rem;
+  border-radius: 6px;
+}
+
+.no_appointments {
+  margin-top: 4rem;
+  font-size: 1.2rem;
+}
+
+.appointments_list_wrapper {
+  margin-top: 1.5rem; 
+  width: 100%;
+}
