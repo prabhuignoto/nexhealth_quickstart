@@ -7,7 +7,6 @@
 - [Configuration](#configuration)
 - [Installation](#installation)
 - [Starting the Node server and Frontend app](#starting-the-node-server-and-frontend-app)
-- [Built with](#built-with)
 
 ## Getting started
 
@@ -98,9 +97,3 @@ npm run start
 ```
 
 If everything was setup correctly, you should be able to access the ui at the following url: http://localhost:3000/
-
-## Built with
-
-[React](https://facebook.github.io/react/)
-[Node.js](https://nodejs.org/)
-[Express](http://expressjs.com/)
