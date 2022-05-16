@@ -6,6 +6,7 @@ import session from "express-session";
 import url from "url";
 import { appointmentRouter } from "./routers/appointment-router.js";
 import { authRouter } from "./routers/auth-router.js";
+import { availabilitiesRouter } from "./routers/availabilities-router.js";
 import { router } from "./routers/common-router.js";
 
 const app = express();
@@ -53,6 +54,7 @@ app.use(function (req, res, next) {
 app.use("/api", router);
 app.use("/api/auth", authRouter);
 app.use("/api/appointments", appointmentRouter);
+app.use("/api/availabilities", availabilitiesRouter);
 
 app.listen(4000, () => {
   console.log("Server is running on port 4000");

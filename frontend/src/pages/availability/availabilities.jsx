@@ -11,7 +11,7 @@ const Availabilities = () => {
 
   useEffect(() => {
     const getData = async () => {
-      const request = await fetch(`${API}/appointments/availabilities`, {
+      const request = await fetch(`${API}/availabilities`, {
         credentials: "include",
         method: "GET",
       });
@@ -29,7 +29,7 @@ const Availabilities = () => {
   const handleDelete = useCallback((id) => {
     const deleteAvailability = async () => {
       const request = await fetch(
-        `${API}/appointments/delete-availability/${id}`,
+        `${API}/availabilities/delete/${id}`,
         {
           credentials: "include",
           method: "DELETE",

@@ -126,7 +126,7 @@ const Availability = () => {
 
     const createAvailability = async () => {
       const request = await fetch(
-        `${process.env.REACT_APP_API}/appointments/create-availability`,
+        `${process.env.REACT_APP_API}/availabilities/create`,
         {
           credentials: "include",
           method: "POST",
