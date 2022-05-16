@@ -1,11 +1,18 @@
-# NexHealth Appointment Manager
+<h1>NexHealth Appointment Manager</h1>
 
-![app](2022-05-16-15-04-17.png)
+![app](frontend-app.png)
+
+- [Getting started](#getting-started)
+- [Configuration](#configuration)
+- [Installation](#installation)
+- [Starting the Node server and Frontend app](#starting-the-node-server-and-frontend-app)
+- [Built with](#built-with)
+
 
 ## Getting started
 
-This repository was created to assist you in getting started with the NexHealth API.
-Using this repository, you can rapidly create a server that interacts with the NexHealth API for appointment scheduling and provider management.
+This repository was created to assist you in getting started with the [NexHealth API](https://docs.nexhealth.com/reference/introduction).
+Using this repository, you can rapidly create a [Node](https://nodejs.org/en/) server that interacts with the NexHealth API for appointment scheduling and provider management.
 
 You can book appointments, view them, and manage the providers using the Frontend app built with [React](https://facebook.github.io/react/).
 
@@ -13,7 +20,7 @@ The user interface code can be found within the frontend folder, and the backend
 
 ## Configuration
 
-Please ensure that you have permission to use the NexHealth API. Fill out the form to request access.
+Please ensure that you have permission to use the NexHealth API. Fill out the [form](https://www.nexhealth.com/api-request/request-access) to request access.
 
 Once you have access, you can populate the.env file under the server folder with the appropriate values.
 
@@ -42,7 +49,7 @@ npm install
 
 ```
 
-## Starting the server and frontend
+## Starting the Node server and Frontend app
 
 Change in to the server folder and run the following command:
 
