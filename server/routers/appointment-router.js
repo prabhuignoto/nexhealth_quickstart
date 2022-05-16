@@ -139,8 +139,6 @@ appointmentRouter.post("/create-availability", async (req, res) => {
       ...nexHealthParams,
     });
 
-    console.log(`${process.env.API_URL}/availabilities?${params}`);
-
     const response = await fetch(
       `${process.env.API_URL}/availabilities?${params}`,
       {

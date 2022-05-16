@@ -11,6 +11,7 @@ import commonStyles from "../../styles/common.module.css";
 import styles from "./appointment_booking.module.css";
 
 const API = process.env.REACT_APP_API;
+const LOCATION_ID = process.env.REACT_APP_LOCATION_ID;
 
 const AppointmentBookingForm = () => {
   const [patients, setPatients] = useState([]);
@@ -63,9 +64,9 @@ const AppointmentBookingForm = () => {
   useEffect(() => {
     const getData = async () => {
       const request = await fetch(
-        `${API}/appointments/slots?providerId=${+selectedProvider}&locationId=449&startDate=${selectedDate}`,
+        `${API}/appointments/slots?providerId=${+selectedProvider}&locationId=${LOCATION_ID}&startDate=${selectedDate}`,
         {
-          credentials: "include",
+          credentials: "include", 
           method: "GET",
         }
       );

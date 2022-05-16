@@ -37,18 +37,27 @@ cd NexHealth
 
 Please ensure that you have permission to use the NexHealth API. Fill out the [form](https://www.nexhealth.com/api-request/request-access) to request access.
 
-Once you have access, you can populate the.env file under the server folder with the appropriate values.
+Once you have access, you can populate the `.env` file under the `server` folder with the appropriate values.
 
 Following are the Mandatory values you would need to start the Node server successfully:
 
-| Properties  | description                                                                                 |
-| :---------- | :------------------------------------------------------------------------------------------ |
+| Properties  | description                                                                                |
+| :---------- | :----------------------------------------------------------------------------------------- |
 | API_URL     | This will be the sandbox url used for testing purposes, e.g: https://sandbox.nexhealth.com |
-| DOMAIN      | Refers to a specific Institution                                                            |
-| LOCATION_ID | Refers to a specific location                                                               |
-| API_KEY     |                                                                                             |
+| DOMAIN      | Refers to a specific Institution                                                           |
+| LOCATION_ID | Refers to a specific location                                                              |
+| API_KEY     |                                                                                            |
 
-Please contact the NexHealth team if you have any questions on these values.
+Similarly, change the location id assigned to your account in the.env file under the frontend folder.
+
+Here is how the Frontend app's env file looks.
+
+```sh
+  REACT_APP_API=http://localhost:4000/api
+  REACT_APP_LOCATION_ID=449
+```
+
+Please contact the NexHealth team if you have any questions about these values.
 
 ## Installation
 
@@ -66,7 +75,7 @@ npm install
 
 ## Starting the Node server and Frontend app
 
-Change in to the server folder and run the following command:
+Navigate to the server folder and run the following command:
 
 ```sh
 cd ./server
