@@ -3,11 +3,11 @@
 ![app](frontend-app.png)
 
 - [Getting started](#getting-started)
+- [Clone the repository](#clone-the-repository)
 - [Configuration](#configuration)
 - [Installation](#installation)
 - [Starting the Node server and Frontend app](#starting-the-node-server-and-frontend-app)
 - [Built with](#built-with)
-
 
 ## Getting started
 
@@ -17,6 +17,22 @@ Using this repository, you can rapidly create a [Node](https://nodejs.org/en/) s
 You can book appointments, view them, and manage the providers using the Frontend app built with [React](https://facebook.github.io/react/).
 
 The user interface code can be found within the frontend folder, and the backend code can be found within the server folder.
+
+## Clone the repository
+
+Using https:
+
+```sh
+  git clone https://github.com/prabhuignoto/NexHealth
+  cd NexHealth
+```
+
+Alternatively, if you use ssh:
+
+```sh
+git clone git@github.com:prabhuignoto/NexHealth.git
+cd NexHealth
+```
 
 ## Configuration
 

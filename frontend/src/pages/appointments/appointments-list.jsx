@@ -1,6 +1,6 @@
 import React from "react";
 import { formatDate } from "../../utils";
-import styles from "../list.module.css";
+import styles from "../../styles/list.module.css";
 
 const AppointmentsList = ({ appointments = [] }) => {
   return (

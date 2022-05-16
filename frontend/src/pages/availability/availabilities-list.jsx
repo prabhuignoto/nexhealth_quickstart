@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import styles from "../list.module.css";
+import styles from "../../styles/list.module.css";
 
 const API = process.env.REACT_APP_API;
 
