@@ -195,11 +195,11 @@ const AppointmentBookingForm = () => {
         {/* operatory */}
         <div className={commonStyles.form_field}>
           <Select
-            label="Operatory"
+            label="Location"
             options={operators}
             onChange={handleOperatorSelection}
-            id="operatory"
-            placeholder="Select an operatory"
+            id="location"
+            placeholder="Select a location"
           />
         </div>
 

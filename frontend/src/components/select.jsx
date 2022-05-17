@@ -7,8 +7,13 @@ const Select = ({ label, options = [], placeholder, id, onChange }) => {
       <label className={styles.label} htmlFor={id}>
         {label}
       </label>
-      <select id={id} className={styles.select} onChange={onChange}>
-        <option value="" disabled selected style={{ fontStyle: "italic" }}>
+      <select
+        id={id}
+        className={styles.select}
+        onChange={onChange}
+        defaultValue={"placeholder"}
+      >
+        <option value="placeholder" disabled style={{ fontStyle: "italic" }}>
           {placeholder}
         </option>
         {options.map((option) => (
