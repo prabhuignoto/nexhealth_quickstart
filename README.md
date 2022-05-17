@@ -18,7 +18,7 @@ You can book appointments, view them, and manage the providers using the fronten
 
 ## Prerequisites
 
-Please ensure that you have the most recent version of node installed. You can download the latest version of Node [here](https://nodejs.org/en/download/).
+Please ensure that you have the most recent version of [Node](https://nodejs.org/en/) installed. You can download the latest version of Node [here](https://nodejs.org/en/download/).
 
 ## Clone the repository
 
