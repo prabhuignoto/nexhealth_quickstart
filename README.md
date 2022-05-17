@@ -3,10 +3,11 @@
 ![app](frontend-app.png)
 
 - [Getting started](#getting-started)
+- [Prerequisites](#prerequisites)
 - [Clone the repository](#clone-the-repository)
 - [Configuration](#configuration)
 - [Installation](#installation)
-- [Starting the Node server and frontend app](#starting-the-node-server-and-frontend-app)
+- [Starting the Node server and Frontend app](#starting-the-node-server-and-frontend-app)
 
 ## Getting started
 
@@ -15,15 +16,17 @@ Using this repository, you can rapidly create a [Node](https://nodejs.org/en/) s
 
 You can book appointments, view them, and manage the providers using the frontend app built with [React](https://facebook.github.io/react/).
 
-The user interface code can be found within the `frontend` folder, and the backend code can be found within the `server` folder.
+## Prerequisites
+
+Please ensure that you have the most recent version of node installed. You can download the latest version of Node [here](https://nodejs.org/en/download/).
 
 ## Clone the repository
 
 Using https:
 
 ```sh
-  git clone https://github.com/prabhuignoto/NexHealth
-  cd NexHealth
+git clone https://github.com/prabhuignoto/NexHealth
+cd NexHealth
 ```
 
 Alternatively, if you use ssh:
@@ -35,28 +38,38 @@ cd NexHealth
 
 ## Configuration
 
-Please ensure that you have permission to use the NexHealth API. Fill out the [form](https://www.nexhealth.com/api-request/request-access) to request access.
+Please ensure that you have permission to use the [NexHealth API](https://docs.nexhealth.com/reference/introduction). Please fill out this [form](https://www.nexhealth.com/api-request/request-access) to request access.
 
-Once you have access, you can populate the `.env` file under the `server` folder with the appropriate values.
+Once you have access, populate the `.env` file under the `server` folder with the appropriate values. Please use the sample `.env.example` located under the server folder as a template.
 
 > Both the front end and the back end apps comes with a sample `.env` file. Please make sure to update the values with your own.
 
-Following are the mandatory values you need to start the Node server successfully:
+Here are the mandatory env values you need to successfully start the Node server:
 
-| Properties  | description                                                                                |
-| :---------- | :----------------------------------------------------------------------------------------- |
-| API_URL     | This will be the sandbox url used for testing purposes, e.g: https://sandbox.nexhealth.com |
-| DOMAIN      | Refers to a specific Institution                                                           |
-| LOCATION_ID | Refers to a specific location                                                              |
-| API_KEY     |                                                                                            |
+| Properties  | description                                                     |
+| :---------- | :-------------------------------------------------------------- |
+| API_URL     | This will be the sandbox url e.g: https://sandbox.nexhealth.com |
+| SUBDOMAIN   | Refers to a specific Institution                                |
+| LOCATION_ID | Refers to a specific location                                   |
+| API_KEY     | API Key provided by NexHealth                                   |
 
-Similarly, change the location_id assigned to your account in the `.env` file under the `frontend` folder.
+Also, check the following lines in server/index.js to make sure the node server is using the right.env file:
+
+```js
+  config({
+    path: `${__dirname}/.env.example`,
+  });
+```
+
+The above line will loads the `.env.sample` file from the server folder.
+
+Similarly, in the `.env` file under the `frontend` folder, change the 'location id' to the one assigned for you.
 
 Here is how the frontend app's `.env` file looks:
 
 ```sh
-  REACT_APP_API=http://localhost:4000/api
-  REACT_APP_LOCATION_ID=449
+REACT_APP_API=http://localhost:4000/api
+REACT_APP_LOCATION_ID=<location_id>
 ```
 
 > Note: `.env` files are convenient for local development. Do not run production applications using .env files.
@@ -102,7 +115,7 @@ If everything is working, you should see the following message:
 Server is running on port 4000
 ```
 
-Let's go ahead and start the frontend app.
+To start the frontend app:
 
 ```sh
 cd ./frontend

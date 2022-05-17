@@ -43,9 +43,10 @@ const LoginPage = () => {
         Login
       </button>
 
-      {showLoginFailMessage && <span role="alert">Failed to Login</span>}
+      {showLoginFailMessage && <div role="alert">Failed to Login.</div>}
     </div>
   );
 };
 
 export { LoginPage };
+

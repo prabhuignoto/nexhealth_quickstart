@@ -9,7 +9,7 @@ const availabilitiesRouter = Router();
 config();
 
 const nexHealthParams = {
-  subdomain: process.env.DOMAIN,
+  subdomain: process.env.SUBDOMAIN,
   location_id: process.env.LOCATION_ID,
 };
 
