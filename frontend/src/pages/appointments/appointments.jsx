@@ -41,9 +41,11 @@ const Appointments = () => {
         );
         const result = await request.json();
 
-        setAppointments(result.data);
+        if (result.code) {
+          setAppointments(result.data);
 
-        setDateFilter(() => ({ startDate: "", endDate: "" }));
+          setDateFilter(() => ({ startDate: "", endDate: "" }));
+        }
       };
 
       getData();

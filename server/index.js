@@ -3,11 +3,14 @@ import cors from "cors";
 import { config } from "dotenv";
 import express from "express";
 import session from "express-session";
-import url from "url";
+import { dirname } from "path";
+import url, { fileURLToPath } from "url";
 import { appointmentRouter } from "./routers/appointment-router.js";
 import { authRouter } from "./routers/auth-router.js";
 import { availabilitiesRouter } from "./routers/availabilities-router.js";
 import { router } from "./routers/common-router.js";
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const app = express();
 
@@ -26,7 +29,9 @@ app.use(function (req, res, next) {
   next();
 });
 
-config();
+config({
+  path: `${__dirname}/.env.example`,
+});
 
 app.use(
   session({
