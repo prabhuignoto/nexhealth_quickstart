@@ -175,10 +175,10 @@ const Availability = () => {
         </div>
         <div className={commonStyles.form_field}>
           <Select
-            label="Operatory"
+            label="Location"
             options={operatories}
-            placeholder="Select an Operatory"
-            id="operatory"
+            placeholder="Select a location"
+            id="location"
             onChange={handleOperatorySelection}
           />
         </div>
