@@ -2,12 +2,8 @@ import classNames from "classnames";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import commonStyles from "../../styles/common.module.css";
+import { FAILURE_MESSAGES } from "./failure_messages";
 import styles from "./login.module.css";
-
-const FAILURE_MESSAGES = {
-  SERVER_DOWN:
-    "The API server appears to be down. Please ensure that the server is up and running.",
-};
 
 const API = process.env.REACT_APP_API;
 
@@ -44,6 +40,8 @@ const LoginPage = () => {
 
         if (data.authenticated) {
           navigate("/home");
+        } else {
+          onLoginFailed(FAILURE_MESSAGES.AUTHENTICATION_FAILED);
         }
 
         setIsLoggingIn(false);
@@ -75,8 +73,10 @@ const LoginPage = () => {
       </button>
 
       {loginFailed && (
-        <div role="alert" className={commonStyles.error_message}>
-          {failureMessage}
+        <div className={styles.error_wrapper}>
+          <div role="alert" className={commonStyles.error_message}>
+            {failureMessage}
+          </div>
         </div>
       )}
     </div>
