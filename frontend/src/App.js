@@ -65,7 +65,7 @@ const ProtectedRoute = ({ children }) => {
           <span style={{ fontSize: "1.25rem" }}>{failedMessage} </span>
           <div style={{ marginTop: "2rem" }}>
             <Link to="/login" style={{ fontSize: "1.2rem" }}>
-              Go back to Login Page
+              Return to the Login Page
             </Link>
           </div>
         </div>
