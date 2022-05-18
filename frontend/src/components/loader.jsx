@@ -1,24 +1,22 @@
 import React from "react";
 import styles from "./loader.module.css";
 
-const Loader = ({}) => {
+const Loader = () => {
   return (
-    <>
-      <div className={styles.spinner}>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-      </div>
-    </>
+    <div className={styles.spinner}>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
   );
 };
 

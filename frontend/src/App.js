@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link, Route, Routes, useNavigate } from "react-router-dom";
 import "./App.css";
 import { Loader } from "./components/loader";
@@ -8,41 +8,48 @@ import { FAILURE_MESSAGES } from "./pages/login/failure_messages";
 import { LoginPage } from "./pages/login/login";
 
 const ProtectedRoute = ({ children }) => {
-  const [isAuthenticated, setIsAuthenticated] = React.useState(false);
-  const [authFailed, setAuthFailed] = React.useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [authFailed, setAuthFailed] = useState(false);
+  const [failedMessage, setFailedMessage] = useState("");
 
   const navigation = useNavigate();
 
-  React.useEffect(() => {
+  useEffect(() => {
     const check = async () => {
-      const result = await fetch(
-        `${process.env.REACT_APP_API}/auth/is-authenticated`,
-        {
-          method: "GET",
-          credentials: "include",
-        }
-      );
-
-      const response = await result.json();
-
-      if (response && response.authenticated) {
-        const locations = await fetch(
-          `${process.env.REACT_APP_API}/locations`,
+      try {
+        const result = await fetch(
+          `${process.env.REACT_APP_API}/auth/is-authenticated`,
           {
             method: "GET",
             credentials: "include",
           }
         );
 
-        const locationsResponse = await locations.json();
+        const response = await result.json();
 
-        if (locationsResponse.code) {
-          setIsAuthenticated(true);
+        if (response && response.authenticated) {
+          const locations = await fetch(
+            `${process.env.REACT_APP_API}/locations`,
+            {
+              method: "GET",
+              credentials: "include",
+            }
+          );
+
+          const locationsResponse = await locations.json();
+
+          if (locationsResponse.code) {
+            setIsAuthenticated(true);
+          } else {
+            setAuthFailed(true);
+            setFailedMessage(FAILURE_MESSAGES.ACCESS_FORBIDDEN);
+          }
         } else {
-          setAuthFailed(true);
+          navigation("/login");
         }
-      } else {
-        navigation("/login");
+      } catch (error) {
+        setAuthFailed(true);
+        setFailedMessage(FAILURE_MESSAGES.SERVER_DOWN);
       }
     };
 
@@ -55,12 +62,10 @@ const ProtectedRoute = ({ children }) => {
         children
       ) : authFailed ? (
         <div>
-          <span style={{ fontSize: "1.25rem" }}>
-            {FAILURE_MESSAGES.ACCESS_FORBIDDEN}{" "}
-          </span>
+          <span style={{ fontSize: "1.25rem" }}>{failedMessage} </span>
           <div style={{ marginTop: "2rem" }}>
             <Link to="/login" style={{ fontSize: "1.2rem" }}>
-              Go back to Login Page
+              Return to the Login Page
             </Link>
           </div>
         </div>
