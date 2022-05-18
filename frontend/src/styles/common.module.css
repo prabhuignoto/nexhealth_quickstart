@@ -66,3 +66,11 @@
   justify-content: flex-end;
   width: 100%;
 }
+
+.error_message {
+  background: #ffc0cb;
+  color: #9c0006;
+  padding: 0.5rem;
+  border-radius: 4px;
+  width: 600px;
+}

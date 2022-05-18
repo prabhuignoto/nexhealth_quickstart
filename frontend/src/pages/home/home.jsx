@@ -1,5 +1,5 @@
 import classNames from "classnames";
-import React, { useCallback, useState } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Appointments } from "../appointments/appointments";
 import { Availabilities } from "../availability/availabilities";
@@ -17,9 +17,7 @@ const tabs = [
 const Home = () => {
   const [activeTab, setActiveTab] = useState("appointments");
 
-  const handleTabSelection = useCallback((id) => {
-    setActiveTab(id);
-  });
+  const handleTabSelection = (id) => setActiveTab(id);
 
   return (
     <div className={styles.wrapper}>

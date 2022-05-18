@@ -52,23 +52,23 @@ const Appointments = () => {
     }
   }, [dateFilter.endDate, dateFilter.startDate]);
 
-  const handleStartDateChange = useCallback((e) => {
+  const handleStartDateChange = (e) => {
     if (endDateRef.current) {
       setDateFilter(() => ({
         endDate: endDateRef.current.value,
         startDate: e.target.value,
       }));
     }
-  }, []);
+  };
 
-  const handleEndDateChange = useCallback((e) => {
+  const handleEndDateChange = (e) => {
     if (startDateRef.current) {
       setDateFilter(() => ({
         startDate: startDateRef.current.value,
         endDate: e.target.value,
       }));
     }
-  }, []);
+  };
 
   return (
     <div className={styles.appointments}>
