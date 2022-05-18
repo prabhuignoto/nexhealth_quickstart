@@ -22,6 +22,8 @@ const ProtectedRoute = ({ children }) => {
 
       const response = await result.json();
 
+      console.log(response);
+
       if (response && response.authenticated) {
         setIsAuthenticated(response.authenticated);
       } else {
