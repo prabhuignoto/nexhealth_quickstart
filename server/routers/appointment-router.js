@@ -48,8 +48,6 @@ appointmentRouter.get("/slots", async (req, res) => {
       days: 1,
     });
 
-    console.log(`${process.env.API_URL}/appointment_slots?${params}`);
-
     const response = await fetch(
       `${process.env.API_URL}/appointment_slots?${params}`,
       {
@@ -69,8 +67,6 @@ appointmentRouter.post("/book-appointment", async (req, res) => {
   const params = new URLSearchParams({
     ...nexHealthParams,
   });
-
-  console.log(`${process.env.API_URL}/appointments?${params}`);
 
   const response = await fetch(
     `${process.env.API_URL}/appointments?${params}`,
