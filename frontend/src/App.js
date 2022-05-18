@@ -6,6 +6,7 @@ import { Home } from "./pages/home/home";
 import { Logout } from "./pages/home/logout";
 import { FAILURE_MESSAGES } from "./pages/login/failure_messages";
 import { LoginPage } from "./pages/login/login";
+import commonStyles from "./styles/common.module.css";
 
 const ProtectedRoute = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -62,7 +63,12 @@ const ProtectedRoute = ({ children }) => {
         children
       ) : authFailed ? (
         <div>
-          <span style={{ fontSize: "1.25rem" }}>{failedMessage} </span>
+          <div
+            style={{ fontSize: "1.25rem", width: "750px" }}
+            className={commonStyles.error_message}
+          >
+            {failedMessage}
+          </div>
           <div style={{ marginTop: "2rem" }}>
             <Link to="/login" style={{ fontSize: "1.2rem" }}>
               Return to the Login Page
