@@ -1,12 +1,15 @@
 import React from "react";
-import { Route, Routes, useNavigate } from "react-router-dom";
+import { Link, Route, Routes, useNavigate } from "react-router-dom";
 import "./App.css";
+import { Loader } from "./components/loader";
 import { Home } from "./pages/home/home";
 import { Logout } from "./pages/home/logout";
+import { FAILURE_MESSAGES } from "./pages/login/failure_messages";
 import { LoginPage } from "./pages/login/login";
 
 const ProtectedRoute = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = React.useState(false);
+  const [authFailed, setAuthFailed] = React.useState(false);
 
   const navigation = useNavigate();
 
@@ -22,10 +25,22 @@ const ProtectedRoute = ({ children }) => {
 
       const response = await result.json();
 
-      console.log(response);
-
       if (response && response.authenticated) {
-        setIsAuthenticated(response.authenticated);
+        const locations = await fetch(
+          `${process.env.REACT_APP_API}/locations`,
+          {
+            method: "GET",
+            credentials: "include",
+          }
+        );
+
+        const locationsResponse = await locations.json();
+
+        if (locationsResponse.code) {
+          setIsAuthenticated(true);
+        } else {
+          setAuthFailed(true);
+        }
       } else {
         navigation("/login");
       }
@@ -34,7 +49,26 @@ const ProtectedRoute = ({ children }) => {
     check();
   }, []);
 
-  return <div>{isAuthenticated ? children : null}</div>;
+  return (
+    <div>
+      {isAuthenticated ? (
+        children
+      ) : authFailed ? (
+        <div>
+          <span style={{ fontSize: "1.25rem" }}>
+            {FAILURE_MESSAGES.ACCESS_FORBIDDEN}{" "}
+          </span>
+          <div style={{ marginTop: "2rem" }}>
+            <Link to="/login" style={{ fontSize: "1.2rem" }}>
+              Go back to Login Page
+            </Link>
+          </div>
+        </div>
+      ) : (
+        <Loader />
+      )}
+    </div>
+  );
 };
 
 function App() {
