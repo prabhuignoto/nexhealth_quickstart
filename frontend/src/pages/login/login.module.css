@@ -5,7 +5,7 @@
   border-radius: 6px;
   border: 1px solid #f5f5f5;
   box-shadow: 0 0 35px 4px rgba(0, 0, 0, 0.1);
-  width: 650px;
+  width: 750px;
   margin: 2rem;
   min-height: 500px;
   padding: 1rem;
@@ -13,4 +13,10 @@
 
 .error_wrapper {
   margin-top: auto;
+  margin-bottom: 1rem;
+}
+
+.loader_wrapper {
+  margin-top: 1rem;
+  width: 650px;
 }

@@ -1,6 +1,7 @@
 import classNames from "classnames";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Loader } from "../../components/loader";
 import commonStyles from "../../styles/common.module.css";
 import { FAILURE_MESSAGES } from "./failure_messages";
 import styles from "./login.module.css";
@@ -18,6 +19,7 @@ const LoginPage = () => {
   const onLoginFailed = (message) => {
     setLoginFailed(true);
     setFailureMessage(message);
+    setIsLoggingIn(false);
   };
 
   const onLoginStart = () => {
@@ -47,11 +49,9 @@ const LoginPage = () => {
         setIsLoggingIn(false);
       } else {
         onLoginFailed(FAILURE_MESSAGES.SERVER_DOWN);
-        setIsLoggingIn(false);
       }
     } catch (error) {
       onLoginFailed(FAILURE_MESSAGES.SERVER_DOWN);
-      setIsLoggingIn(false);
     }
   };
 
@@ -59,7 +59,7 @@ const LoginPage = () => {
     <div className={styles.wrapper}>
       <h1>Welcome to NexHealth Appointment Booking</h1>
 
-      <p>Please login to your account to book an appointment.</p>
+      <p>Please login to your account to book an appointment</p>
 
       <button
         onClick={handleLogin}
@@ -71,6 +71,10 @@ const LoginPage = () => {
       >
         Login
       </button>
+
+      <div className={styles.loader_wrapper}>
+        {isLoggingIn ? <Loader /> : null}
+      </div>
 
       {loginFailed && (
         <div className={styles.error_wrapper}>
