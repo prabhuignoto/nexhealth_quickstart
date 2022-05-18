@@ -1,11 +1,5 @@
 import classNames from "classnames";
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Select } from "../../components/select";
 import commonStyles from "../../styles/common.module.css";
 import styles from "./appointment_booking.module.css";
@@ -119,53 +113,50 @@ const AppointmentBookingForm = () => {
   const handleNotesChange = (ev) => setNotes(ev.target.value);
 
   /** Resets the form */
-  const resetForm = useCallback((ev) => {
+  const resetForm = (ev) => {
     ev.preventDefault();
     if (formRef.current) {
       formRef.current.reset();
       const selects = Array.from(formRef.current.querySelectorAll("select"));
       selects.forEach((select) => (select.selectedIndex = 0));
     }
-  }, []);
+  };
 
   /** Handler to submit the form */
-  const submitForm = useCallback(
-    (ev) => {
-      ev.preventDefault();
-      const bookAppointment = async () => {
-        const request = await fetch(`${API}/appointments/book-appointment`, {
-          credentials: "include",
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
+  const submitForm = (ev) => {
+    ev.preventDefault();
+    const bookAppointment = async () => {
+      const request = await fetch(`${API}/appointments/book-appointment`, {
+        credentials: "include",
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          appt: {
+            patient_id: selectedPatient,
+            provider_id: selectedProvider,
+            operatory_id: selectedOperator,
+            start_time: selectedSlot,
+            confirmed: true,
+            note: notes,
           },
-          body: JSON.stringify({
-            appt: {
-              patient_id: selectedPatient,
-              provider_id: selectedProvider,
-              operatory_id: selectedOperator,
-              start_time: selectedSlot,
-              confirmed: true,
-              note: notes,
-            },
-          }),
-        });
+        }),
+      });
 
-        const result = await request.json();
+      const result = await request.json();
 
-        if (result.code) {
-          alert("Appointment booked successfully!");
-        } else {
-          alert(`Appointment booking failed!\n${result.error}`);
-        }
-      };
-
-      if (canSubmit) {
-        bookAppointment();
+      if (result.code) {
+        alert("Appointment booked successfully!");
+      } else {
+        alert(`Appointment booking failed!\n${result.error}`);
       }
-    },
-    [canSubmit]
-  );
+    };
+
+    if (canSubmit) {
+      bookAppointment();
+    }
+  };
 
   return (
     <div className={styles.wrapper}>

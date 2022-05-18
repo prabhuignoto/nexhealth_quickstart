@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "../../styles/list.module.css";
 
 const API = process.env.REACT_APP_API;
@@ -11,7 +11,7 @@ const ListItem = ({
   days,
   onDeleteClick,
 }) => {
-  const [name, setName] = React.useState("");
+  const [name, setName] = useState("");
 
   useEffect(() => {
     const getProviderDetails = async () => {

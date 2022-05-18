@@ -1,11 +1,5 @@
 import classNames from "classnames";
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Select } from "../../components/select";
 import commonStyles from "../../styles/common.module.css";
 import styles from "./create-availability.module.css";
@@ -45,15 +39,9 @@ const Availability = () => {
     }
   };
 
-  const handleSelectStartTime = useCallback(
-    (ev) => setSelectedStartTime(ev.target.value),
-    []
-  );
+  const handleSelectStartTime = (ev) => setSelectedStartTime(ev.target.value);
 
-  const handleSelectEndTime = useCallback(
-    (ev) => setSelectedEndTime(ev.target.value),
-    []
-  );
+  const handleSelectEndTime = (ev) => setSelectedEndTime(ev.target.value);
 
   useEffect(() => {
     const getProviders = async () => {
@@ -92,7 +80,7 @@ const Availability = () => {
   }, []);
 
   /** resets the form */
-  const resetForm = useCallback((ev) => {
+  const resetForm = (ev) => {
     ev && ev.preventDefault();
     if (formRef.current) {
       formRef.current.reset();
@@ -101,7 +89,7 @@ const Availability = () => {
         select.selectedIndex = 0;
       });
     }
-  });
+  };
 
   /** checks whether the form can be submitted or not */
   const canSubmit = useMemo(

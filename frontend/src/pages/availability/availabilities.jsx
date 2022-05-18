@@ -1,13 +1,13 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { AvailabilitiesList } from "./availabilities-list";
 import styles from "./availabilities.module.css";
 
 const API = process.env.REACT_APP_API;
 
 const Availabilities = () => {
-  const [availabilities, setAvailabilities] = React.useState([]);
+  const [availabilities, setAvailabilities] = useState([]);
 
-  const [refetch, setRefetch] = React.useState(0);
+  const [refetch, setRefetch] = useState(0);
 
   useEffect(() => {
     const getData = async () => {
@@ -26,15 +26,12 @@ const Availabilities = () => {
     getData();
   }, [refetch]);
 
-  const handleDelete = useCallback((id) => {
+  const handleDelete = (id) => {
     const deleteAvailability = async () => {
-      const request = await fetch(
-        `${API}/availabilities/delete/${id}`,
-        {
-          credentials: "include",
-          method: "DELETE",
-        }
-      );
+      const request = await fetch(`${API}/availabilities/delete/${id}`, {
+        credentials: "include",
+        method: "DELETE",
+      });
 
       const result = await request.json();
 
@@ -44,7 +41,7 @@ const Availabilities = () => {
     };
 
     deleteAvailability();
-  }, []);
+  };
 
   return (
     <div className={styles.availabilities}>
