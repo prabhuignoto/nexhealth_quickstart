@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { Appointments } from "../appointments/appointments";
 import { Availabilities } from "../availability/availabilities";
 import { CreateAvailability } from "../availability/create-availability";
-import { AppointmentBookingForm } from "../booking/appointment_booking";
+import { AppointmentBookingForm } from "../booking/booking";
 import styles from "./home.module.css";
 
 const tabs = [

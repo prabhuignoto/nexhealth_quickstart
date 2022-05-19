@@ -5,7 +5,7 @@ import { Select } from "../../components/select";
 import { locationsState } from "../../state";
 import commonStyles from "../../styles/common.module.css";
 import { getData } from "../../utils";
-import styles from "./appointment_booking.module.css";
+import styles from "./booking.module.css";
 
 const API = process.env.REACT_APP_API;
 
