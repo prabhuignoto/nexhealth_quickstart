@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Appointments } from "../appointments/appointments";
 import { Availabilities } from "../availability/availabilities";
-import { Availability } from "../availability/create-availability";
+import { CreateAvailability } from "../availability/create-availability";
 import { AppointmentBookingForm } from "../booking/appointment_booking";
 import styles from "./home.module.css";
 
@@ -45,7 +45,7 @@ const Home = () => {
         <div className={styles.tabs_body}>
           {activeTab === "appointments" && <Appointments />}
           {activeTab === "booking" && <AppointmentBookingForm />}
-          {activeTab === "availability" && <Availability />}
+          {activeTab === "availability" && <CreateAvailability />}
           {activeTab === "availabilities" && <Availabilities />}
         </div>
       </section>

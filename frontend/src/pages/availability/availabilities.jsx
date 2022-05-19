@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { getData } from "../../utils";
 import { AvailabilitiesList } from "./availabilities-list";
 import styles from "./availabilities.module.css";
 
@@ -10,12 +11,9 @@ const Availabilities = () => {
   const [refetch, setRefetch] = useState(0);
 
   useEffect(() => {
-    const getData = async () => {
+    const fetchAvailabilities = async () => {
       try {
-        const request = await fetch(`${API}/availabilities`, {
-          credentials: "include",
-          method: "GET",
-        });
+        const request = await getData(`${API}/availabilities`);
 
         const result = await request.json();
 
@@ -27,7 +25,7 @@ const Availabilities = () => {
       }
     };
 
-    getData();
+    fetchAvailabilities();
   }, [refetch]);
 
   const handleDelete = (id) => {

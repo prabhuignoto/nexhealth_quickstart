@@ -1,11 +1,13 @@
 import classNames from "classnames";
 import React, { useEffect, useMemo, useRef, useState } from "react";
+import { useRecoilValue } from "recoil";
 import { Select } from "../../components/select";
+import { locationsState } from "../../state";
 import commonStyles from "../../styles/common.module.css";
+import { getData } from "../../utils";
 import styles from "./appointment_booking.module.css";
 
 const API = process.env.REACT_APP_API;
-const LOCATION_ID = process.env.REACT_APP_LOCATION_ID;
 
 const AppointmentBookingForm = () => {
   const [patients, setPatients] = useState([]);
@@ -22,13 +24,12 @@ const AppointmentBookingForm = () => {
   const [selectedSlot, setSelectedSlot] = useState(null);
   const [notes, setNotes] = useState("");
 
+  const locations = useRecoilValue(locationsState);
+
   useEffect(() => {
-    const getData = async (type) => {
+    const fetchData = async (type) => {
       try {
-        const request = await fetch(`${API}/${type}`, {
-          credentials: "include",
-          method: "GET",
-        });
+        const request = await getData(`${API}/${type}`);
 
         const result = await request.json();
 
@@ -54,35 +55,40 @@ const AppointmentBookingForm = () => {
     };
 
     // fetch patients, providers, operators
-    getData("patients");
-    getData("providers");
-    getData("operatories");
+    fetchData("patients");
+    fetchData("providers");
+    fetchData("operatories");
   }, []);
 
   useEffect(() => {
-    const getData = async () => {
-      const request = await fetch(
-        `${API}/appointments/slots?providerId=${+selectedProvider}&locationId=${LOCATION_ID}&startDate=${selectedDate}`,
-        {
-          credentials: "include",
-          method: "GET",
+    const fetchSlots = async () => {
+      try {
+        if (!locations.length) {
+          return;
         }
-      );
 
-      const result = await request.json();
-
-      if (result.code && result.data.length) {
-        setSlots(
-          result.data[0].slots.map((slot) => ({
-            ...slot,
-            name: slot.time,
-          }))
+        const locationId = locations[0].locations[0].id;
+        const request = await getData(
+          `${API}/appointments/slots?providerId=${+selectedProvider}&locationId=${locationId}&startDate=${selectedDate}`
         );
+
+        const result = await request.json();
+
+        if (result.code && result.data.length) {
+          setSlots(
+            result.data[0].slots.map((slot) => ({
+              ...slot,
+              name: slot.time,
+            }))
+          );
+        }
+      } catch (error) {
+        console.log(error);
       }
     };
 
     if (selectedProvider && selectedDate) {
-      getData();
+      fetchSlots();
     }
   }, [selectedProvider, selectedDate]);
 

@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
+import { getData } from "../../utils";
 import { AppointmentsList } from "./appointments-list";
 import styles from "./appointments.module.css";
 
@@ -34,11 +35,10 @@ const Appointments = () => {
 
   useEffect(() => {
     if (dateFilter.startDate && dateFilter.endDate) {
-      const getData = async () => {
+      const fetchAppointments = async () => {
         try {
-          const request = await fetch(
-            `${API}/appointments?startDate=${dateFilter.startDate}&endDate=${dateFilter.endDate}`,
-            { credentials: "include", method: "GET" }
+          const request = await getData(
+            `${API}/appointments?startDate=${dateFilter.startDate}&endDate=${dateFilter.endDate}`
           );
           const result = await request.json();
 
@@ -52,7 +52,7 @@ const Appointments = () => {
         }
       };
 
-      getData();
+      fetchAppointments();
     }
   }, [dateFilter.endDate, dateFilter.startDate]);
 

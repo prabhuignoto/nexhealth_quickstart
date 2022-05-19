@@ -1,10 +1,12 @@
 import classNames from "classnames";
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useSetRecoilState } from "recoil";
 import { Loader } from "../../components/loader";
+import { subDomainState } from "../../state";
 import commonStyles from "../../styles/common.module.css";
-import { FAILURE_MESSAGES } from "./failure_messages";
 import styles from "./login.module.css";
+import { FAILURE_MESSAGES } from "./messages";
 
 const API = process.env.REACT_APP_API;
 
@@ -13,8 +15,10 @@ const LoginPage = () => {
 
   const [isLoggingIn, setIsLoggingIn] = useState(false);
   const [loginFailed, setLoginFailed] = useState(false);
-
+  const [subDomain, setSubDomain] = useState("");
   const [failureMessage, setFailureMessage] = useState(null);
+
+  const setSubDomainState = useSetRecoilState(subDomainState);
 
   const onLoginFailed = (message) => {
     setLoginFailed(true);
@@ -28,9 +32,13 @@ const LoginPage = () => {
     setLoginFailed(false);
   };
 
+  const disableLoginButton = useMemo(() => isLoggingIn, [isLoggingIn]);
+
   const handleLogin = async () => {
     try {
       onLoginStart();
+
+      setSubDomainState(subDomain);
 
       const result = await fetch(`${API}/auth`, {
         method: "get",
@@ -63,10 +71,10 @@ const LoginPage = () => {
 
       <button
         onClick={handleLogin}
-        disabled={isLoggingIn}
+        disabled={disableLoginButton}
         className={classNames(
           commonStyles.button,
-          isLoggingIn ? commonStyles.disabled : null
+          disableLoginButton ? commonStyles.disabled : null
         )}
       >
         Login

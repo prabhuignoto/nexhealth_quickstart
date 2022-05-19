@@ -1,47 +1,44 @@
 import React, { useEffect, useState } from "react";
 import { Link, Route, Routes, useNavigate } from "react-router-dom";
+import { useSetRecoilState } from "recoil";
 import "./App.css";
 import { Loader } from "./components/loader";
 import { Home } from "./pages/home/home";
 import { Logout } from "./pages/home/logout";
-import { FAILURE_MESSAGES } from "./pages/login/failure_messages";
 import { LoginPage } from "./pages/login/login";
+import { FAILURE_MESSAGES } from "./pages/login/messages.js";
+import { locationsState, subDomainState } from "./state";
 import commonStyles from "./styles/common.module.css";
-
-const SUBDOMAIN = process.env.REACT_APP_SUBDOMAIN;
+import { getData } from "./utils";
 
 const ProtectedRoute = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [authFailed, setAuthFailed] = useState(false);
   const [failedMessage, setFailedMessage] = useState("");
 
+  const setSubDomain = useSetRecoilState(subDomainState);
+  const setLocations = useSetRecoilState(locationsState);
+
   const navigation = useNavigate();
 
   useEffect(() => {
     const check = async () => {
       try {
-        const result = await fetch(
-          `${process.env.REACT_APP_API}/auth/is-authenticated`,
-          {
-            method: "GET",
-            credentials: "include",
-          }
+        const result = await getData(
+          `${process.env.REACT_APP_API}/auth/is-authenticated`
         );
 
         const response = await result.json();
 
         if (response && response.authenticated) {
-          const locations = await fetch(
-            `${process.env.REACT_APP_API}/locations?subdomain=${SUBDOMAIN}`,
-            {
-              method: "GET",
-              credentials: "include",
-            }
+          const locations = await getData(
+            `${process.env.REACT_APP_API}/locations`
           );
 
           const locationsResponse = await locations.json();
 
           if (locationsResponse.code) {
+            setLocations(locationsResponse.data);
             setIsAuthenticated(true);
           } else {
             setAuthFailed(true);
