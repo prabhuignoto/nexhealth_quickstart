@@ -7,7 +7,7 @@ import { Home } from "./pages/home/home";
 import { Logout } from "./pages/home/logout";
 import { LoginPage } from "./pages/login/login";
 import { FAILURE_MESSAGES } from "./pages/login/messages.js";
-import { locationsState, subDomainState } from "./state";
+import { locationsState } from "./state";
 import commonStyles from "./styles/common.module.css";
 import { getData } from "./utils";
 
@@ -16,7 +16,6 @@ const ProtectedRoute = ({ children }) => {
   const [authFailed, setAuthFailed] = useState(false);
   const [failedMessage, setFailedMessage] = useState("");
 
-  const setSubDomain = useSetRecoilState(subDomainState);
   const setLocations = useSetRecoilState(locationsState);
 
   const navigation = useNavigate();
@@ -54,7 +53,7 @@ const ProtectedRoute = ({ children }) => {
     };
 
     check();
-  }, []);
+  });
 
   return (
     <div>

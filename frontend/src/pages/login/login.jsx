@@ -1,9 +1,7 @@
 import classNames from "classnames";
 import React, { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useSetRecoilState } from "recoil";
 import { Loader } from "../../components/loader";
-import { subDomainState } from "../../state";
 import commonStyles from "../../styles/common.module.css";
 import styles from "./login.module.css";
 import { FAILURE_MESSAGES } from "./messages";
@@ -15,10 +13,7 @@ const LoginPage = () => {
 
   const [isLoggingIn, setIsLoggingIn] = useState(false);
   const [loginFailed, setLoginFailed] = useState(false);
-  const [subDomain, setSubDomain] = useState("");
   const [failureMessage, setFailureMessage] = useState(null);
-
-  const setSubDomainState = useSetRecoilState(subDomainState);
 
   const onLoginFailed = (message) => {
     setLoginFailed(true);
@@ -37,8 +32,6 @@ const LoginPage = () => {
   const handleLogin = async () => {
     try {
       onLoginStart();
-
-      setSubDomainState(subDomain);
 
       const result = await fetch(`${API}/auth`, {
         method: "get",

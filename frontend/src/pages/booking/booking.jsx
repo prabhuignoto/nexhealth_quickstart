@@ -90,7 +90,7 @@ const AppointmentBookingForm = () => {
     if (selectedProvider && selectedDate) {
       fetchSlots();
     }
-  }, [selectedProvider, selectedDate]);
+  }, [selectedProvider, selectedDate, locations]);
 
   /** Checks whether the form can be submitted or not */
   const canSubmit = useMemo(
