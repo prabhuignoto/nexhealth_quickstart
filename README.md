@@ -38,39 +38,43 @@ cd NexHealth
 
 ## Configuration
 
-Please ensure that you have permission to use the [NexHealth API](https://docs.nexhealth.com/reference/introduction). Please fill out this [form](https://www.nexhealth.com/api-request/request-access) to request access.
+1. To request access to the [NexHealth API](https://docs.nexhealth.com/reference/introduction), fill out this [form](https://www.nexhealth.com/api-request/request-access). You should receive a **subdomain**, a **location_id**, and an **API Key**.
 
-Once you have access, populate the `.env` file under the `server` folder with the appropriate values. Please use the sample `.env.example` located under the server folder as a template.
+2. Populate an `.env` file in `server/` with the credentials from above.
 
-> Both the front end and the back end apps comes with a sample `.env` file. Please make sure to update the values with your own.
+```sh
+cd NexHealth
+touch server/.env
+```
 
 Here are the mandatory env values you need to successfully start the Node server:
 
-| Properties  | description                                                     |
+| Properties  | Description                                                     |
 | :---------- | :-------------------------------------------------------------- |
-| API_URL     | This will be the sandbox url e.g: https://sandbox.nexhealth.com |
-| SUBDOMAIN   | Refers to a specific Institution                                |
+| API_URL     | Sandbox url e.g: https://sandbox.nexhealth.com |
+| SUBDOMAIN   | Refers to a specific institution                                |
 | LOCATION_ID | Refers to a specific location                                   |
 | API_KEY     | API Key provided by NexHealth                                   |
 
-Also, check the following lines in server/server-config.js to make sure the node server is using the right .env file:
+Please use the sample `.env.example` located under the server folder as a template.
 
-```js
-  config({
-    path: `${__dirname}/.env.example`,
-  });
+```sh
+API_URL=https://sandbox.nexhealth.com
+SUBDOMAIN=xxxx
+LOCATION_ID=xxxx
+API_KEY=xxxx
 ```
 
-The above line will load the `.env.sample` file from the server folder.
+3. Open the `.env` file in `frontend/`
 
-Similarly, in the `.env` file under the `frontend` folder, change the 'location id' to the one assigned for you.
-
-Here is how the frontend app's `.env` file looks:
+This is how the file should look:
 
 ```sh
 REACT_APP_API=http://localhost:4000/api
 REACT_APP_LOCATION_ID=<location_id>
 ```
+
+Change the <location_id> to the one assigned to you.
 
 > Note: `.env` files are convenient for local development. Do not run production applications using .env files.
 
