@@ -47,7 +47,7 @@ cd NexHealth
 touch server/.env
 ```
 
-Here are the mandatory env values you need to successfully start the Node server:
+Add values for the below properties:
 
 | Properties  | Description                                                     |
 | :---------- | :-------------------------------------------------------------- |
@@ -56,7 +56,7 @@ Here are the mandatory env values you need to successfully start the Node server
 | LOCATION_ID | Refers to a specific location                                   |
 | API_KEY     | API Key provided by NexHealth                                   |
 
-Please use the sample `.env.example` located under the server folder as a template.
+Please use the sample `.env.example` located under the `server/` folder as a template.
 
 ```sh
 API_URL=https://sandbox.nexhealth.com
