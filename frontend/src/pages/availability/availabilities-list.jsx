@@ -67,7 +67,11 @@ const AvailabilitiesList = ({ availabilities = [], onDelete }) => {
 
           {/* availabilities */}
           {availabilities.map((availability) => (
-            <ListItem {...availability} onDeleteClick={onDeleteClick} />
+            <ListItem
+              {...availability}
+              onDeleteClick={onDeleteClick}
+              key={availability.id}
+            />
           ))}
         </ul>
       )}

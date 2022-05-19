@@ -1,10 +1,10 @@
 import classNames from "classnames";
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Loader } from "../../components/loader";
 import commonStyles from "../../styles/common.module.css";
-import { FAILURE_MESSAGES } from "./failure_messages";
 import styles from "./login.module.css";
+import { FAILURE_MESSAGES } from "../../messages";
 
 const API = process.env.REACT_APP_API;
 
@@ -13,7 +13,6 @@ const LoginPage = () => {
 
   const [isLoggingIn, setIsLoggingIn] = useState(false);
   const [loginFailed, setLoginFailed] = useState(false);
-
   const [failureMessage, setFailureMessage] = useState(null);
 
   const onLoginFailed = (message) => {
@@ -27,6 +26,8 @@ const LoginPage = () => {
     setFailureMessage("");
     setLoginFailed(false);
   };
+
+  const disableLoginButton = useMemo(() => isLoggingIn, [isLoggingIn]);
 
   const handleLogin = async () => {
     try {
@@ -63,10 +64,10 @@ const LoginPage = () => {
 
       <button
         onClick={handleLogin}
-        disabled={isLoggingIn}
+        disabled={disableLoginButton}
         className={classNames(
           commonStyles.button,
-          isLoggingIn ? commonStyles.disabled : null
+          disableLoginButton ? commonStyles.disabled : null
         )}
       >
         Login

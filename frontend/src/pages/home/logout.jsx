@@ -26,7 +26,7 @@ const Logout = () => {
     };
 
     logout();
-  }, []);
+  });
 
   return (
     <div>

@@ -1,4 +1,9 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
+import { useSetRecoilState } from "recoil";
+import { Loader } from "../../components/loader";
+import { apiState } from "../../state";
+import { getData } from "../../utils";
+import { FAILURE_MESSAGES } from "../../messages";
 import { AppointmentsList } from "./appointments-list";
 import styles from "./appointments.module.css";
 
@@ -7,9 +12,11 @@ const API = process.env.REACT_APP_API;
 const Appointments = () => {
   const [dateFilter, setDateFilter] = useState({ startDate: "", endDate: "" });
   const [appointments, setAppointments] = useState([]);
+  const [isLoadingData, setIsLoadingData] = useState(false);
 
   const startDateRef = useRef(null);
   const endDateRef = useRef(null);
+  const setApiState = useSetRecoilState(apiState);
 
   const onStartDateRef = useCallback((node) => {
     if (node) {
@@ -34,25 +41,30 @@ const Appointments = () => {
 
   useEffect(() => {
     if (dateFilter.startDate && dateFilter.endDate) {
-      const getData = async () => {
+      const fetchAppointments = async () => {
         try {
-          const request = await fetch(
-            `${API}/appointments?startDate=${dateFilter.startDate}&endDate=${dateFilter.endDate}`,
-            { credentials: "include", method: "GET" }
+          setIsLoadingData(true);
+          const request = await getData(
+            `${API}/appointments?startDate=${dateFilter.startDate}&endDate=${dateFilter.endDate}`
           );
           const result = await request.json();
 
           if (result.code) {
             setAppointments(result.data);
+            setIsLoadingData(false);
 
             setDateFilter(() => ({ startDate: "", endDate: "" }));
           }
         } catch (error) {
-          console.log(error);
+          setIsLoadingData(false);
+          setApiState({
+            failed: true,
+            message: FAILURE_MESSAGES.SERVER_DOWN,
+          });
         }
       };
 
-      getData();
+      fetchAppointments();
     }
   }, [dateFilter.endDate, dateFilter.startDate]);
 
@@ -100,7 +112,13 @@ const Appointments = () => {
       </div>
 
       <div className={styles.appointments_list_wrapper}>
-        <AppointmentsList appointments={appointments} />
+        {isLoadingData ? (
+          <div className={styles.loader_wrapper}>
+            <Loader />
+          </div>
+        ) : (
+          <AppointmentsList appointments={appointments} />
+        )}
       </div>
     </div>
   );

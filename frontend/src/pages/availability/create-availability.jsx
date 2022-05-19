@@ -2,6 +2,7 @@ import classNames from "classnames";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Select } from "../../components/select";
 import commonStyles from "../../styles/common.module.css";
+import { getData } from "../../utils";
 import styles from "./create-availability.module.css";
 
 const days = [
@@ -14,7 +15,7 @@ const days = [
   "Sunday",
 ];
 
-const Availability = () => {
+const CreateAvailability = () => {
   const [providers, setProviders] = useState([]);
   const [operatories, setOperatories] = useState([]);
 
@@ -46,10 +47,7 @@ const Availability = () => {
   useEffect(() => {
     const getProviders = async () => {
       try {
-        const request = await fetch(`${process.env.REACT_APP_API}/providers`, {
-          credentials: "include",
-          method: "GET",
-        });
+        const request = await getData(`${process.env.REACT_APP_API}/providers`);
 
         const result = await request.json();
 
@@ -68,12 +66,8 @@ const Availability = () => {
 
     const getOperatories = async () => {
       try {
-        const request = await fetch(
-          `${process.env.REACT_APP_API}/operatories`,
-          {
-            credentials: "include",
-            method: "GET",
-          }
+        const request = await getData(
+          `${process.env.REACT_APP_API}/operatories`
         );
 
         const result = await request.json();
@@ -246,4 +240,4 @@ const Availability = () => {
   );
 };
 
-export { Availability };
+export { CreateAvailability };
