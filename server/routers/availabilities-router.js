@@ -53,8 +53,6 @@ availabilitiesRouter.delete("/delete/:id", async (req, res) => {
     );
 
     res.status(200).send({ message: "Availability deleted", code: true });
-
-    res.json(availability);
   } catch (error) {
     console.log(error);
   }

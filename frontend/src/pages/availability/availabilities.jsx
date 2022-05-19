@@ -11,15 +11,19 @@ const Availabilities = () => {
 
   useEffect(() => {
     const getData = async () => {
-      const request = await fetch(`${API}/availabilities`, {
-        credentials: "include",
-        method: "GET",
-      });
+      try {
+        const request = await fetch(`${API}/availabilities`, {
+          credentials: "include",
+          method: "GET",
+        });
 
-      const result = await request.json();
+        const result = await request.json();
 
-      if (result.code) {
-        setAvailabilities(result.data);
+        if (result.code) {
+          setAvailabilities(result.data);
+        }
+      } catch (error) {
+        console.log(error);
       }
     };
 
