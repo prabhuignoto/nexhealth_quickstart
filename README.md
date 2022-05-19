@@ -53,7 +53,7 @@ Here are the mandatory env values you need to successfully start the Node server
 | LOCATION_ID | Refers to a specific location                                   |
 | API_KEY     | API Key provided by NexHealth                                   |
 
-Also, check the following lines in server/index.js to make sure the node server is using the right.env file:
+Also, check the following lines in server/server-config.js to make sure the node server is using the right .env file:
 
 ```js
   config({
@@ -61,7 +61,7 @@ Also, check the following lines in server/index.js to make sure the node server 
   });
 ```
 
-The above line will loads the `.env.sample` file from the server folder.
+The above line will load the `.env.sample` file from the server folder.
 
 Similarly, in the `.env` file under the `frontend` folder, change the 'location id' to the one assigned for you.
 

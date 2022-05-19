@@ -6,14 +6,21 @@ const Logout = () => {
 
   useEffect(() => {
     const logout = async () => {
-      const request = await fetch(`${process.env.REACT_APP_API}/auth/logout`, {
-        credentials: "include",
-        method: "GET",
-      });
+      try {
+        const request = await fetch(
+          `${process.env.REACT_APP_API}/auth/logout`,
+          {
+            credentials: "include",
+            method: "GET",
+          }
+        );
 
-      const result = await request.json();
+        const result = await request.json();
 
-      if (!result.authenticated) {
+        if (!result.authenticated) {
+          navigate("/");
+        }
+      } catch (error) {
         navigate("/");
       }
     };

@@ -35,16 +35,20 @@ const Appointments = () => {
   useEffect(() => {
     if (dateFilter.startDate && dateFilter.endDate) {
       const getData = async () => {
-        const request = await fetch(
-          `${API}/appointments?startDate=${dateFilter.startDate}&endDate=${dateFilter.endDate}`,
-          { credentials: "include", method: "GET" }
-        );
-        const result = await request.json();
+        try {
+          const request = await fetch(
+            `${API}/appointments?startDate=${dateFilter.startDate}&endDate=${dateFilter.endDate}`,
+            { credentials: "include", method: "GET" }
+          );
+          const result = await request.json();
 
-        if (result.code) {
-          setAppointments(result.data);
+          if (result.code) {
+            setAppointments(result.data);
 
-          setDateFilter(() => ({ startDate: "", endDate: "" }));
+            setDateFilter(() => ({ startDate: "", endDate: "" }));
+          }
+        } catch (error) {
+          console.log(error);
         }
       };
 

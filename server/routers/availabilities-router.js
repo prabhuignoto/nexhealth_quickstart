@@ -1,12 +1,12 @@
-import { config } from "dotenv";
 import { Router } from "express";
 import fetch from "node-fetch";
 import { URLSearchParams } from "url";
+import serverConfig from "../server-config.js";
 import { getHeaders } from "../utils.js";
 
 const availabilitiesRouter = Router();
 
-config();
+serverConfig();
 
 const nexHealthParams = {
   subdomain: process.env.SUBDOMAIN,
@@ -53,8 +53,6 @@ availabilitiesRouter.delete("/delete/:id", async (req, res) => {
     );
 
     res.status(200).send({ message: "Availability deleted", code: true });
-
-    res.json(availability);
   } catch (error) {
     console.log(error);
   }

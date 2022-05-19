@@ -45,33 +45,44 @@ const Availability = () => {
 
   useEffect(() => {
     const getProviders = async () => {
-      const request = await fetch(`${process.env.REACT_APP_API}/providers`, {
-        credentials: "include",
-        method: "GET",
-      });
+      try {
+        const request = await fetch(`${process.env.REACT_APP_API}/providers`, {
+          credentials: "include",
+          method: "GET",
+        });
 
-      const result = await request.json();
+        const result = await request.json();
 
-      if (result.code && result.data.length) {
-        setProviders(
-          result.data.map((provider) => ({
-            ...provider,
-            name: provider.doctor_name,
-          }))
-        );
+        if (result.code && result.data.length) {
+          setProviders(
+            result.data.map((provider) => ({
+              ...provider,
+              name: provider.doctor_name,
+            }))
+          );
+        }
+      } catch (error) {
+        console.log(error);
       }
     };
 
     const getOperatories = async () => {
-      const request = await fetch(`${process.env.REACT_APP_API}/operatories`, {
-        credentials: "include",
-        method: "GET",
-      });
+      try {
+        const request = await fetch(
+          `${process.env.REACT_APP_API}/operatories`,
+          {
+            credentials: "include",
+            method: "GET",
+          }
+        );
 
-      const result = await request.json();
+        const result = await request.json();
 
-      if (result.code && result.data.length) {
-        setOperatories(result.data);
+        if (result.code && result.data.length) {
+          setOperatories(result.data);
+        }
+      } catch (error) {
+        console.log(error);
       }
     };
 

@@ -1,12 +1,12 @@
-import { config } from "dotenv";
 import { Router } from "express";
 import fetch from "node-fetch";
 import { URLSearchParams } from "url";
+import serverConfig from "../server-config.js";
 import { getHeaders } from "../utils.js";
 
 const router = Router();
 
-config();
+serverConfig();
 
 const nexHealthParams = {
   subdomain: process.env.SUBDOMAIN,
@@ -21,7 +21,7 @@ router.get("/patients", async (req, res) => {
       include_upcoming_appts: false,
       location_strict: false,
       page: 1,
-      per_page: 5,
+      per_page: 50,
     });
 
     const response = await fetch(`${process.env.API_URL}/patients?${params}`, {
@@ -39,7 +39,7 @@ router.get("/providers", async (req, res) => {
     const params = new URLSearchParams({
       ...nexHealthParams,
       page: 1,
-      per_page: 5,
+      per_page: 50,
     });
 
     const response = await fetch(`${process.env.API_URL}/providers?${params}`, {
@@ -57,7 +57,7 @@ router.get("/providers/:id", async (req, res) => {
     const params = new URLSearchParams({
       ...nexHealthParams,
       page: 1,
-      per_page: 5,
+      per_page: 50,
     });
 
     const response = await fetch(
@@ -75,13 +75,7 @@ router.get("/providers/:id", async (req, res) => {
 
 router.get("/locations", async (req, res) => {
   try {
-    const params = new URLSearchParams({
-      ...nexHealthParams,
-      page: 1,
-      per_page: 5,
-    });
-
-    const response = await fetch(`${process.env.API_URL}/locations?${params}`, {
+    const response = await fetch(`${process.env.API_URL}/locations`, {
       headers: getHeaders(false, req.session.token),
     });
 
@@ -98,7 +92,7 @@ router.get("/operatories", async (req, res) => {
     const params = new URLSearchParams({
       ...nexHealthParams,
       page: 1,
-      per_page: 5,
+      per_page: 50,
     });
 
     const response = await fetch(

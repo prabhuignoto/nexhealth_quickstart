@@ -24,28 +24,32 @@ const AppointmentBookingForm = () => {
 
   useEffect(() => {
     const getData = async (type) => {
-      const request = await fetch(`${API}/${type}`, {
-        credentials: "include",
-        method: "GET",
-      });
+      try {
+        const request = await fetch(`${API}/${type}`, {
+          credentials: "include",
+          method: "GET",
+        });
 
-      const result = await request.json();
+        const result = await request.json();
 
-      if (!result.code) {
-        return;
-      }
+        if (!result.code) {
+          return;
+        }
 
-      if (type === "patients") {
-        setPatients(result.data.patients);
-      } else if (type === "providers") {
-        setProviders(
-          result.data.map((provider) => ({
-            ...provider,
-            name: provider.doctor_name,
-          }))
-        );
-      } else if (type === "operatories") {
-        setOperators(result.data);
+        if (type === "patients") {
+          setPatients(result.data.patients);
+        } else if (type === "providers") {
+          setProviders(
+            result.data.map((provider) => ({
+              ...provider,
+              name: provider.doctor_name,
+            }))
+          );
+        } else if (type === "operatories") {
+          setOperators(result.data);
+        }
+      } catch (error) {
+        console.log(error);
       }
     };
 

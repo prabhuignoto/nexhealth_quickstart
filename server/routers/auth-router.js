@@ -1,9 +1,9 @@
-import { config } from "dotenv";
 import { Router } from "express";
 import fetch from "node-fetch";
+import serverConfig from "../server-config.js";
 import { getHeaders } from "../utils.js";
 
-config();
+serverConfig();
 
 const authRouter = Router();
 
