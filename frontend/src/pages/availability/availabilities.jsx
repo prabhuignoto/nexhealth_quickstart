@@ -60,7 +60,7 @@ const Availabilities = () => {
         ) : (
           <AvailabilitiesList
             availabilities={availabilities}
-            handleDelete={handleDelete}
+            onDelete={handleDelete}
           />
         )}
       </div>
