@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
+import { Loader } from "../../components/loader";
 import { getData } from "../../utils";
 import { AppointmentsList } from "./appointments-list";
 import styles from "./appointments.module.css";
@@ -8,6 +9,7 @@ const API = process.env.REACT_APP_API;
 const Appointments = () => {
   const [dateFilter, setDateFilter] = useState({ startDate: "", endDate: "" });
   const [appointments, setAppointments] = useState([]);
+  const [isLoadingData, setIsLoadingData] = useState(false);
 
   const startDateRef = useRef(null);
   const endDateRef = useRef(null);
@@ -37,6 +39,7 @@ const Appointments = () => {
     if (dateFilter.startDate && dateFilter.endDate) {
       const fetchAppointments = async () => {
         try {
+          setIsLoadingData(true);
           const request = await getData(
             `${API}/appointments?startDate=${dateFilter.startDate}&endDate=${dateFilter.endDate}`
           );
@@ -44,10 +47,12 @@ const Appointments = () => {
 
           if (result.code) {
             setAppointments(result.data);
+            setIsLoadingData(false);
 
             setDateFilter(() => ({ startDate: "", endDate: "" }));
           }
         } catch (error) {
+          setIsLoadingData(false);
           console.log(error);
         }
       };
@@ -100,7 +105,13 @@ const Appointments = () => {
       </div>
 
       <div className={styles.appointments_list_wrapper}>
-        <AppointmentsList appointments={appointments} />
+        {isLoadingData ? (
+          <div className={styles.loader_wrapper}>
+            <Loader />
+          </div>
+        ) : (
+          <AppointmentsList appointments={appointments} />
+        )}
       </div>
     </div>
   );
