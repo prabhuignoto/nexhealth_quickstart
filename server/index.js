@@ -1,16 +1,13 @@
 import bodyParser from "body-parser";
 import cors from "cors";
-import { config } from "dotenv";
 import express from "express";
 import session from "express-session";
-import { dirname } from "path";
-import url, { fileURLToPath } from "url";
+import url from "url";
 import { appointmentRouter } from "./routers/appointment-router.js";
 import { authRouter } from "./routers/auth-router.js";
 import { availabilitiesRouter } from "./routers/availabilities-router.js";
 import { router } from "./routers/common-router.js";
-
-const __dirname = dirname(fileURLToPath(import.meta.url));
+import serverConfig from "./server-config.js";
 
 const app = express();
 
@@ -29,9 +26,7 @@ app.use(function (req, res, next) {
   next();
 });
 
-config({
-  path: `${__dirname}/.env.example`,
-});
+serverConfig();
 
 app.use(
   session({

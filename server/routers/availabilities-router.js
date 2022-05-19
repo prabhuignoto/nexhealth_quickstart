@@ -1,12 +1,12 @@
-import { config } from "dotenv";
 import { Router } from "express";
 import fetch from "node-fetch";
 import { URLSearchParams } from "url";
+import serverConfig from "../server-config.js";
 import { getHeaders } from "../utils.js";
 
 const availabilitiesRouter = Router();
 
-config();
+serverConfig();
 
 const nexHealthParams = {
   subdomain: process.env.SUBDOMAIN,

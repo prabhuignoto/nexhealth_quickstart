@@ -8,6 +8,8 @@ import { FAILURE_MESSAGES } from "./pages/login/failure_messages";
 import { LoginPage } from "./pages/login/login";
 import commonStyles from "./styles/common.module.css";
 
+const SUBDOMAIN = process.env.REACT_APP_SUBDOMAIN;
+
 const ProtectedRoute = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [authFailed, setAuthFailed] = useState(false);
@@ -30,7 +32,7 @@ const ProtectedRoute = ({ children }) => {
 
         if (response && response.authenticated) {
           const locations = await fetch(
-            `${process.env.REACT_APP_API}/locations`,
+            `${process.env.REACT_APP_API}/locations?subdomain=${SUBDOMAIN}`,
             {
               method: "GET",
               credentials: "include",
