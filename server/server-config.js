@@ -6,6 +6,6 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 
 export default function () {
   config({
-    path: `${__dirname}/.env.example`,
+    path: `${__dirname}/.env`,
   });
 }
