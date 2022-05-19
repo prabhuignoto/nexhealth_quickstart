@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Loader } from "../../components/loader";
 import commonStyles from "../../styles/common.module.css";
 import styles from "./login.module.css";
-import { FAILURE_MESSAGES } from "./messages";
+import { FAILURE_MESSAGES } from "../../messages";
 
 const API = process.env.REACT_APP_API;
 

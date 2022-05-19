@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
+import { useSetRecoilState } from "recoil";
 import { Loader } from "../../components/loader";
+import { apiState } from "../../state";
 import { getData } from "../../utils";
+import { FAILURE_MESSAGES } from "../../messages";
 import { AvailabilitiesList } from "./availabilities-list";
 import styles from "./availabilities.module.css";
 
@@ -11,6 +14,7 @@ const Availabilities = () => {
   const [isLoadingData, setIsLoadingData] = useState(true);
 
   const [refetch, setRefetch] = useState(0);
+  const setApiState = useSetRecoilState(apiState);
 
   useEffect(() => {
     const fetchAvailabilities = async () => {
@@ -27,6 +31,10 @@ const Availabilities = () => {
       } catch (error) {
         console.log(error);
         setIsLoadingData(false);
+        setApiState({
+          failed: true,
+          message: FAILURE_MESSAGES.SERVER_DOWN,
+        });
       }
     };
 

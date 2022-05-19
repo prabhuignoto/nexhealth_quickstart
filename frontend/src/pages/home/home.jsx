@@ -1,6 +1,9 @@
 import classNames from "classnames";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { useRecoilState } from "recoil";
+import { apiState } from "../../state";
+import commonStyles from "../../styles/common.module.css";
 import { Appointments } from "../appointments/appointments";
 import { Availabilities } from "../availability/availabilities";
 import { CreateAvailability } from "../availability/create-availability";
@@ -17,7 +20,16 @@ const tabs = [
 const Home = () => {
   const [activeTab, setActiveTab] = useState("appointments");
 
+  const [apiStateVal, setApiStateVal] = useRecoilState(apiState);
+
   const handleTabSelection = (id) => setActiveTab(id);
+
+  useEffect(() => {
+    setApiStateVal({
+      failed: false,
+      message: "",
+    });
+  }, [activeTab]);
 
   return (
     <div className={styles.wrapper}>
@@ -49,6 +61,13 @@ const Home = () => {
           {activeTab === "availabilities" && <Availabilities />}
         </div>
       </section>
+      <div>
+        {apiStateVal.failed && (
+          <div className={commonStyles.error_message}>
+            <p>{apiStateVal.message}</p>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

@@ -6,7 +6,7 @@ import { Loader } from "./components/loader";
 import { Home } from "./pages/home/home";
 import { Logout } from "./pages/home/logout";
 import { LoginPage } from "./pages/login/login";
-import { FAILURE_MESSAGES } from "./pages/login/messages.js";
+import { FAILURE_MESSAGES } from "./messages.js";
 import { locationsState } from "./state";
 import commonStyles from "./styles/common.module.css";
 import { getData } from "./utils";

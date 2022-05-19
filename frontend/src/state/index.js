@@ -7,8 +7,10 @@ export const locationState = atom({
 
 export const apiState = atom({
   key: "apiState",
-  default: "",
-  message: "",
+  default: {
+    failed: false,
+    message: "",
+  },
 });
 
 export const subDomainState = atom({

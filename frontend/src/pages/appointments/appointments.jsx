@@ -1,6 +1,9 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
+import { useSetRecoilState } from "recoil";
 import { Loader } from "../../components/loader";
+import { apiState } from "../../state";
 import { getData } from "../../utils";
+import { FAILURE_MESSAGES } from "../../messages";
 import { AppointmentsList } from "./appointments-list";
 import styles from "./appointments.module.css";
 
@@ -13,6 +16,7 @@ const Appointments = () => {
 
   const startDateRef = useRef(null);
   const endDateRef = useRef(null);
+  const setApiState = useSetRecoilState(apiState);
 
   const onStartDateRef = useCallback((node) => {
     if (node) {
@@ -53,7 +57,10 @@ const Appointments = () => {
           }
         } catch (error) {
           setIsLoadingData(false);
-          console.log(error);
+          setApiState({
+            failed: true,
+            message: FAILURE_MESSAGES.SERVER_DOWN,
+          });
         }
       };
 
