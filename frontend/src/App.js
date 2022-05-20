@@ -1,22 +1,23 @@
 import React, { useEffect, useState } from "react";
 import { Link, Route, Routes, useNavigate } from "react-router-dom";
-import { useSetRecoilState } from "recoil";
 import "./App.css";
 import { Loader } from "./components/loader";
+import { FAILURE_MESSAGES } from "./messages.js";
 import { Home } from "./pages/home/home";
 import { Logout } from "./pages/home/logout";
 import { LoginPage } from "./pages/login/login";
-import { FAILURE_MESSAGES } from "./messages.js";
-import { locationsState } from "./state";
 import commonStyles from "./styles/common.module.css";
 import { getData } from "./utils";
+
+export const HomeContext = React.createContext({
+  locations: [],
+});
 
 const ProtectedRoute = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [authFailed, setAuthFailed] = useState(false);
   const [failedMessage, setFailedMessage] = useState("");
-
-  const setLocations = useSetRecoilState(locationsState);
+  const [locations, setLocations] = useState([]);
 
   const navigation = useNavigate();
 
@@ -53,12 +54,14 @@ const ProtectedRoute = ({ children }) => {
     };
 
     check();
-  });
+  }, []);
 
   return (
     <div>
       {isAuthenticated ? (
-        children
+        <HomeContext.Provider value={{ locations }}>
+          {children}
+        </HomeContext.Provider>
       ) : authFailed ? (
         <div>
           <div

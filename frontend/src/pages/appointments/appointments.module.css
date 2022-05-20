@@ -4,12 +4,14 @@
   align-items: center;
   justify-content: flex-start;
   width: 95%;
-  height: 100%;
+  min-height: 650px;
+  /* height: 100%; */
   background: #fff;
   border-radius: 4px;
   padding: 0;
   margin: 0;
   box-shadow: 0 0 20px 2px rgba(0, 0, 0, 0.1);
+  /* border: 1px solid red; */
 }
 
 .filter_wrapper {

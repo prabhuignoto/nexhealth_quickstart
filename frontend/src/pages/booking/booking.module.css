@@ -8,3 +8,17 @@
   padding: 1rem;
   box-shadow: 0 0 20px 2px rgba(0, 0, 0, 0.1);
 }
+
+.patient_wrapper {
+  display: flex;
+  align-items: flex-start;
+}
+
+.separator {
+  margin: 0 1rem;
+  align-self: center;
+}
+
+.add_patient_label {
+  display: flex;
+}
