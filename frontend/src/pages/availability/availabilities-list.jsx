@@ -6,12 +6,14 @@ const API = process.env.REACT_APP_API;
 const ListItem = ({
   id,
   provider_id,
+  operatory_id,
   begin_time,
   end_time,
   days,
   onDeleteClick,
 }) => {
   const [name, setName] = useState("");
+  const [location, setLocation] = useState("");
 
   useEffect(() => {
     const getProviderDetails = async () => {
@@ -30,13 +32,31 @@ const ListItem = ({
       }
     };
 
+    const getOperatoryDetails = async () => {
+      const result = await fetch(`${API}/operatories/${operatory_id}`, {
+        method: "GET",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      const operatory = await result.json();
+
+      if (operatory.code) {
+        setLocation(operatory.data.name);
+      }
+    };
+
     getProviderDetails();
+    getOperatoryDetails();
   }, []);
 
   return (
     <li key={id} className={styles.item}>
       <div className={styles.item_field}>{name}</div>
       <div className={styles.item_field}>{days.join(",")}</div>
+      <div className={styles.item_field}>{location}</div>
       <div className={styles.item_field}>{begin_time}</div>
       <div className={styles.item_field}>{end_time}</div>
       <div>
@@ -60,6 +80,7 @@ const AvailabilitiesList = ({ availabilities = [], onDelete }) => {
           <li className={styles.list_headers}>
             <div className={styles.list_header}>Name</div>
             <div className={styles.list_header}>Days</div>
+            <div className={styles.list_header}>Location</div>
             <div className={styles.list_header}>Begin Time</div>
             <div className={styles.list_header}>End Time</div>
             <div></div>

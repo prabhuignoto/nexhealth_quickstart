@@ -1,10 +1,10 @@
 import classNames from "classnames";
-import React, { useEffect, useMemo, useRef, useState } from "react";
-import { useRecoilValue } from "recoil";
+import React, { useContext, useEffect, useMemo, useRef, useState } from "react";
+import { HomeContext } from "../../App";
 import { Select } from "../../components/select";
-import { locationsState } from "../../state";
 import commonStyles from "../../styles/common.module.css";
 import { getData } from "../../utils";
+import { AddPatient } from "./add-patient-field";
 import styles from "./booking.module.css";
 
 const API = process.env.REACT_APP_API;
@@ -24,7 +24,14 @@ const AppointmentBookingForm = () => {
   const [selectedSlot, setSelectedSlot] = useState(null);
   const [notes, setNotes] = useState("");
 
-  const locations = useRecoilValue(locationsState);
+  const [patientType, setPatientType] = useState("new");
+  const [patientInfo, setPatientInfo] = useState({
+    firstName: "",
+    lastName: "",
+    bio: "",
+  });
+
+  const locationsData = useContext(HomeContext);
 
   useEffect(() => {
     const fetchData = async (type) => {
@@ -63,13 +70,16 @@ const AppointmentBookingForm = () => {
   useEffect(() => {
     const fetchSlots = async () => {
       try {
+        const locations = locationsData.locations;
+
         if (!locations.length) {
           return;
         }
 
         const locationId = locations[0].locations[0].id;
+
         const request = await getData(
-          `${API}/appointments/slots?providerId=${+selectedProvider}&locationId=${locationId}&startDate=${selectedDate}`
+          `${API}/appointments/slots?providerId=${+selectedProvider}&locationId=${locationId}&startDate=${selectedDate}&slot_length=60`
         );
 
         const result = await request.json();
@@ -90,12 +100,17 @@ const AppointmentBookingForm = () => {
     if (selectedProvider && selectedDate) {
       fetchSlots();
     }
-  }, [selectedProvider, selectedDate, locations]);
+  }, [selectedProvider, selectedDate, locationsData]);
+
+  const patientDataEntered = useMemo(
+    () => selectedPatient || (patientInfo.firstName && patientInfo.lastName),
+    [selectedPatient, patientInfo]
+  );
 
   /** Checks whether the form can be submitted or not */
   const canSubmit = useMemo(
     () =>
-      selectedPatient &&
+      patientDataEntered &&
       selectedProvider &&
       selectedOperator &&
       selectedDate &&
@@ -106,21 +121,48 @@ const AppointmentBookingForm = () => {
       selectedOperator,
       selectedDate,
       selectedSlot,
+      patientDataEntered,
     ]
   );
 
   /** handlers */
   const handlePatientSelection = (ev) => setSelectedPatient(ev.target.value);
-
   const handleProviderSelection = (ev) => setSelectedProvider(ev.target.value);
-
   const handleOperatorSelection = (ev) => setSelectedOperator(ev.target.value);
 
   const handleDateSelection = (ev) => setSelectedDate(ev.target.value);
 
   const handleSlotSelection = (ev) => setSelectedSlot(ev.target.value);
-
   const handleNotesChange = (ev) => setNotes(ev.target.value);
+  const handlePatientTypeChange = (ev) => {
+    setSelectedPatient("");
+    setPatientInfo({
+      firstName: "",
+      lastName: "",
+      bio: {
+        date_of_birth: "",
+        gender: "",
+      },
+    });
+    setPatientType(ev.target.value);
+  };
+
+  const handlePatientFirstNameChange = (ev) =>
+    setPatientInfo((prev) => ({ ...prev, firstName: ev.target.value }));
+  const handlePatientLastNameChange = (ev) =>
+    setPatientInfo((prev) => ({ ...prev, lastName: ev.target.value }));
+  const handlePatientDOBChange = (ev) =>
+    setPatientInfo((prev) => ({
+      ...prev,
+      bio: { ...prev.bio, date_of_birth: ev.target.value },
+    }));
+
+  const handlePatientGenderChange = (ev) => {
+    setPatientInfo((prev) => ({
+      ...prev,
+      bio: { ...prev.bio, gender: ev.target.value },
+    }));
+  };
 
   /** Resets the form */
   const resetForm = (ev) => {
@@ -136,30 +178,53 @@ const AppointmentBookingForm = () => {
   const submitForm = (ev) => {
     ev.preventDefault();
     const bookAppointment = async () => {
-      const request = await fetch(`${API}/appointments/book-appointment`, {
-        credentials: "include",
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          appt: {
+      try {
+        let patientData = null;
+
+        if (patientType === "existing") {
+          patientData = {
             patient_id: selectedPatient,
-            provider_id: selectedProvider,
-            operatory_id: selectedOperator,
-            start_time: selectedSlot,
-            confirmed: true,
-            note: notes,
+          };
+        } else {
+          patientData = {
+            is_guardian: true,
+            patient_id: patients[0].id,
+            patient: {
+              first_name: patientInfo.firstName,
+              last_name: patientInfo.lastName,
+              bio: patientInfo.bio,
+            },
+          };
+        }
+
+        const request = await fetch(`${API}/appointments/book-appointment`, {
+          credentials: "include",
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
           },
-        }),
-      });
+          body: JSON.stringify({
+            appt: {
+              ...patientData,
+              provider_id: selectedProvider,
+              operatory_id: selectedOperator,
+              start_time: selectedSlot,
+              confirmed: true,
+              patient_confirmed: true,
+              note: notes,
+            },
+          }),
+        });
 
-      const result = await request.json();
+        const result = await request.json();
 
-      if (result.code) {
-        alert("Appointment booked successfully!");
-      } else {
-        alert(`Appointment booking failed!\n${result.error}`);
+        if (result.code) {
+          alert("Appointment booked successfully!");
+        } else {
+          alert(`Appointment booking failed!\n${result.error}`);
+        }
+      } catch (error) {
+        console.log(error);
       }
     };
 
@@ -172,15 +237,16 @@ const AppointmentBookingForm = () => {
     <div className={styles.wrapper}>
       <form className={commonStyles.form} ref={formRef}>
         {/* patient */}
-        <div className={commonStyles.form_field}>
-          <Select
-            label="Patient"
-            options={patients}
-            onChange={handlePatientSelection}
-            id="patient"
-            placeholder="Select a patient"
-          />
-        </div>
+        <AddPatient
+          patientType={patientType}
+          onTypeChange={handlePatientTypeChange}
+          onFirstNameChange={handlePatientFirstNameChange}
+          onLastNameChange={handlePatientLastNameChange}
+          onDOBChange={handlePatientDOBChange}
+          onGenderChange={handlePatientGenderChange}
+          onPatientSelection={handlePatientSelection}
+          patients={patients}
+        />
 
         {/* provider */}
         <div className={commonStyles.form_field}>
