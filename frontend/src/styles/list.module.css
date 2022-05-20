@@ -17,7 +17,8 @@
   display: flex;
 }
 
-.list_headers {
+.list_headers,
+.appointment_list_headers {
   width: 100%;
   background: #6bb6ff;
 }
@@ -33,12 +34,20 @@
 .item,
 .list_headers {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(6, 1fr);
   grid-gap: 0.5rem;
 }
 
-.item {
-  padding: 0.5rem 0;
+.appointment_list_headers,
+.appointment_list_item {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-gap: 0.5rem;
+}
+
+.item,
+.appointment_list_item {
+  padding: 0.75rem 0;
   width: 100%;
 }
 
@@ -50,6 +59,7 @@
   word-break: break-all;
 }
 
-.item:nth-child(odd) {
+.item:nth-child(odd),
+.appointment_list_item:nth-child(odd) {
   background: #f5f5f5;
 }

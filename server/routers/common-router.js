@@ -110,4 +110,25 @@ router.get("/operatories", async (req, res) => {
   }
 });
 
+router.get("/operatories/:id", async (req, res) => {
+  try {
+    const params = new URLSearchParams({
+      ...nexHealthParams,
+      page: 1,
+      per_page: 50,
+    });
+
+    const response = await fetch(
+      `${process.env.API_URL}/operatories/${req.params.id}?${params}`,
+      {
+        headers: getHeaders(false, req.session.token),
+      }
+    );
+    const operator = await response.json();
+    res.json(operator);
+  } catch (error) {
+    console.log(error);
+  }
+});
+
 export { router };

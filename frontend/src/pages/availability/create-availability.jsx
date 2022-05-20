@@ -118,34 +118,38 @@ const CreateAvailability = () => {
     ev.preventDefault();
 
     const createAvailability = async () => {
-      const request = await fetch(
-        `${process.env.REACT_APP_API}/availabilities/create`,
-        {
-          credentials: "include",
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            availability: {
-              active: true,
-              begin_time: selectedStartTime,
-              days: selectedDays,
-              end_time: selectedEndTime,
-              operatory_id: selectedOperatory,
-              provider_id: selectedProvider,
+      try {
+        const request = await fetch(
+          `${process.env.REACT_APP_API}/availabilities/create`,
+          {
+            credentials: "include",
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
             },
-          }),
+            body: JSON.stringify({
+              availability: {
+                active: true,
+                begin_time: selectedStartTime,
+                days: selectedDays,
+                end_time: selectedEndTime,
+                operatory_id: selectedOperatory,
+                provider_id: selectedProvider,
+              },
+            }),
+          }
+        );
+
+        const result = await request.json();
+
+        if (result.code) {
+          resetForm();
+          alert("Availability created successfully");
+        } else {
+          alert(`Availability creation failed!\n${result.error}`);
         }
-      );
-
-      const result = await request.json();
-
-      if (result.code) {
-        resetForm();
-        alert("Availability created successfully");
-      } else {
-        alert(`Availability creation failed!\n${result.error}`);
+      } catch (error) {
+        console.log(error);
       }
     };
 

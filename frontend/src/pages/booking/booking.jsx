@@ -88,7 +88,6 @@ const AppointmentBookingForm = () => {
           setSlots(
             result.data[0].slots.map((slot) => ({
               ...slot,
-              // name: formatDate(slot.time),
               name: slot.time,
             }))
           );
@@ -179,49 +178,53 @@ const AppointmentBookingForm = () => {
   const submitForm = (ev) => {
     ev.preventDefault();
     const bookAppointment = async () => {
-      let patientData = null;
+      try {
+        let patientData = null;
 
-      if (patientType === "existing") {
-        patientData = {
-          patient_id: selectedPatient,
-        };
-      } else {
-        patientData = {
-          is_guardian: true,
-          patient_id: patients[0].id,
-          patient: {
-            first_name: patientInfo.firstName,
-            last_name: patientInfo.lastName,
-            bio: patientInfo.bio,
+        if (patientType === "existing") {
+          patientData = {
+            patient_id: selectedPatient,
+          };
+        } else {
+          patientData = {
+            is_guardian: true,
+            patient_id: patients[0].id,
+            patient: {
+              first_name: patientInfo.firstName,
+              last_name: patientInfo.lastName,
+              bio: patientInfo.bio,
+            },
+          };
+        }
+
+        const request = await fetch(`${API}/appointments/book-appointment`, {
+          credentials: "include",
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
           },
-        };
-      }
+          body: JSON.stringify({
+            appt: {
+              ...patientData,
+              provider_id: selectedProvider,
+              operatory_id: selectedOperator,
+              start_time: selectedSlot,
+              confirmed: true,
+              patient_confirmed: true,
+              note: notes,
+            },
+          }),
+        });
 
-      const request = await fetch(`${API}/appointments/book-appointment`, {
-        credentials: "include",
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          appt: {
-            ...patientData,
-            provider_id: selectedProvider,
-            operatory_id: selectedOperator,
-            start_time: selectedSlot,
-            confirmed: true,
-            patient_confirmed: true,
-            note: notes,
-          },
-        }),
-      });
+        const result = await request.json();
 
-      const result = await request.json();
-
-      if (result.code) {
-        alert("Appointment booked successfully!");
-      } else {
-        alert(`Appointment booking failed!\n${result.error}`);
+        if (result.code) {
+          alert("Appointment booked successfully!");
+        } else {
+          alert(`Appointment booking failed!\n${result.error}`);
+        }
+      } catch (error) {
+        console.log(error);
       }
     };
 
