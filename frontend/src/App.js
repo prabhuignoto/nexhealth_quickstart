@@ -57,7 +57,7 @@ const ProtectedRoute = ({ children }) => {
   }, []);
 
   return (
-    <div>
+    <>
       {isAuthenticated ? (
         <HomeContext.Provider value={{ locations }}>
           {children}
@@ -79,7 +79,7 @@ const ProtectedRoute = ({ children }) => {
       ) : (
         <Loader />
       )}
-    </div>
+    </>
   );
 };
 

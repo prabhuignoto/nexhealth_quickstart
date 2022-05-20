@@ -45,7 +45,7 @@ appointmentRouter.get("/slots", async (req, res) => {
       start_date: req.query.startDate,
       "lids[]": req.query.locationId,
       "pids[]": req.query.providerId,
-      days: 1,
+      days: 5,
     });
 
     const response = await fetch(

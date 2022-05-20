@@ -77,8 +77,9 @@ const AppointmentBookingForm = () => {
         }
 
         const locationId = locations[0].locations[0].id;
+
         const request = await getData(
-          `${API}/appointments/slots?providerId=${+selectedProvider}&locationId=${locationId}&startDate=${selectedDate}`
+          `${API}/appointments/slots?providerId=${+selectedProvider}&locationId=${locationId}&startDate=${selectedDate}&slot_length=60`
         );
 
         const result = await request.json();
@@ -87,6 +88,7 @@ const AppointmentBookingForm = () => {
           setSlots(
             result.data[0].slots.map((slot) => ({
               ...slot,
+              // name: formatDate(slot.time),
               name: slot.time,
             }))
           );
@@ -185,7 +187,6 @@ const AppointmentBookingForm = () => {
         };
       } else {
         patientData = {
-          is_new_clients_patient: true,
           is_guardian: true,
           patient_id: patients[0].id,
           patient: {
@@ -209,6 +210,7 @@ const AppointmentBookingForm = () => {
             operatory_id: selectedOperator,
             start_time: selectedSlot,
             confirmed: true,
+            patient_confirmed: true,
             note: notes,
           },
         }),

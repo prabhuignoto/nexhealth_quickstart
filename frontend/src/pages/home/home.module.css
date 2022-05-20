@@ -40,25 +40,25 @@
 
 @media (min-width: 1281px) {
   .wrapper {
-    width: 1080px;
+    width: 1200px;
   }
 }
 
 @media (min-width: 1441px) {
   .wrapper {
-    width: 1280px;
+    width: 1300px;
   }
 }
 
 @media (min-width: 1921px) {
   .wrapper {
-    width: 1280px;
+    width: 1600px;
   }
 }
 
 @media (min-width: 2561px) {
   .wrapper {
-    width: 1650px;
+    width: 1850px;
   }
 }
 
@@ -67,13 +67,12 @@
   align-items: center;
   justify-content: flex-start;
   width: 100%;
-  background: #c8c8c8;
+  background: #fff;
 }
 
 .body {
   display: flex;
   flex-direction: column;
-  /* background: #ebebeb; */
   width: 100%;
   border-radius: 4px;
   padding: 2rem 0.5rem;
@@ -116,6 +115,6 @@
 }
 
 .title {
-  color: #4c4c4c;
+  color: #1e90ff;
   margin-left: 1rem;
 }

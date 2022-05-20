@@ -84,7 +84,9 @@ const AddPatient = ({
                 defaultValue="default"
                 className={commonStyles.select}
               >
-                <option value="default">Select a Gender</option>
+                <option value="default" disabled>
+                  Select a Gender
+                </option>
                 <option value="Male">Male</option>
                 <option value="Female">Female</option>
                 <option value="other">Other</option>
