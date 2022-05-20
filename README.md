@@ -65,17 +65,6 @@ LOCATION_ID=xxxx
 API_KEY=xxxx
 ```
 
-3. Open the `.env` file in `frontend/`
-
-This is how the file should look:
-
-```sh
-REACT_APP_API=http://localhost:4000/api
-REACT_APP_LOCATION_ID=<location_id>
-```
-
-Change the <location_id> to the one assigned to you.
-
 > Note: `.env` files are convenient for local development. Do not run production applications using .env files.
 
 Please contact the NexHealth team if you have any questions about these values.
