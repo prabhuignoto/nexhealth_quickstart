@@ -27,7 +27,7 @@ const AppointmentsList = ({ appointments = [] }) => {
           )}
         </ul>
       ) : (
-        <span role="alert">No Appointments available</span>
+        <span role="alert">No Appointments found</span>
       )}
     </>
   );
