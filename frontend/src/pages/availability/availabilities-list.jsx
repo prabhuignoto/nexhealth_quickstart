@@ -1,76 +1,43 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import styles from "../../styles/list.module.css";
+import { getData } from "../../utils";
+import { ListItem } from "./availability-list-item";
 
 const API = process.env.REACT_APP_API;
 
-const ListItem = ({
-  id,
-  provider_id,
-  operatory_id,
-  begin_time,
-  end_time,
-  days,
-  onDeleteClick,
-}) => {
-  const [name, setName] = useState("");
-  const [location, setLocation] = useState("");
+const AvailabilitiesList = ({ availabilities = [], onDelete }) => {
+  const queriedOperatories = useRef({});
 
-  useEffect(() => {
-    const getProviderDetails = async () => {
-      const result = await fetch(`${API}/providers/${provider_id}`, {
-        method: "GET",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+  const [operatoriesDetails, setOperatoriesDetails] = useState({});
 
-      const provider = await result.json();
+  const onDeleteClick = (ids) => {
+    window.confirm("Are you sure you want to delete this availability?") &&
+      onDelete(ids);
+  };
 
-      if (provider.code) {
-        setName(provider.data.name);
-      }
-    };
+  const getOperatoryDetails = useCallback(async (id) => {
+    const result = await getData(`${API}/operatories/${id}`);
+    const operatory = await result.json();
 
-    const getOperatoryDetails = async () => {
-      const result = await fetch(`${API}/operatories/${operatory_id}`, {
-        method: "GET",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
-      const operatory = await result.json();
-
-      if (operatory.code) {
-        setLocation(operatory.data.name);
-      }
-    };
-
-    getProviderDetails();
-    getOperatoryDetails();
+    if (operatory.code) {
+      setOperatoriesDetails((prev) => ({ ...prev, [id]: operatory.data.name }));
+    }
   }, []);
 
-  return (
-    <li key={id} className={styles.item}>
-      <div className={styles.item_field}>{name}</div>
-      <div className={styles.item_field}>{days.join(",")}</div>
-      <div className={styles.item_field}>{location}</div>
-      <div className={styles.item_field}>{begin_time}</div>
-      <div className={styles.item_field}>{end_time}</div>
-      <div>
-        <button onClick={() => onDeleteClick(id)}>Delete</button>
-      </div>
-    </li>
-  );
-};
+  useEffect(() => {
+    if (availabilities.length) {
+      availabilities.forEach((availability) => {
+        availability.details.forEach((detail) => {
+          const { operatory_id } = detail;
 
-const AvailabilitiesList = ({ availabilities = [], onDelete }) => {
-  const onDeleteClick = (id) => {
-    window.confirm("Are you sure you want to delete this availability?") &&
-      onDelete(id);
-  };
+          if (!(operatory_id in queriedOperatories.current)) {
+            queriedOperatories.current[operatory_id] = null;
+            getOperatoryDetails(operatory_id);
+          }
+        });
+      });
+    }
+  }, [availabilities.length]);
 
   return (
     <>
@@ -79,10 +46,7 @@ const AvailabilitiesList = ({ availabilities = [], onDelete }) => {
           {/* headers */}
           <li className={styles.list_headers}>
             <div className={styles.list_header}>Name</div>
-            <div className={styles.list_header}>Days</div>
-            <div className={styles.list_header}>Location</div>
-            <div className={styles.list_header}>Begin Time</div>
-            <div className={styles.list_header}>End Time</div>
+            <div className={styles.list_header}>Availability</div>
             <div></div>
           </li>
 
@@ -92,6 +56,8 @@ const AvailabilitiesList = ({ availabilities = [], onDelete }) => {
               {...availability}
               onDeleteClick={onDeleteClick}
               key={availability.id}
+              operatoryDetails={operatoriesDetails}
+              availabilityDetails={availability.details}
             />
           ))}
         </ul>

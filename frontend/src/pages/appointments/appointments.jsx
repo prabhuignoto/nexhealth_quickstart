@@ -1,7 +1,14 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { Loader } from "../../components/loader";
 import { FAILURE_MESSAGES } from "../../messages";
 import { getData } from "../../utils";
+import { HomeContext } from "./../../helpers/protected-route";
 import { AppointmentsList } from "./appointments-list";
 import styles from "./appointments.module.css";
 
@@ -11,6 +18,7 @@ const Appointments = () => {
   const [dateFilter, setDateFilter] = useState({ startDate: "", endDate: "" });
   const [appointments, setAppointments] = useState([]);
   const [isLoadingData, setIsLoadingData] = useState(false);
+  const { onError } = useContext(HomeContext);
 
   const startDateRef = useRef(null);
   const endDateRef = useRef(null);
@@ -54,7 +62,7 @@ const Appointments = () => {
           }
         } catch (error) {
           setIsLoadingData(false);
-          window.alert(FAILURE_MESSAGES.SERVER_DOWN);
+          onError(FAILURE_MESSAGES.SERVER_DOWN);
         }
       };
 

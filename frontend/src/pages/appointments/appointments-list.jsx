@@ -1,5 +1,6 @@
 import React from "react";
 import styles from "../../styles/list.module.css";
+import { formatDate } from "./../../utils";
 
 const AppointmentsList = ({ appointments = [] }) => {
   return (
@@ -21,7 +22,9 @@ const AppointmentsList = ({ appointments = [] }) => {
                 <div className={styles.item_field}>{patient_name}</div>
                 <div className={styles.item_field}>{note}</div>
                 <div className={styles.item_field}>{provider_name}</div>
-                <div className={styles.item_field}>{start_time}</div>
+                <div className={styles.item_field}>
+                  {formatDate(start_time)}
+                </div>
               </li>
             )
           )}

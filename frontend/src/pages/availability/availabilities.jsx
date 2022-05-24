@@ -1,55 +1,95 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Loader } from "../../components/loader";
-import { FAILURE_MESSAGES } from "../../messages";
+import { HomeContext } from "../../helpers/protected-route";
 import { getData } from "../../utils";
 import { AvailabilitiesList } from "./availabilities-list";
 import styles from "./availabilities.module.css";
 
 const API = process.env.REACT_APP_API;
 
+function parseData(data) {
+  const parsedResult = {};
+
+  data.forEach((item) => {
+    const providerId = item.provider_id;
+
+    if (parsedResult[providerId]) {
+      const curObject = parsedResult[providerId];
+      parsedResult[providerId] = {
+        ...curObject,
+        details: curObject.details.concat({
+          ...item,
+          timings: {
+            beginTime: item.begin_time,
+            endTime: item.end_time,
+          },
+        }),
+      };
+    } else {
+      parsedResult[providerId] = {
+        ...item,
+        details: [
+          {
+            ...item,
+            timings: {
+              beginTime: item.begin_time,
+              endTime: item.end_time,
+            },
+          },
+        ],
+      };
+    }
+  });
+
+  return Object.keys(parsedResult).map((key) => parsedResult[key]);
+}
+
 const Availabilities = () => {
   const [availabilities, setAvailabilities] = useState([]);
   const [isLoadingData, setIsLoadingData] = useState(true);
 
   const [refetch, setRefetch] = useState(0);
+  const { onError } = useContext(HomeContext);
 
   useEffect(() => {
     const fetchAvailabilities = async () => {
       try {
         setIsLoadingData(true);
         const request = await getData(`${API}/availabilities`);
-
         const result = await request.json();
 
         if (result.code) {
           setIsLoadingData(false);
-          setAvailabilities(result.data);
+          setAvailabilities(parseData(result.data));
         }
       } catch (error) {
-        console.log(error);
         setIsLoadingData(false);
-        window.alert(FAILURE_MESSAGES.SERVER_DOWN);
+        onError(error);
       }
     };
 
     fetchAvailabilities();
   }, [refetch]);
 
-  const handleDelete = (id) => {
-    const deleteAvailability = async () => {
-      const request = await fetch(`${API}/availabilities/delete/${id}`, {
-        credentials: "include",
-        method: "DELETE",
-      });
+  const handleDelete = (ids) => {
+    try {
+      const deleteAvailability = async (id) => {
+        const request = await fetch(`${API}/availabilities/delete/${id}`, {
+          credentials: "include",
+          method: "DELETE",
+        });
 
-      const result = await request.json();
+        const result = await request.json();
 
-      if (result.code) {
-        setRefetch(new Date().getMilliseconds());
-      }
-    };
+        if (result.code) {
+          setRefetch(new Date().getMilliseconds());
+        }
+      };
 
-    deleteAvailability();
+      ids.forEach((id) => deleteAvailability(id));
+    } catch (error) {
+      onError(error);
+    }
   };
 
   return (

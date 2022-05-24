@@ -34,7 +34,7 @@
 .item,
 .list_headers {
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
+  grid-template-columns: 2fr 5fr 1fr;
   grid-gap: 0.5rem;
 }
 
