@@ -1,16 +1,14 @@
 import dayjs from "dayjs";
+import advancedFormat from "dayjs/plugin/advancedFormat";
 import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
 
-const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
-
 dayjs.extend(utc);
 dayjs.extend(timezone);
-
-dayjs.tz.setDefault(tz);
+dayjs.extend(advancedFormat);
 
 export function formatDate(date) {
-  return dayjs(date).format("MMM DD, YYYY hh:mm A");
+  return dayjs.utc(date).format("MMM DD, YYYY hh:mm A");
 }
 
 export function getData(url) {

@@ -4,6 +4,7 @@ import { HomeContext } from "../../App";
 import { Select } from "../../components/select";
 import commonStyles from "../../styles/common.module.css";
 import { getData } from "../../utils";
+import { formatDate } from "./../../utils";
 import { AddPatient } from "./add-patient-field";
 import styles from "./booking.module.css";
 
@@ -88,7 +89,7 @@ const AppointmentBookingForm = () => {
           setSlots(
             result.data[0].slots.map((slot) => ({
               ...slot,
-              name: slot.time,
+              name: formatDate(slot.time),
             }))
           );
         }
