@@ -5,9 +5,8 @@ import React, {
   useRef,
   useState,
 } from "react";
+import { apiGET } from "../../api-helpers";
 import { Loader } from "../../components/loader";
-import { FAILURE_MESSAGES } from "../../messages";
-import { getData } from "../../utils";
 import { HomeContext } from "./../../helpers/protected-route";
 import { AppointmentsList } from "./appointments-list";
 import styles from "./appointments.module.css";
@@ -49,20 +48,18 @@ const Appointments = () => {
       const fetchAppointments = async () => {
         try {
           setIsLoadingData(true);
-          const request = await getData(
-            `${API}/appointments?startDate=${dateFilter.startDate}&endDate=${dateFilter.endDate}`
+          apiGET(
+            `${API}/appointments?startDate=${dateFilter.startDate}&endDate=${dateFilter.endDate}`,
+            (data) => {
+              setAppointments(data);
+              setIsLoadingData(false);
+              setDateFilter(() => ({ startDate: "", endDate: "" }));
+            },
+            onError
           );
-          const result = await request.json();
-
-          if (result.code) {
-            setAppointments(result.data);
-            setIsLoadingData(false);
-
-            setDateFilter(() => ({ startDate: "", endDate: "" }));
-          }
         } catch (error) {
           setIsLoadingData(false);
-          onError(FAILURE_MESSAGES.SERVER_DOWN);
+          onError(error);
         }
       };
 

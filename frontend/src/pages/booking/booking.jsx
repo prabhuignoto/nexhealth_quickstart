@@ -1,9 +1,9 @@
 import classNames from "classnames";
 import React, { useContext, useEffect, useMemo, useRef, useState } from "react";
+import { apiGET } from "../../api-helpers";
 import { Select } from "../../components/select";
 import { HomeContext } from "../../helpers/protected-route";
 import commonStyles from "../../styles/common.module.css";
-import { getData } from "../../utils";
 import { formatDate } from "./../../utils";
 import { AddPatient } from "./add-patient-field";
 import styles from "./booking.module.css";
@@ -38,26 +38,24 @@ const AppointmentBookingForm = () => {
   useEffect(() => {
     const fetchData = async (type) => {
       try {
-        const request = await getData(`${API}/${type}`);
-
-        const result = await request.json();
-
-        if (!result.code) {
-          return;
-        }
-
-        if (type === "patients") {
-          setPatients(result.data.patients);
-        } else if (type === "providers") {
-          setProviders(
-            result.data.map((provider) => ({
-              ...provider,
-              name: provider.doctor_name,
-            }))
-          );
-        } else if (type === "operatories") {
-          setOperators(result.data);
-        }
+        apiGET(
+          `${API}/${type}`,
+          (data) => {
+            if (type === "patients") {
+              setPatients(data.patients);
+            } else if (type === "providers") {
+              setProviders(
+                data.map((provider) => ({
+                  ...provider,
+                  name: provider.doctor_name,
+                }))
+              );
+            } else if (type === "operatories") {
+              setOperators(data);
+            }
+          },
+          onError
+        );
       } catch (error) {
         onError(error);
       }
@@ -80,20 +78,18 @@ const AppointmentBookingForm = () => {
 
         const locationId = locations[0].locations[0].id;
 
-        const request = await getData(
-          `${API}/appointments/slots?providerId=${+selectedProvider}&locationId=${locationId}&startDate=${selectedDate}`
+        apiGET(
+          `${API}/appointments/slots?providerId=${+selectedProvider}&locationId=${locationId}&startDate=${selectedDate}`,
+          (data) => {
+            setSlots(
+              data[0].slots.map((slot) => ({
+                ...slot,
+                name: formatDate(slot.time),
+              }))
+            );
+          },
+          onError
         );
-
-        const result = await request.json();
-
-        if (result.code && result.data.length) {
-          setSlots(
-            result.data[0].slots.map((slot) => ({
-              ...slot,
-              name: formatDate(slot.time),
-            }))
-          );
-        }
       } catch (error) {
         onError(error);
       }
