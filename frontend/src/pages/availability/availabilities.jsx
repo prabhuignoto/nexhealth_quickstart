@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Loader } from "../../components/loader";
-import { FAILURE_MESSAGES } from "../../messages";
+import { HomeContext } from "../../helpers/protected-route";
 import { getData } from "../../utils";
 import { AvailabilitiesList } from "./availabilities-list";
 import styles from "./availabilities.module.css";
@@ -49,6 +49,7 @@ const Availabilities = () => {
   const [isLoadingData, setIsLoadingData] = useState(true);
 
   const [refetch, setRefetch] = useState(0);
+  const { onError } = useContext(HomeContext);
 
   useEffect(() => {
     const fetchAvailabilities = async () => {
@@ -62,9 +63,8 @@ const Availabilities = () => {
           setAvailabilities(parseData(result.data));
         }
       } catch (error) {
-        console.log(error);
         setIsLoadingData(false);
-        window.alert(FAILURE_MESSAGES.SERVER_DOWN);
+        onError(error);
       }
     };
 
@@ -88,8 +88,7 @@ const Availabilities = () => {
 
       ids.forEach((id) => deleteAvailability(id));
     } catch (error) {
-      console.log(error);
-      window.alert("Failed to delete availability");
+      onError(error);
     }
   };
 
@@ -112,4 +111,3 @@ const Availabilities = () => {
 };
 
 export { Availabilities };
-

@@ -1,4 +1,5 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useContext, useEffect, useMemo, useState } from "react";
+import { HomeContext } from "../../helpers/protected-route";
 import styles from "../../styles/list.module.css";
 import { getData } from "../../utils";
 
@@ -12,14 +13,19 @@ const ListItem = ({
   operatoryDetails,
 }) => {
   const [name, setName] = useState("");
+  const { onError } = useContext(HomeContext);
 
   useEffect(() => {
     const getProviderDetails = async () => {
-      const result = await getData(`${API}/providers/${provider_id}`);
-      const provider = await result.json();
+      try {
+        const result = await getData(`${API}/providers/${provider_id}`);
+        const provider = await result.json();
 
-      if (provider.code) {
-        setName(provider.data.name);
+        if (provider.code) {
+          setName(provider.data.name);
+        }
+      } catch (error) {
+        onError(error);
       }
     };
 

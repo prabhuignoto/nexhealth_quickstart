@@ -8,8 +8,6 @@ const API = process.env.REACT_APP_API;
 const AvailabilitiesList = ({ availabilities = [], onDelete }) => {
   const queriedOperatories = useRef({});
 
-  // console.log(availabilities);
-
   const [operatoriesDetails, setOperatoriesDetails] = useState({});
 
   const onDeleteClick = (ids) => {

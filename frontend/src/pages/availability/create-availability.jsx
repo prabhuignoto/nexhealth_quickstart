@@ -1,6 +1,7 @@
 import classNames from "classnames";
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { Select } from "../../components/select";
+import { HomeContext } from "../../helpers/protected-route";
 import commonStyles from "../../styles/common.module.css";
 import { getData } from "../../utils";
 import styles from "./create-availability.module.css";
@@ -27,6 +28,7 @@ const CreateAvailability = () => {
   const [selectedEndTime, setSelectedEndTime] = useState(null);
 
   const formRef = useRef(null);
+  const { onError } = useContext(HomeContext);
 
   const handleProviderSelection = (ev) => setSelectedProvider(ev.target.value);
   const handleOperatorySelection = (ev) =>
@@ -60,7 +62,7 @@ const CreateAvailability = () => {
           );
         }
       } catch (error) {
-        console.log(error);
+        onError(error);
       }
     };
 
@@ -76,7 +78,7 @@ const CreateAvailability = () => {
           setOperatories(result.data);
         }
       } catch (error) {
-        console.log(error);
+        onError(error);
       }
     };
 
@@ -149,7 +151,7 @@ const CreateAvailability = () => {
           alert(`Availability creation failed!\n${result.error}`);
         }
       } catch (error) {
-        console.log(error);
+        onError(error);
       }
     };
 
