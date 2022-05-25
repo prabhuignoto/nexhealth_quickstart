@@ -32,7 +32,6 @@ const AppointmentBookingForm = ({
 
   const [selectedPatient, setSelectedPatient] = useState(null);
   const [selectedProvider, setSelectedProvider] = useState(null);
-  const [selectedOperator, setSelectedOperator] = useState(null);
   const [selectedLocation, setSelectedLocation] = useState(null);
 
   const [selectedDate, setSelectedDate] = useState(null);
@@ -112,15 +111,10 @@ const AppointmentBookingForm = ({
   /** Checks whether the form can be submitted or not */
   const canSubmit = useMemo(
     () =>
-      patientDataEntered &&
-      selectedProvider &&
-      selectedOperator &&
-      selectedDate &&
-      selectedSlot,
+      patientDataEntered && selectedProvider && selectedDate && selectedSlot,
     [
       selectedPatient,
       selectedProvider,
-      selectedOperator,
       selectedDate,
       selectedSlot,
       patientDataEntered,
@@ -208,8 +202,8 @@ const AppointmentBookingForm = ({
           appt: {
             ...patientData,
             provider_id: selectedProvider,
-            operatory_id: selectedOperator,
-            start_time: selectedSlot,
+            operatory_id: selectedLocation,
+            start_time: selectedDate,
             confirmed: true,
             patient_confirmed: true,
             note: notes,

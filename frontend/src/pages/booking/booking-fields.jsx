@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { DayPicker } from "react-day-picker";
 import "react-day-picker/dist/style.css";
 import { Select } from "../../components/select";
@@ -16,6 +16,7 @@ const BookingFields = ({
   disabledDays = [],
 }) => {
   const locationRef = useRef(null);
+  const [selectedDay, setSelectedDay] = useState(null);
 
   return (
     <>
@@ -53,9 +54,16 @@ const BookingFields = ({
         <DayPicker
           onDayClick={handleDateSelection}
           mode="single"
-          disabled={{
-            dayOfWeek: disabledDays,
-          }}
+          disabled={[
+            {
+              dayOfWeek: disabledDays,
+            },
+            {
+              before: new Date(),
+            },
+          ]}
+          selected={selectedDay}
+          onSelect={setSelectedDay}
         />
       </div>
 

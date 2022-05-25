@@ -9,6 +9,6 @@ export async function apiGET({ url, onSuccess, onError }) {
       onSuccess && result.data && onSuccess(result.data);
     }
   } catch (error) {
-    onError && onError();
+    onError && onError(error);
   }
 }

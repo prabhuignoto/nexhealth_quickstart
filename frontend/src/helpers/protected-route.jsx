@@ -20,9 +20,12 @@ const ProtectedRoute = ({ children }) => {
   const navigation = useNavigate();
 
   const onError = (error) => {
+    console.log(error);
     setErrorOccurred(true);
     setFailedMessage(
-      `${FAILURE_MESSAGES.SOMETHING_WENT_WRONG} <br>Reason: ${error.message}`
+      `${FAILURE_MESSAGES.SOMETHING_WENT_WRONG} ${
+        error.message ? `<br>Reason: ${error.message}` : ""
+      }`
     );
     setIsAuthenticated(false);
   };

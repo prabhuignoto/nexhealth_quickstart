@@ -1,3 +1,4 @@
+import { nanoid } from "nanoid";
 import React, { useContext, useEffect, useState } from "react";
 import { apiGET } from "../../api-helpers";
 import { OverlayLoader } from "../../components/overlay-loader";
@@ -26,7 +27,10 @@ const BookingContainer = () => {
 
   const onSubmit = async (data) => {
     try {
-      const request = postData(`${API}/appointments/book-appointment`, data);
+      const request = await postData(
+        `${API}/appointments/book-appointment`,
+        data
+      );
 
       const result = await request.json();
 
@@ -43,11 +47,14 @@ const BookingContainer = () => {
   const handlePatientTypeChange = () => reset();
 
   const handleFetchSlots = async (params) => {
+    setShowOverlayLoader(true);
     apiGET({
       url: `${API}/appointments/slots?${params}`,
       onSuccess: (data) => {
+        setShowOverlayLoader(false);
         setSlots(
           data[0].slots.map((slot) => ({
+            id: nanoid(),
             ...slot,
             name: formatDate(slot.time),
           }))
