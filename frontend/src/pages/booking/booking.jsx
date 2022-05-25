@@ -6,14 +6,26 @@ import { AddPatient } from "./add-patient-field";
 import { BookingFields } from "./booking-fields";
 import styles from "./booking.module.css";
 
+const Days = [
+  "Sunday",
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+];
+
 const AppointmentBookingForm = ({
   patients,
   providers,
+  operators,
   onSubmit,
-  onLocationSelected,
   onProviderSelected,
+  onFetchSlots,
   slots,
   locations,
+  onPatientTypeChange,
 }) => {
   const formRef = useRef(null);
   const { onError } = useContext(HomeContext);
@@ -60,7 +72,7 @@ const AppointmentBookingForm = ({
           params.append("startDate", selectedDate);
           params.append("operatoryId", selectedLocation);
 
-          onLocationSelected(params.toString());
+          onFetchSlots(params.toString());
         }
       } catch (error) {
         onError(error);
@@ -76,6 +88,26 @@ const AppointmentBookingForm = ({
     () => selectedPatient || (patientInfo.firstName && patientInfo.lastName),
     [selectedPatient, patientInfo]
   );
+
+  const disabledDays = useMemo(() => {
+    let disabledDays = [];
+
+    if (operators.length && selectedLocation) {
+      const availableDays = operators
+        .filter((op) => op.operatory_id === +selectedLocation)
+        .flatMap((op) => op.days);
+
+      Days.forEach((day, index) => {
+        if (!availableDays.includes(day)) {
+          disabledDays.push(index);
+        }
+      });
+    } else {
+      disabledDays = [..."0123456"].map((x) => +x);
+    }
+
+    return disabledDays;
+  }, [operators.length, selectedLocation]);
 
   /** Checks whether the form can be submitted or not */
   const canSubmit = useMemo(
@@ -97,8 +129,10 @@ const AppointmentBookingForm = ({
 
   /** handlers */
   const handlePatientSelection = (ev) => setSelectedPatient(ev.target.value);
-  const handleProviderSelection = (ev) => setSelectedProvider(ev.target.value);
-  const handleOperatorSelection = (ev) => setSelectedOperator(ev.target.value);
+  const handleProviderSelection = (ev) => {
+    setSelectedLocation("");
+    setSelectedProvider(ev.target.value);
+  };
   const handleLocationSelection = (ev) => {
     setSelectedLocation(ev.target.value);
   };
@@ -118,6 +152,7 @@ const AppointmentBookingForm = ({
       },
     });
     setPatientType(ev.target.value);
+    onPatientTypeChange(ev.target.value);
   };
 
   const handlePatientFirstNameChange = (ev) =>
@@ -210,11 +245,11 @@ const AppointmentBookingForm = ({
           providers={providers}
           locations={locations}
           handleDateSelection={handleDateSelection}
-          handleOperatorSelection={handleOperatorSelection}
           handleProviderSelection={handleProviderSelection}
           handleSlotSelection={handleSlotSelection}
           handleNotesChange={handleNotesChange}
           handleLocationSelection={handleLocationSelection}
+          disabledDays={disabledDays}
         />
 
         {/* button controls */}

@@ -22,3 +22,11 @@
 .add_patient_label {
   display: flex;
 }
+
+.booking_container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  position: relative;
+}

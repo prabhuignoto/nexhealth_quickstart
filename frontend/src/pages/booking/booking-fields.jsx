@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import { DayPicker } from "react-day-picker";
 import "react-day-picker/dist/style.css";
 import { Select } from "../../components/select";
@@ -13,7 +13,10 @@ const BookingFields = ({
   handleSlotSelection,
   handleProviderSelection,
   handleLocationSelection,
+  disabledDays = [],
 }) => {
+  const locationRef = useRef(null);
+
   return (
     <>
       {/* provider */}
@@ -21,7 +24,10 @@ const BookingFields = ({
         <Select
           label="Provider"
           options={providers}
-          onChange={handleProviderSelection}
+          onChange={(ev) => {
+            locationRef.current.reset();
+            handleProviderSelection(ev);
+          }}
           id="provider"
           placeholder="Select a provider"
         />
@@ -35,6 +41,7 @@ const BookingFields = ({
           onChange={handleLocationSelection}
           id="location"
           placeholder="Select a location"
+          ref={locationRef}
         />
       </div>
 
@@ -46,10 +53,8 @@ const BookingFields = ({
         <DayPicker
           onDayClick={handleDateSelection}
           mode="single"
-          hideHead
-          // fromDate={new Date()}
           disabled={{
-            dayOfWeek: [0, 6],
+            dayOfWeek: disabledDays,
           }}
         />
       </div>
