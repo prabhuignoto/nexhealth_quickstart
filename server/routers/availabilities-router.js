@@ -70,7 +70,7 @@ availabilitiesRouter.delete("/delete/:id", async (req, res) => {
     });
 
     const response = await fetch(
-      `${process.env.API_URL}/availabilities/${req.query.id}?${params}`,
+      `${process.env.API_URL}/availabilities/${req.params.id}?${params}`,
       {
         method: "DELETE",
         headers: getHeaders(false, req.session.token),

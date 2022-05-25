@@ -100,11 +100,13 @@ const Availabilities = () => {
           <div className={styles.loader_wrapper}>
             <Loader />
           </div>
-        ) : (
+        ) : availabilities.length ? (
           <AvailabilitiesList
             availabilities={availabilities}
             onDelete={handleDelete}
           />
+        ) : (
+          <span>No Availabilities found</span>
         )}
       </div>
     </div>

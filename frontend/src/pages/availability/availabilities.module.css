@@ -1,7 +1,6 @@
 .availabilities {
   width: 95%;
   background: #fff;
-  /* height: 100%; */
   box-shadow: 0 0 20px 2px rgba(0, 0, 0, 0.1);
   border-radius: 4px;
   min-height: 650px;
@@ -9,9 +8,12 @@
 
 .list_wrapper {
   display: flex;
-  max-height: 600px;
-  overflow: auto;
+  align-items: flex-start;
+  justify-content: center;
+  max-height: 750px;
+  overflow-y: auto;
   width: 100%;
+  min-height: 200px;
 }
 
 .loader_wrapper {
