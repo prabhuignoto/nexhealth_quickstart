@@ -24,13 +24,13 @@ const AvailabilitiesList = ({ availabilities = [], onDelete }) => {
   };
 
   const getOperatoryDetails = useCallback(async (id) => {
-    apiGET(
-      `${API}/operatories/${id}`,
-      (data) => {
+    apiGET({
+      url: `${API}/operatories/${id}`,
+      onSuccess: (data) => {
         setOperatoriesDetails((prev) => ({ ...prev, [id]: data.name }));
       },
-      onError
-    );
+      onError,
+    });
   }, []);
 
   useEffect(() => {

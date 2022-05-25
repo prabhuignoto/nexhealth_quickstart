@@ -38,6 +38,31 @@ availabilitiesRouter.get("/", async (req, res) => {
   }
 });
 
+availabilitiesRouter.get("/provider/:id", async (req, res) => {
+  try {
+    const params = new URLSearchParams({
+      ...nexHealthParams,
+      page: 1,
+      per_page: 50,
+      active: true,
+      provider_id: req.params.id,
+    });
+
+    console.log(`${process.env.API_URL}/availabilities?${params}`);
+
+    const response = await fetch(
+      `${process.env.API_URL}/availabilities?${params}`,
+      {
+        headers: getHeaders(false, req.session.token),
+      }
+    );
+    const availabilities = await response.json();
+    res.json(availabilities);
+  } catch (error) {
+    console.log(error);
+  }
+});
+
 availabilitiesRouter.delete("/delete/:id", async (req, res) => {
   try {
     const params = new URLSearchParams({
@@ -45,7 +70,7 @@ availabilitiesRouter.delete("/delete/:id", async (req, res) => {
     });
 
     const response = await fetch(
-      `${process.env.API_URL}/availabilities/${req.params.id}?${params}`,
+      `${process.env.API_URL}/availabilities/${req.query.id}?${params}`,
       {
         method: "DELETE",
         headers: getHeaders(false, req.session.token),

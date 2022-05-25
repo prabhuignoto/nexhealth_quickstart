@@ -48,15 +48,15 @@ const Appointments = () => {
       const fetchAppointments = async () => {
         try {
           setIsLoadingData(true);
-          apiGET(
-            `${API}/appointments?startDate=${dateFilter.startDate}&endDate=${dateFilter.endDate}`,
-            (data) => {
+          apiGET({
+            url: `${API}/appointments?startDate=${dateFilter.startDate}&endDate=${dateFilter.endDate}`,
+            onSuccess: (data) => {
               setAppointments(data);
               setIsLoadingData(false);
               setDateFilter(() => ({ startDate: "", endDate: "" }));
             },
-            onError
-          );
+            onError,
+          });
         } catch (error) {
           setIsLoadingData(false);
           onError(error);

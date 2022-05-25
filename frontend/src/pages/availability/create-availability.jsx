@@ -49,9 +49,9 @@ const CreateAvailability = () => {
   useEffect(() => {
     const getProviders = async () => {
       try {
-        apiGET(
-          `${process.env.REACT_APP_API}/providers`,
-          (data) => {
+        apiGET({
+          url: `${process.env.REACT_APP_API}/providers`,
+          onSuccess: (data) => {
             setProviders(
               data.map((provider) => ({
                 ...provider,
@@ -59,8 +59,8 @@ const CreateAvailability = () => {
               }))
             );
           },
-          onError
-        );
+          onError,
+        });
       } catch (error) {
         onError(error);
       }
@@ -68,13 +68,13 @@ const CreateAvailability = () => {
 
     const getOperatories = async () => {
       try {
-        apiGET(
-          `${process.env.REACT_APP_API}/operatories`,
-          (data) => {
+        apiGET({
+          url: `${process.env.REACT_APP_API}/operatories`,
+          onSuccess: (data) => {
             setOperatories(data);
           },
-          onError
-        );
+          onError,
+        });
       } catch (error) {
         onError(error);
       }

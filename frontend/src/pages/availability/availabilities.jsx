@@ -55,14 +55,14 @@ const Availabilities = () => {
     const fetchAvailabilities = async () => {
       try {
         setIsLoadingData(true);
-        apiGET(
-          `${API}/availabilities`,
-          (data) => {
+        apiGET({
+          url: `${API}/availabilities`,
+          onSuccess: (data) => {
             setIsLoadingData(false);
             setAvailabilities(parseData(data));
           },
-          onError
-        );
+          onError,
+        });
       } catch (error) {
         setIsLoadingData(false);
         onError(error);

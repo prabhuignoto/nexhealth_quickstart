@@ -36,11 +36,11 @@ const AppointmentBookingForm = () => {
   const locationsData = useContext(HomeContext);
 
   useEffect(() => {
-    const fetchData = async (type) => {
+    const fetchData = (type) => {
       try {
-        apiGET(
-          `${API}/${type}`,
-          (data) => {
+        apiGET({
+          url: `${API}/${type}`,
+          onSuccess: (data) => {
             if (type === "patients") {
               setPatients(data.patients);
             } else if (type === "providers") {
@@ -50,12 +50,10 @@ const AppointmentBookingForm = () => {
                   name: provider.doctor_name,
                 }))
               );
-            } else if (type === "operatories") {
-              setOperators(data);
             }
           },
-          onError
-        );
+          onError,
+        });
       } catch (error) {
         onError(error);
       }
@@ -64,8 +62,26 @@ const AppointmentBookingForm = () => {
     // fetch patients, providers, operators
     fetchData("patients");
     fetchData("providers");
-    fetchData("operatories");
+    // fetchData("operatories");
   }, []);
+
+  useEffect(() => {
+    try {
+      if (selectedProvider) {
+        debugger;
+        apiGET({
+          url: `${API}/availabilities/provider/${selectedProvider}`,
+          onSuccess: (data) => {
+            debugger;
+            setOperators(data.locations);
+          },
+          onError,
+        });
+      }
+    } catch (error) {
+      onError(error);
+    }
+  }, [selectedProvider]);
 
   useEffect(() => {
     const fetchSlots = async () => {
@@ -78,9 +94,9 @@ const AppointmentBookingForm = () => {
 
         const locationId = locations[0].locations[0].id;
 
-        apiGET(
-          `${API}/appointments/slots?providerId=${+selectedProvider}&locationId=${locationId}&startDate=${selectedDate}`,
-          (data) => {
+        apiGET({
+          url: `${API}/appointments/slots?providerId=${+selectedProvider}&locationId=${locationId}&startDate=${selectedDate}`,
+          onSuccess: (data) => {
             setSlots(
               data[0].slots.map((slot) => ({
                 ...slot,
@@ -88,8 +104,8 @@ const AppointmentBookingForm = () => {
               }))
             );
           },
-          onError
-        );
+          onError,
+        });
       } catch (error) {
         onError(error);
       }

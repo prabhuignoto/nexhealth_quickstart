@@ -18,13 +18,13 @@ const ListItem = ({
   useEffect(() => {
     const getProviderDetails = async () => {
       try {
-        apiGET(
-          `${API}/providers/${provider_id}`,
-          (data) => {
+        apiGET({
+          url: `${API}/providers/${provider_id}`,
+          onSuccess: (data) => {
             setName(data.name);
           },
-          onError
-        );
+          onError,
+        });
       } catch (error) {
         onError(error);
       }
