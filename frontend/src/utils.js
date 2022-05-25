@@ -21,3 +21,26 @@ export function getData(url) {
     },
   });
 }
+
+export function postData(url, data) {
+  return fetch(url, {
+    method: "POST",
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+    body: JSON.stringify(data),
+  });
+}
+
+export function deleteData(url) {
+  return fetch(url, {
+    method: "DELETE",
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+  });
+}

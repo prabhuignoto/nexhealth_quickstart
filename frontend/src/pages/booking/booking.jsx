@@ -1,27 +1,28 @@
 import classNames from "classnames";
 import React, { useContext, useEffect, useMemo, useRef, useState } from "react";
-import { apiGET } from "../../api-helpers";
-import { Select } from "../../components/select";
 import { HomeContext } from "../../helpers/protected-route";
 import commonStyles from "../../styles/common.module.css";
-import { formatDate } from "./../../utils";
 import { AddPatient } from "./add-patient-field";
+import { BookingFields } from "./booking-fields";
 import styles from "./booking.module.css";
 
-const API = process.env.REACT_APP_API;
-
-const AppointmentBookingForm = () => {
-  const [patients, setPatients] = useState([]);
-  const [providers, setProviders] = useState([]);
-  const [operators, setOperators] = useState([]);
-  const [slots, setSlots] = useState([]);
-
+const AppointmentBookingForm = ({
+  patients,
+  providers,
+  onSubmit,
+  onLocationSelected,
+  onProviderSelected,
+  slots,
+  locations,
+}) => {
   const formRef = useRef(null);
   const { onError } = useContext(HomeContext);
 
   const [selectedPatient, setSelectedPatient] = useState(null);
   const [selectedProvider, setSelectedProvider] = useState(null);
   const [selectedOperator, setSelectedOperator] = useState(null);
+  const [selectedLocation, setSelectedLocation] = useState(null);
+
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedSlot, setSelectedSlot] = useState(null);
   const [notes, setNotes] = useState("");
@@ -36,85 +37,40 @@ const AppointmentBookingForm = () => {
   const locationsData = useContext(HomeContext);
 
   useEffect(() => {
-    const fetchData = (type) => {
-      try {
-        apiGET({
-          url: `${API}/${type}`,
-          onSuccess: (data) => {
-            if (type === "patients") {
-              setPatients(data.patients);
-            } else if (type === "providers") {
-              setProviders(
-                data.map((provider) => ({
-                  ...provider,
-                  name: provider.doctor_name,
-                }))
-              );
-            }
-          },
-          onError,
-        });
-      } catch (error) {
-        onError(error);
-      }
-    };
-
-    // fetch patients, providers, operators
-    fetchData("patients");
-    fetchData("providers");
-    // fetchData("operatories");
-  }, []);
-
-  useEffect(() => {
-    try {
-      if (selectedProvider) {
-        debugger;
-        apiGET({
-          url: `${API}/availabilities/provider/${selectedProvider}`,
-          onSuccess: (data) => {
-            debugger;
-            setOperators(data.locations);
-          },
-          onError,
-        });
-      }
-    } catch (error) {
-      onError(error);
+    if (selectedProvider) {
+      onProviderSelected(selectedProvider);
     }
   }, [selectedProvider]);
 
   useEffect(() => {
     const fetchSlots = async () => {
       try {
-        const locations = locationsData.locations;
+        if (selectedLocation) {
+          const locations = locationsData.locations;
 
-        if (!locations.length) {
-          return;
+          if (!locations.length) {
+            return;
+          }
+
+          const locationId = locations[0].locations[0].id;
+
+          const params = new URLSearchParams();
+          params.append("locationId", locationId);
+          params.append("providerId", selectedProvider);
+          params.append("startDate", selectedDate);
+          params.append("operatoryId", selectedLocation);
+
+          onLocationSelected(params.toString());
         }
-
-        const locationId = locations[0].locations[0].id;
-
-        apiGET({
-          url: `${API}/appointments/slots?providerId=${+selectedProvider}&locationId=${locationId}&startDate=${selectedDate}`,
-          onSuccess: (data) => {
-            setSlots(
-              data[0].slots.map((slot) => ({
-                ...slot,
-                name: formatDate(slot.time),
-              }))
-            );
-          },
-          onError,
-        });
       } catch (error) {
         onError(error);
       }
     };
 
-    if (selectedProvider && selectedDate) {
+    if (selectedDate && selectedLocation) {
       fetchSlots();
     }
-  }, [selectedProvider, selectedDate, locationsData]);
+  }, [selectedDate, locationsData, selectedLocation]);
 
   const patientDataEntered = useMemo(
     () => selectedPatient || (patientInfo.firstName && patientInfo.lastName),
@@ -143,8 +99,11 @@ const AppointmentBookingForm = () => {
   const handlePatientSelection = (ev) => setSelectedPatient(ev.target.value);
   const handleProviderSelection = (ev) => setSelectedProvider(ev.target.value);
   const handleOperatorSelection = (ev) => setSelectedOperator(ev.target.value);
+  const handleLocationSelection = (ev) => {
+    setSelectedLocation(ev.target.value);
+  };
 
-  const handleDateSelection = (ev) => setSelectedDate(ev.target.value);
+  const handleDateSelection = (date) => setSelectedDate(date);
 
   const handleSlotSelection = (ev) => setSelectedSlot(ev.target.value);
   const handleNotesChange = (ev) => setNotes(ev.target.value);
@@ -191,7 +150,7 @@ const AppointmentBookingForm = () => {
   /** Handler to submit the form */
   const submitForm = (ev) => {
     ev.preventDefault();
-    const bookAppointment = async () => {
+    const bookAppointment = () => {
       try {
         let patientData = null;
 
@@ -210,33 +169,17 @@ const AppointmentBookingForm = () => {
             },
           };
         }
-
-        const request = await fetch(`${API}/appointments/book-appointment`, {
-          credentials: "include",
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
+        onSubmit({
+          appt: {
+            ...patientData,
+            provider_id: selectedProvider,
+            operatory_id: selectedOperator,
+            start_time: selectedSlot,
+            confirmed: true,
+            patient_confirmed: true,
+            note: notes,
           },
-          body: JSON.stringify({
-            appt: {
-              ...patientData,
-              provider_id: selectedProvider,
-              operatory_id: selectedOperator,
-              start_time: selectedSlot,
-              confirmed: true,
-              patient_confirmed: true,
-              note: notes,
-            },
-          }),
         });
-
-        const result = await request.json();
-
-        if (result.code) {
-          alert("Appointment booked successfully!");
-        } else {
-          alert(`Appointment booking failed!\n${result.error}`);
-        }
       } catch (error) {
         onError(error);
       }
@@ -262,62 +205,17 @@ const AppointmentBookingForm = () => {
           patients={patients}
         />
 
-        {/* provider */}
-        <div className={commonStyles.form_field}>
-          <Select
-            label="Provider"
-            options={providers}
-            onChange={handleProviderSelection}
-            id="provider"
-            placeholder="Select a provider"
-          />
-        </div>
-
-        {/* operatory */}
-        <div className={commonStyles.form_field}>
-          <Select
-            label="Location"
-            options={operators}
-            onChange={handleOperatorSelection}
-            id="location"
-            placeholder="Select a location"
-          />
-        </div>
-
-        {/* provider */}
-        <div className={commonStyles.form_field}>
-          <label className={commonStyles.label} htmlFor="provider">
-            Choose a date
-          </label>
-          <input
-            type="date"
-            id="start_time"
-            aria-label="start time"
-            className={commonStyles.input}
-            onChange={handleDateSelection}
-          />
-        </div>
-
-        <div className={commonStyles.form_field}>
-          <Select
-            label="Slot"
-            options={slots}
-            onChange={handleSlotSelection}
-            id="slot"
-            placeholder="Select a slot"
-          />
-        </div>
-
-        <div className={commonStyles.form_field}>
-          <label className={commonStyles.label} htmlFor="notes">
-            Note
-          </label>
-          <textarea
-            className={commonStyles.textarea}
-            id="notes"
-            onChange={handleNotesChange}
-          />
-        </div>
+        <BookingFields
+          slots={slots}
+          providers={providers}
+          locations={locations}
+          handleDateSelection={handleDateSelection}
+          handleOperatorSelection={handleOperatorSelection}
+          handleProviderSelection={handleProviderSelection}
+          handleSlotSelection={handleSlotSelection}
+          handleNotesChange={handleNotesChange}
+          handleLocationSelection={handleLocationSelection}
+        />
 
         {/* button controls */}
         <div className={commonStyles.controls}>

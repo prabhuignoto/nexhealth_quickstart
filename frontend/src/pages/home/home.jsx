@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { Appointments } from "../appointments/appointments";
 import { Availabilities } from "../availability/availabilities";
 import { CreateAvailability } from "../availability/create-availability";
-import { AppointmentBookingForm } from "../booking/booking";
+import { BookingContainer } from "../booking/booking-container";
 import styles from "./home.module.css";
 
 const tabs = [
@@ -44,7 +44,7 @@ const Home = () => {
         </ul>
         <div className={styles.tabs_body}>
           {activeTab === "appointments" && <Appointments />}
-          {activeTab === "booking" && <AppointmentBookingForm />}
+          {activeTab === "booking" && <BookingContainer />}
           {activeTab === "availability" && <CreateAvailability />}
           {activeTab === "availabilities" && <Availabilities />}
         </div>
