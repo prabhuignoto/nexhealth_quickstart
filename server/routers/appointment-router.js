@@ -38,6 +38,32 @@ appointmentRouter.get("/", async (req, res) => {
   }
 });
 
+appointmentRouter.get("/filter-by-provider/:id", async (req, res) => {
+  try {
+    const params = new URLSearchParams({
+      ...nexHealthParams,
+      page: 1,
+      per_page: 50,
+      start: req.query.startDate,
+      end: req.query.endDate,
+      "provider_ids[]": req.params.id,
+    });
+
+    const response = await fetch(
+      `${process.env.API_URL}/appointments?${params}`,
+      {
+        headers: getHeaders(false, req.session.token),
+      }
+    );
+
+    const appointments = await response.json();
+
+    res.json(appointments);
+  } catch (error) {
+    console.log(error);
+  }
+});
+
 appointmentRouter.get("/slots", async (req, res) => {
   try {
     const params = new URLSearchParams({
