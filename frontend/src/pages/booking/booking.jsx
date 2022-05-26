@@ -21,7 +21,6 @@ const AppointmentBookingForm = React.forwardRef((props, ref) => {
     operators,
     onSubmit,
     onProviderSelected,
-    onLocationSelected,
     onFetchSlots,
     slots,
     locations,
@@ -153,7 +152,6 @@ const AppointmentBookingForm = React.forwardRef((props, ref) => {
   };
   const handleLocationSelection = (ev) => {
     setSelectedLocation(ev.target.value);
-    onLocationSelected(ev.target.value);
   };
 
   const handleDateSelection = (date) => setSelectedDate(date);
@@ -269,6 +267,7 @@ const AppointmentBookingForm = React.forwardRef((props, ref) => {
           <button
             className={classNames(
               commonStyles.button,
+              commonStyles.button_margin,
               !canSubmit ? commonStyles.disabled : ""
             )}
             disabled={!canSubmit}

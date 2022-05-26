@@ -4,6 +4,7 @@ import { apiGET } from "../../api-helpers";
 import { Select } from "../../components/select";
 import { HomeContext } from "../../helpers/protected-route";
 import commonStyles from "../../styles/common.module.css";
+import { postData } from "../../utils";
 import styles from "./create-availability.module.css";
 
 const days = [
@@ -119,24 +120,17 @@ const CreateAvailability = () => {
 
     const createAvailability = async () => {
       try {
-        const request = await fetch(
+        const request = await postData(
           `${process.env.REACT_APP_API}/availabilities/create`,
           {
-            credentials: "include",
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
+            availability: {
+              active: true,
+              begin_time: selectedStartTime,
+              days: selectedDays,
+              end_time: selectedEndTime,
+              operatory_id: selectedOperatory,
+              provider_id: selectedProvider,
             },
-            body: JSON.stringify({
-              availability: {
-                active: true,
-                begin_time: selectedStartTime,
-                days: selectedDays,
-                end_time: selectedEndTime,
-                operatory_id: selectedOperatory,
-                provider_id: selectedProvider,
-              },
-            }),
           }
         );
 
@@ -228,6 +222,7 @@ const CreateAvailability = () => {
           <button
             className={classNames(
               commonStyles.button,
+              commonStyles.button_margin,
               !canSubmit ? commonStyles.disabled : ""
             )}
             disabled={!canSubmit}

@@ -48,14 +48,13 @@ availabilitiesRouter.get("/provider/:id", async (req, res) => {
       provider_id: req.params.id,
     });
 
-    console.log(`${process.env.API_URL}/availabilities?${params}`);
-
     const response = await fetch(
       `${process.env.API_URL}/availabilities?${params}`,
       {
         headers: getHeaders(false, req.session.token),
       }
     );
+
     const availabilities = await response.json();
     res.json(availabilities);
   } catch (error) {

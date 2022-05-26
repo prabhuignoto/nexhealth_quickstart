@@ -1,4 +1,5 @@
 import React from "react";
+import commonStyles from "../../styles/common.module.css";
 import styles from "../../styles/list.module.css";
 import { formatDate } from "./../../utils";
 
@@ -20,7 +21,6 @@ const AppointmentsList = ({ appointments = [], onCancel }) => {
           {/* headers */}
           <li className={styles.appointment_list_headers}>
             <div className={styles.list_header}>Patient Name</div>
-            <div className={styles.list_header}>Note</div>
             <div className={styles.list_header}>Provider</div>
             <div className={styles.list_header}>Start Time</div>
             <div></div>
@@ -40,13 +40,13 @@ const AppointmentsList = ({ appointments = [], onCancel }) => {
             }) => (
               <li key={id} className={styles.appointment_list_item}>
                 <div className={styles.item_field}>{patient_name}</div>
-                <div className={styles.item_field}>{note}</div>
                 <div className={styles.item_field}>{provider_name}</div>
                 <div className={styles.item_field}>
                   {formatDate(start_time)}
                 </div>
                 <div>
                   <button
+                    className={commonStyles.button}
                     onClick={() =>
                       handleCancel(
                         id,
@@ -57,7 +57,7 @@ const AppointmentsList = ({ appointments = [], onCancel }) => {
                       )
                     }
                   >
-                    Cancel
+                    Cancel Appointment
                   </button>
                 </div>
               </li>

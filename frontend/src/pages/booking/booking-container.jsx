@@ -17,7 +17,6 @@ const BookingContainer = () => {
   const [providers, setProviders] = useState([]);
   const [operators, setOperators] = useState([]);
   const [locations, setLocations] = useState([]);
-  const [selectedLocation, setSelectedLocation] = useState(null);
 
   const [slots, setSlots] = useState([]);
   const { onError } = useContext(HomeContext);
@@ -51,7 +50,6 @@ const BookingContainer = () => {
   };
 
   const handlePatientTypeChange = () => reset();
-  const handleSelectedLocation = (location) => setSelectedLocation(location);
 
   const handleFetchSlots = ({
     locationId,
@@ -166,7 +164,6 @@ const BookingContainer = () => {
         onSubmit={onSubmit}
         onFetchSlots={handleFetchSlots}
         onProviderSelected={onProviderSelected}
-        onLocationSelected={handleSelectedLocation}
         slots={slots}
         onPatientTypeChange={handlePatientTypeChange}
         ref={formRef}

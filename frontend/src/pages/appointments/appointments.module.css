@@ -4,7 +4,7 @@
   align-items: center;
   justify-content: flex-start;
   width: 95%;
-  min-height: 650px;
+  /* min-height: 80vh; */
   background: #fff;
   border-radius: 4px;
   padding: 0;
@@ -45,7 +45,8 @@
 .appointments_list_wrapper {
   margin-top: 1.5rem;
   width: 100%;
-  max-height: 750px;
+  max-height: 75vh;
+  min-height: 650px;
   overflow-y: auto;
 }
 
