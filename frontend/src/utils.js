@@ -56,3 +56,13 @@ export function patchData(url, data) {
     body: JSON.stringify(data),
   });
 }
+
+export const Days = [
+  "Sunday",
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+];

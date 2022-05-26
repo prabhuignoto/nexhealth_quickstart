@@ -106,7 +106,7 @@ const Availabilities = () => {
             onDelete={handleDelete}
           />
         ) : (
-          <span>No Availabilities found</span>
+          <span className={styles.no_data}>No Availabilities found</span>
         )}
       </div>
     </div>

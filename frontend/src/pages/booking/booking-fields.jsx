@@ -1,22 +1,43 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useImperativeHandle, useRef, useState } from "react";
 import { DayPicker } from "react-day-picker";
 import "react-day-picker/dist/style.css";
 import { Select } from "../../components/select";
 import commonStyles from "../../styles/common.module.css";
 
-const BookingFields = ({
-  providers,
-  slots,
-  locations,
-  handleDateSelection,
-  handleNotesChange,
-  handleSlotSelection,
-  handleProviderSelection,
-  handleLocationSelection,
-  disabledDays = [],
-}) => {
+const BookingFields = React.forwardRef((props, ref) => {
+  const {
+    providers,
+    slots,
+    locations,
+    handleDateSelection,
+    handleNotesChange,
+    handleSlotSelection,
+    handleProviderSelection,
+    handleLocationSelection,
+    disabledDays = [],
+    patientType,
+  } = props;
+
   const locationRef = useRef(null);
+  const providerRef = useRef(null);
   const [selectedDay, setSelectedDay] = useState(null);
+
+  const resetFields = () => {
+    setSelectedDay(null);
+    locationRef.current.reset();
+    providerRef.current.reset();
+  };
+
+  useImperativeHandle(ref, () => ({
+    reset: () => {
+      resetFields();
+    },
+  }));
+
+  useEffect(() => {
+    //reset
+    resetFields();
+  }, [patientType]);
 
   return (
     <>
@@ -31,6 +52,7 @@ const BookingFields = ({
           }}
           id="provider"
           placeholder="Select a provider"
+          ref={providerRef}
         />
       </div>
 
@@ -89,6 +111,6 @@ const BookingFields = ({
       </div>
     </>
   );
-};
+});
 
 export { BookingFields };

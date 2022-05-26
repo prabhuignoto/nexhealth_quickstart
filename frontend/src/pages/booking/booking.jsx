@@ -1,35 +1,32 @@
 import classNames from "classnames";
-import React, { useContext, useEffect, useMemo, useRef, useState } from "react";
+import React, {
+  useContext,
+  useEffect,
+  useImperativeHandle,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { HomeContext } from "../../helpers/protected-route";
 import commonStyles from "../../styles/common.module.css";
+import { Days } from "../../utils";
 import { AddPatient } from "./add-patient-field";
 import { BookingFields } from "./booking-fields";
 import styles from "./booking.module.css";
 
-const Days = [
-  "Sunday",
-  "Monday",
-  "Tuesday",
-  "Wednesday",
-  "Thursday",
-  "Friday",
-  "Saturday",
-];
-
-const AppointmentBookingForm = ({
-  patients,
-  providers,
-  operators,
-  onSubmit,
-  onProviderSelected,
-  onLocationSelected,
-  onFetchSlots,
-  slots,
-  locations,
-  onPatientTypeChange,
-}) => {
-  const formRef = useRef(null);
-  const { onError } = useContext(HomeContext);
+const AppointmentBookingForm = React.forwardRef((props, ref) => {
+  const {
+    patients,
+    providers,
+    operators,
+    onSubmit,
+    onProviderSelected,
+    onLocationSelected,
+    onFetchSlots,
+    slots,
+    locations,
+    onPatientTypeChange,
+  } = props;
 
   const [selectedPatient, setSelectedPatient] = useState(null);
   const [selectedProvider, setSelectedProvider] = useState(null);
@@ -46,7 +43,33 @@ const AppointmentBookingForm = ({
     bio: "",
   });
 
+  const formRef = useRef(null);
+  const bookingFieldsRef = useRef(null);
+  const { onError } = useContext(HomeContext);
   const locationsData = useContext(HomeContext);
+
+  /** Resets the form */
+  const resetForm = () => {
+    if (formRef.current) {
+      formRef.current.reset();
+      bookingFieldsRef.current.reset();
+      const selects = Array.from(formRef.current.querySelectorAll("select"));
+      selects.forEach((select) => (select.selectedIndex = 0));
+      setSelectedLocation("");
+      setSelectedProvider("");
+      setSelectedPatient("");
+      setPatientInfo({});
+      setSelectedDate(null);
+      setSelectedSlot(null);
+      setNotes("");
+    }
+  };
+
+  useImperativeHandle(ref, () => ({
+    reset: () => {
+      resetForm();
+    },
+  }));
 
   useEffect(() => {
     if (selectedProvider) {
@@ -66,19 +89,19 @@ const AppointmentBookingForm = ({
 
           const locationId = locations[0].locations[0].id;
 
-          const params = new URLSearchParams();
-          params.append("locationId", locationId);
-          params.append("providerId", selectedProvider);
-          params.append("startDate", selectedDate);
-          params.append("operatoryId", selectedLocation);
-
-          onFetchSlots(params.toString());
+          onFetchSlots({
+            locationId,
+            providerId: selectedProvider,
+            startDate: selectedDate,
+            operatoryId: selectedLocation,
+          });
         }
       } catch (error) {
         onError(error);
       }
     };
 
+    // start fetching slots once the date and location are selected
     if (selectedDate && selectedLocation) {
       fetchSlots();
     }
@@ -167,16 +190,7 @@ const AppointmentBookingForm = ({
       bio: { ...prev.bio, gender: ev.target.value },
     }));
   };
-
-  /** Resets the form */
-  const resetForm = (ev) => {
-    ev.preventDefault();
-    if (formRef.current) {
-      formRef.current.reset();
-      const selects = Array.from(formRef.current.querySelectorAll("select"));
-      selects.forEach((select) => (select.selectedIndex = 0));
-    }
-  };
+  /** handlers */
 
   /** Handler to submit the form */
   const submitForm = (ev) => {
@@ -246,6 +260,8 @@ const AppointmentBookingForm = ({
           handleNotesChange={handleNotesChange}
           handleLocationSelection={handleLocationSelection}
           disabledDays={disabledDays}
+          patientType={patientType}
+          ref={bookingFieldsRef}
         />
 
         {/* button controls */}
@@ -260,13 +276,19 @@ const AppointmentBookingForm = ({
           >
             Book Appointment
           </button>
-          <button className={commonStyles.button} onClick={resetForm}>
+          <button
+            className={commonStyles.button}
+            onClick={(ev) => {
+              ev.preventDefault();
+              resetForm();
+            }}
+          >
             Reset
           </button>
         </div>
       </form>
     </div>
   );
-};
+});
 
 export { AppointmentBookingForm };

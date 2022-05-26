@@ -1,6 +1,6 @@
-import { default as dayJs, default as dayjs } from "dayjs";
+import { default as dayjs } from "dayjs";
 import utc from "dayjs/plugin/utc";
-import React, { useContext, useEffect, useMemo, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { apiGET } from "../../api-helpers";
 import { OverlayLoader } from "../../components/overlay-loader";
 import { HomeContext } from "../../helpers/protected-route";
@@ -18,27 +18,16 @@ const BookingContainer = () => {
   const [operators, setOperators] = useState([]);
   const [locations, setLocations] = useState([]);
   const [selectedLocation, setSelectedLocation] = useState(null);
-  const [activeAppointments, setActiveAppointments] = useState([]);
 
   const [slots, setSlots] = useState([]);
   const { onError } = useContext(HomeContext);
   const [showOverlayLoader, setShowOverlayLoader] = useState(false);
-
-  const getAppointments = useMemo(
-    () =>
-      activeAppointments.filter(
-        (appointment) => appointment.operatory_id === +selectedLocation
-      ),
-    [activeAppointments.length, selectedLocation]
-  );
-
-  console.log(getAppointments, selectedLocation);
+  const formRef = useRef(null);
 
   const reset = () => {
     setOperators([]);
     setLocations([]);
     setSlots([]);
-    setActiveAppointments([]);
   };
 
   const onSubmit = async (data) => {
@@ -52,6 +41,7 @@ const BookingContainer = () => {
 
       if (result.code) {
         alert("Appointment booked successfully!");
+        formRef.current.reset();
       } else {
         alert(`Appointment booking failed!\n${result.error}`);
       }
@@ -63,13 +53,24 @@ const BookingContainer = () => {
   const handlePatientTypeChange = () => reset();
   const handleSelectedLocation = (location) => setSelectedLocation(location);
 
-  const handleFetchSlots = (params) => {
+  const handleFetchSlots = ({
+    locationId,
+    providerId,
+    startDate,
+    operatoryId,
+  }) => {
     setShowOverlayLoader(true);
+
+    const params = new URLSearchParams();
+    params.append("locationId", locationId);
+    params.append("providerId", providerId);
+    params.append("startDate", startDate);
+    params.append("operatoryId", operatoryId);
+
     apiGET({
-      url: `${API}/appointments/slots?${params}`,
+      url: `${API}/appointments/slots?${params.toString()}`,
       onSuccess: (data) => {
         setShowOverlayLoader(false);
-        debugger;
         setSlots(
           data[0].slots.map((slot) => ({
             ...slot,
@@ -84,7 +85,7 @@ const BookingContainer = () => {
 
   const onProviderSelected = (providerId) => {
     try {
-      setLocations([]);
+      reset();
       setShowOverlayLoader(true);
 
       apiGET({
@@ -92,23 +93,6 @@ const BookingContainer = () => {
         onSuccess: (data) => {
           setShowOverlayLoader(false);
           setOperators(data);
-        },
-        onError,
-      });
-
-      const startDate = dayJs(new Date()).format();
-      const endDate = dayJs(new Date()).add(4, "month").format();
-
-      const params = new URLSearchParams({
-        startDate,
-        endDate,
-      });
-
-      apiGET({
-        url: `${API}/appointments/filter-by-provider/${providerId}?${params.toString()}`,
-        onSuccess: (data) => {
-          console.log("appointments", data);
-          setActiveAppointments(data);
         },
         onError,
       });
@@ -185,6 +169,7 @@ const BookingContainer = () => {
         onLocationSelected={handleSelectedLocation}
         slots={slots}
         onPatientTypeChange={handlePatientTypeChange}
+        ref={formRef}
       />
       {showOverlayLoader && <OverlayLoader />}
     </div>
