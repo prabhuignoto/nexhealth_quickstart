@@ -1,4 +1,5 @@
 import React from "react";
+import commonStyles from "../../styles/common.module.css";
 import styles from "../../styles/list.module.css";
 import { formatDate } from "./../../utils";
 
@@ -45,6 +46,7 @@ const AppointmentsList = ({ appointments = [], onCancel }) => {
                 </div>
                 <div>
                   <button
+                    className={commonStyles.button}
                     onClick={() =>
                       handleCancel(
                         id,
@@ -55,7 +57,7 @@ const AppointmentsList = ({ appointments = [], onCancel }) => {
                       )
                     }
                   >
-                    Cancel
+                    Cancel Appointment
                   </button>
                 </div>
               </li>

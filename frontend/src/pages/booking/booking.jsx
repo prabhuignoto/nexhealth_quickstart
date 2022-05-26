@@ -267,6 +267,7 @@ const AppointmentBookingForm = React.forwardRef((props, ref) => {
           <button
             className={classNames(
               commonStyles.button,
+              commonStyles.button_margin,
               !canSubmit ? commonStyles.disabled : ""
             )}
             disabled={!canSubmit}

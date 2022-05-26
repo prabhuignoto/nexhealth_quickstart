@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useMemo, useState } from "react";
 import { apiGET } from "../../api-helpers";
 import { HomeContext } from "../../helpers/protected-route";
+import commonStyles from "../../styles/common.module.css";
 import styles from "../../styles/list.module.css";
 
 const API = process.env.REACT_APP_API;
@@ -64,7 +65,10 @@ const ListItem = ({
         <div className={styles.item_field}>{name}</div>
         <div className={styles.item_field}>{getAvailabilityContent}</div>
         <div>
-          <button onClick={() => onDeleteClick(details.map((det) => det.id))}>
+          <button
+            onClick={() => onDeleteClick(details.map((det) => det.id))}
+            className={commonStyles.button}
+          >
             Delete
           </button>
         </div>
