@@ -30,10 +30,10 @@ const ProtectedRoute = ({ children }) => {
     setIsAuthenticated(false);
   };
 
-  const canShowFailureMessage = useMemo(() => errorOccurred || authFailed, [
-    errorOccurred,
-    authFailed,
-  ]);
+  const canShowFailureMessage = useMemo(
+    () => errorOccurred || authFailed,
+    [errorOccurred, authFailed]
+  );
 
   useEffect(() => {
     const check = async () => {
@@ -83,10 +83,25 @@ const ProtectedRoute = ({ children }) => {
             className={commonStyles.error_message}
             dangerouslySetInnerHTML={{ __html: failedMessage }}
           ></div>
-          <div style={{ marginTop: "2rem" }}>
+          <div
+            style={{
+              marginTop: "2rem",
+              display: "flex",
+              // flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
             <Link to="/login" style={{ fontSize: "1.2rem" }}>
               Return to the Login Page
             </Link>
+            <button
+              onClick={() => window.location.reload()}
+              className={commonStyles.button}
+              style={{ width: "150px" }}
+            >
+              Refresh Page
+            </button>
           </div>
         </div>
       ) : (
