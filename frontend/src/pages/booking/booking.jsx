@@ -270,4 +270,3 @@ const AppointmentBookingForm = ({
 };
 
 export { AppointmentBookingForm };
-
