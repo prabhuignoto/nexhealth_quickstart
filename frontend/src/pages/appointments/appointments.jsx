@@ -18,30 +18,6 @@ const Appointments = () => {
   const [isLoadingData, setIsLoadingData] = useState(false);
   const { onError } = useContext(HomeContext);
 
-  // const startDateRef = useRef(null);
-  // const endDateRef = useRef(null);
-
-  // const onStartDateRef = useCallback((node) => {
-  //   if (node) {
-  //     startDateRef.current = node;
-  //     const startDate = new Date().toISOString().split("T")[0];
-  //     node.value = startDate;
-  //     setDateFilter((prev) => ({ ...prev, startDate }));
-  //   }
-  // }, []);
-
-  // const onEndDateRef = useCallback((node) => {
-  //   if (node) {
-  //     endDateRef.current = node;
-
-  //     const date = new Date();
-  //     const newDate = date.setDate(date.getDate() + 15);
-  //     const endDate = new Date(newDate).toISOString().split("T")[0];
-  //     node.value = endDate;
-  //     setDateFilter((prev) => ({ ...prev, endDate }));
-  //   }
-  // }, []);
-
   const fetchAppointments = async (startDate, endDate) => {
     try {
       setIsLoadingData(true);
@@ -50,7 +26,6 @@ const Appointments = () => {
         onSuccess: (data) => {
           setAppointments(data.filter((appointment) => !appointment.cancelled));
           setIsLoadingData(false);
-          // setDateFilter(() => ({ startDate: "", endDate: "" }));
         },
         onError,
       });
@@ -75,7 +50,6 @@ const Appointments = () => {
   };
 
   const handleEndDateChange = (e) => {
-    debugger;
     setDateFilter((prev) => ({
       ...prev,
       endDate: dayjs(e.target.value),
@@ -126,7 +100,6 @@ const Appointments = () => {
               type="datetime-local"
               aria-label="start-date"
               value={dateFilter.startDate.format("YYYY-MM-DDTHH:mm")}
-              // ref={onStartDateRef}
               onChange={handleStartDateChange}
             />
           </div>
@@ -136,7 +109,6 @@ const Appointments = () => {
               type="datetime-local"
               aria-label="end-date"
               value={dateFilter.endDate.format("YYYY-MM-DDTHH:mm")}
-              // ref={onEndDateRef}
               onChange={handleEndDateChange}
             />
           </div>

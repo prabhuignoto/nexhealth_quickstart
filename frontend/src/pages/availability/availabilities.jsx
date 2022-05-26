@@ -55,6 +55,7 @@ const Availabilities = () => {
     const fetchAvailabilities = async () => {
       try {
         setIsLoadingData(true);
+
         apiGET({
           url: `${API}/availabilities`,
           onSuccess: (data) => {

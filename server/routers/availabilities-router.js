@@ -54,6 +54,7 @@ availabilitiesRouter.get("/provider/:id", async (req, res) => {
         headers: getHeaders(false, req.session.token),
       }
     );
+
     const availabilities = await response.json();
     res.json(availabilities);
   } catch (error) {
