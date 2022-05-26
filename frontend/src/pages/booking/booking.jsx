@@ -22,6 +22,7 @@ const AppointmentBookingForm = ({
   operators,
   onSubmit,
   onProviderSelected,
+  onLocationSelected,
   onFetchSlots,
   slots,
   locations,
@@ -129,6 +130,7 @@ const AppointmentBookingForm = ({
   };
   const handleLocationSelection = (ev) => {
     setSelectedLocation(ev.target.value);
+    onLocationSelected(ev.target.value);
   };
 
   const handleDateSelection = (date) => setSelectedDate(date);
@@ -203,7 +205,7 @@ const AppointmentBookingForm = ({
             ...patientData,
             provider_id: selectedProvider,
             operatory_id: selectedLocation,
-            start_time: selectedDate,
+            start_time: selectedSlot,
             confirmed: true,
             patient_confirmed: true,
             note: notes,
@@ -268,3 +270,4 @@ const AppointmentBookingForm = ({
 };
 
 export { AppointmentBookingForm };
+

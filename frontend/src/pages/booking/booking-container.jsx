@@ -1,11 +1,14 @@
-import { nanoid } from "nanoid";
-import React, { useContext, useEffect, useState } from "react";
+import { default as dayJs, default as dayjs } from "dayjs";
+import utc from "dayjs/plugin/utc";
+import React, { useContext, useEffect, useMemo, useState } from "react";
 import { apiGET } from "../../api-helpers";
 import { OverlayLoader } from "../../components/overlay-loader";
 import { HomeContext } from "../../helpers/protected-route";
 import { formatDate, postData } from "../../utils";
 import { AppointmentBookingForm } from "./booking";
 import styles from "./booking.module.css";
+
+dayjs.extend(utc);
 
 const API = process.env.REACT_APP_API;
 
@@ -14,15 +17,28 @@ const BookingContainer = () => {
   const [providers, setProviders] = useState([]);
   const [operators, setOperators] = useState([]);
   const [locations, setLocations] = useState([]);
+  const [selectedLocation, setSelectedLocation] = useState(null);
+  const [activeAppointments, setActiveAppointments] = useState([]);
 
   const [slots, setSlots] = useState([]);
   const { onError } = useContext(HomeContext);
   const [showOverlayLoader, setShowOverlayLoader] = useState(false);
 
+  const getAppointments = useMemo(
+    () =>
+      activeAppointments.filter(
+        (appointment) => appointment.operatory_id === +selectedLocation
+      ),
+    [activeAppointments.length, selectedLocation]
+  );
+
+  console.log(getAppointments, selectedLocation);
+
   const reset = () => {
     setOperators([]);
     setLocations([]);
     setSlots([]);
+    setActiveAppointments([]);
   };
 
   const onSubmit = async (data) => {
@@ -45,18 +61,20 @@ const BookingContainer = () => {
   };
 
   const handlePatientTypeChange = () => reset();
+  const handleSelectedLocation = (location) => setSelectedLocation(location);
 
-  const handleFetchSlots = async (params) => {
+  const handleFetchSlots = (params) => {
     setShowOverlayLoader(true);
     apiGET({
       url: `${API}/appointments/slots?${params}`,
       onSuccess: (data) => {
         setShowOverlayLoader(false);
+        debugger;
         setSlots(
           data[0].slots.map((slot) => ({
-            id: nanoid(),
             ...slot,
             name: formatDate(slot.time),
+            id: dayjs(slot.time).utc().format(),
           }))
         );
       },
@@ -64,15 +82,33 @@ const BookingContainer = () => {
     });
   };
 
-  const onProviderSelected = async (providerId) => {
+  const onProviderSelected = (providerId) => {
     try {
       setLocations([]);
       setShowOverlayLoader(true);
+
       apiGET({
         url: `${API}/availabilities/provider/${providerId}`,
         onSuccess: (data) => {
           setShowOverlayLoader(false);
           setOperators(data);
+        },
+        onError,
+      });
+
+      const startDate = dayJs(new Date()).format();
+      const endDate = dayJs(new Date()).add(4, "month").format();
+
+      const params = new URLSearchParams({
+        startDate,
+        endDate,
+      });
+
+      apiGET({
+        url: `${API}/appointments/filter-by-provider/${providerId}?${params.toString()}`,
+        onSuccess: (data) => {
+          console.log("appointments", data);
+          setActiveAppointments(data);
         },
         onError,
       });
@@ -146,6 +182,7 @@ const BookingContainer = () => {
         onSubmit={onSubmit}
         onFetchSlots={handleFetchSlots}
         onProviderSelected={onProviderSelected}
+        onLocationSelected={handleSelectedLocation}
         slots={slots}
         onPatientTypeChange={handlePatientTypeChange}
       />

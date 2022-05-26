@@ -47,6 +47,7 @@ appointmentRouter.get("/filter-by-provider/:id", async (req, res) => {
       start: req.query.startDate,
       end: req.query.endDate,
       "provider_ids[]": req.params.id,
+      // "operatory_ids[]": req.query.operatoryId,
     });
 
     const response = await fetch(
@@ -107,6 +108,23 @@ appointmentRouter.post("/book-appointment", async (req, res) => {
 
   const appointment = await response.json();
 
+  res.json(appointment);
+});
+
+appointmentRouter.patch("/cancel-appointment/:id", async (req, res) => {
+  const params = new URLSearchParams({
+    ...nexHealthParams,
+  });
+
+  const response = await fetch(
+    `${process.env.API_URL}/appointments/${req.params.id}?${params}`,
+    {
+      method: "PATCH",
+      headers: getHeaders(false, req.session.token),
+      body: JSON.stringify(req.body),
+    }
+  );
+  const appointment = await response.json();
   res.json(appointment);
 });
 

@@ -44,3 +44,15 @@ export function deleteData(url) {
     },
   });
 }
+
+export function patchData(url, data) {
+  return fetch(url, {
+    method: "PATCH",
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+    body: JSON.stringify(data),
+  });
+}

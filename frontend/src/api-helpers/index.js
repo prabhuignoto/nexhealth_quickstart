@@ -7,6 +7,8 @@ export async function apiGET({ url, onSuccess, onError }) {
 
     if (result.code) {
       onSuccess && result.data && onSuccess(result.data);
+    } else {
+      onError && onError(result.error);
     }
   } catch (error) {
     onError && onError(error);
