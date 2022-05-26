@@ -1,14 +1,16 @@
-import React from "react";
+import React, { useImperativeHandle, useRef } from "react";
 import styles from "./select.module.css";
 
-const Select = ({
-  label,
-  options = [],
-  placeholder,
-  id,
-  onChange,
-  children,
-}) => {
+const Select = React.forwardRef((props, ref) => {
+  const { label, options = [], placeholder, id, onChange, children } = props;
+  const selectRef = useRef(null);
+
+  useImperativeHandle(ref, () => ({
+    reset: () => {
+      selectRef.current.selectedIndex = 0;
+    },
+  }));
+
   return (
     <>
       {label && (
@@ -21,6 +23,7 @@ const Select = ({
         className={styles.select}
         onChange={onChange}
         defaultValue={"placeholder"}
+        ref={selectRef}
       >
         <option
           value="placeholder"
@@ -39,6 +42,6 @@ const Select = ({
       </select>
     </>
   );
-};
+});
 
 export { Select };

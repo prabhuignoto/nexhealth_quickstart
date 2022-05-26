@@ -2,7 +2,17 @@ import React from "react";
 import styles from "../../styles/list.module.css";
 import { formatDate } from "./../../utils";
 
-const AppointmentsList = ({ appointments = [] }) => {
+const AppointmentsList = ({ appointments = [], onCancel }) => {
+  const handleCancel = (
+    id,
+    patient_id,
+    operatory_id,
+    provider_id,
+    start_time
+  ) => {
+    window.confirm("Are you sure you want to cancel this appointment?") &&
+      onCancel(id, patient_id, operatory_id, provider_id, start_time);
+  };
   return (
     <>
       {appointments.length > 0 ? (
@@ -13,17 +23,42 @@ const AppointmentsList = ({ appointments = [] }) => {
             <div className={styles.list_header}>Note</div>
             <div className={styles.list_header}>Provider</div>
             <div className={styles.list_header}>Start Time</div>
+            <div></div>
           </li>
 
           {/* appointments */}
           {appointments.map(
-            ({ id, patient_name, note, provider_name, start_time }) => (
+            ({
+              id,
+              patient_name,
+              note,
+              provider_name,
+              start_time,
+              patient_id,
+              operatory_id,
+              provider_id,
+            }) => (
               <li key={id} className={styles.appointment_list_item}>
                 <div className={styles.item_field}>{patient_name}</div>
                 <div className={styles.item_field}>{note}</div>
                 <div className={styles.item_field}>{provider_name}</div>
                 <div className={styles.item_field}>
                   {formatDate(start_time)}
+                </div>
+                <div>
+                  <button
+                    onClick={() =>
+                      handleCancel(
+                        id,
+                        patient_id,
+                        operatory_id,
+                        provider_id,
+                        start_time
+                      )
+                    }
+                  >
+                    Cancel
+                  </button>
                 </div>
               </li>
             )

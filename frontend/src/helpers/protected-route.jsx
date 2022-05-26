@@ -20,9 +20,12 @@ const ProtectedRoute = ({ children }) => {
   const navigation = useNavigate();
 
   const onError = (error) => {
+    console.log(error);
     setErrorOccurred(true);
     setFailedMessage(
-      `${FAILURE_MESSAGES.SOMETHING_WENT_WRONG} <br>Reason: ${error.message}`
+      `${FAILURE_MESSAGES.SOMETHING_WENT_WRONG} ${
+        error.message ? `<br>Reason: ${error.message}` : ""
+      }`
     );
     setIsAuthenticated(false);
   };
@@ -80,10 +83,25 @@ const ProtectedRoute = ({ children }) => {
             className={commonStyles.error_message}
             dangerouslySetInnerHTML={{ __html: failedMessage }}
           ></div>
-          <div style={{ marginTop: "2rem" }}>
+          <div
+            style={{
+              marginTop: "2rem",
+              display: "flex",
+              // flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
             <Link to="/login" style={{ fontSize: "1.2rem" }}>
               Return to the Login Page
             </Link>
+            <button
+              onClick={() => window.location.reload()}
+              className={commonStyles.button}
+              style={{ width: "150px" }}
+            >
+              Refresh Page
+            </button>
           </div>
         </div>
       ) : (

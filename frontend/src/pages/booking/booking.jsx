@@ -1,27 +1,37 @@
 import classNames from "classnames";
-import React, { useContext, useEffect, useMemo, useRef, useState } from "react";
-import { Select } from "../../components/select";
+import React, {
+  useContext,
+  useEffect,
+  useImperativeHandle,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { HomeContext } from "../../helpers/protected-route";
 import commonStyles from "../../styles/common.module.css";
-import { getData } from "../../utils";
-import { formatDate } from "./../../utils";
+import { Days } from "../../utils";
 import { AddPatient } from "./add-patient-field";
+import { BookingFields } from "./booking-fields";
 import styles from "./booking.module.css";
 
-const API = process.env.REACT_APP_API;
-
-const AppointmentBookingForm = () => {
-  const [patients, setPatients] = useState([]);
-  const [providers, setProviders] = useState([]);
-  const [operators, setOperators] = useState([]);
-  const [slots, setSlots] = useState([]);
-
-  const formRef = useRef(null);
-  const { onError } = useContext(HomeContext);
+const AppointmentBookingForm = React.forwardRef((props, ref) => {
+  const {
+    patients,
+    providers,
+    operators,
+    onSubmit,
+    onProviderSelected,
+    onLocationSelected,
+    onFetchSlots,
+    slots,
+    locations,
+    onPatientTypeChange,
+  } = props;
 
   const [selectedPatient, setSelectedPatient] = useState(null);
   const [selectedProvider, setSelectedProvider] = useState(null);
-  const [selectedOperator, setSelectedOperator] = useState(null);
+  const [selectedLocation, setSelectedLocation] = useState(null);
+
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedSlot, setSelectedSlot] = useState(null);
   const [notes, setNotes] = useState("");
@@ -33,94 +43,102 @@ const AppointmentBookingForm = () => {
     bio: "",
   });
 
+  const formRef = useRef(null);
+  const bookingFieldsRef = useRef(null);
+  const { onError } = useContext(HomeContext);
   const locationsData = useContext(HomeContext);
 
+  /** Resets the form */
+  const resetForm = () => {
+    if (formRef.current) {
+      formRef.current.reset();
+      bookingFieldsRef.current.reset();
+      const selects = Array.from(formRef.current.querySelectorAll("select"));
+      selects.forEach((select) => (select.selectedIndex = 0));
+      setSelectedLocation("");
+      setSelectedProvider("");
+      setSelectedPatient("");
+      setPatientInfo({});
+      setSelectedDate(null);
+      setSelectedSlot(null);
+      setNotes("");
+    }
+  };
+
+  useImperativeHandle(ref, () => ({
+    reset: () => {
+      resetForm();
+    },
+  }));
+
   useEffect(() => {
-    const fetchData = async (type) => {
-      try {
-        const request = await getData(`${API}/${type}`);
-
-        const result = await request.json();
-
-        if (!result.code) {
-          return;
-        }
-
-        if (type === "patients") {
-          setPatients(result.data.patients);
-        } else if (type === "providers") {
-          setProviders(
-            result.data.map((provider) => ({
-              ...provider,
-              name: provider.doctor_name,
-            }))
-          );
-        } else if (type === "operatories") {
-          setOperators(result.data);
-        }
-      } catch (error) {
-        onError(error);
-      }
-    };
-
-    // fetch patients, providers, operators
-    fetchData("patients");
-    fetchData("providers");
-    fetchData("operatories");
-  }, []);
+    if (selectedProvider) {
+      onProviderSelected(selectedProvider);
+    }
+  }, [selectedProvider]);
 
   useEffect(() => {
     const fetchSlots = async () => {
       try {
-        const locations = locationsData.locations;
+        if (selectedLocation) {
+          const locations = locationsData.locations;
 
-        if (!locations.length) {
-          return;
-        }
+          if (!locations.length) {
+            return;
+          }
 
-        const locationId = locations[0].locations[0].id;
+          const locationId = locations[0].locations[0].id;
 
-        const request = await getData(
-          `${API}/appointments/slots?providerId=${+selectedProvider}&locationId=${locationId}&startDate=${selectedDate}`
-        );
-
-        const result = await request.json();
-
-        if (result.code && result.data.length) {
-          setSlots(
-            result.data[0].slots.map((slot) => ({
-              ...slot,
-              name: formatDate(slot.time),
-            }))
-          );
+          onFetchSlots({
+            locationId,
+            providerId: selectedProvider,
+            startDate: selectedDate,
+            operatoryId: selectedLocation,
+          });
         }
       } catch (error) {
         onError(error);
       }
     };
 
-    if (selectedProvider && selectedDate) {
+    // start fetching slots once the date and location are selected
+    if (selectedDate && selectedLocation) {
       fetchSlots();
     }
-  }, [selectedProvider, selectedDate, locationsData]);
+  }, [selectedDate, locationsData, selectedLocation]);
 
   const patientDataEntered = useMemo(
     () => selectedPatient || (patientInfo.firstName && patientInfo.lastName),
     [selectedPatient, patientInfo]
   );
 
+  const disabledDays = useMemo(() => {
+    let disabledDays = [];
+
+    if (operators.length && selectedLocation) {
+      const availableDays = operators
+        .filter((op) => op.operatory_id === +selectedLocation)
+        .flatMap((op) => op.days);
+
+      Days.forEach((day, index) => {
+        if (!availableDays.includes(day)) {
+          disabledDays.push(index);
+        }
+      });
+    } else {
+      disabledDays = [..."0123456"].map((x) => +x);
+    }
+
+    return disabledDays;
+  }, [operators.length, selectedLocation]);
+
   /** Checks whether the form can be submitted or not */
   const canSubmit = useMemo(
     () =>
-      patientDataEntered &&
-      selectedProvider &&
-      selectedOperator &&
-      selectedDate &&
-      selectedSlot,
+      patientDataEntered && selectedProvider && selectedDate && selectedSlot,
     [
       selectedPatient,
       selectedProvider,
-      selectedOperator,
       selectedDate,
       selectedSlot,
       patientDataEntered,
@@ -129,10 +147,16 @@ const AppointmentBookingForm = () => {
 
   /** handlers */
   const handlePatientSelection = (ev) => setSelectedPatient(ev.target.value);
-  const handleProviderSelection = (ev) => setSelectedProvider(ev.target.value);
-  const handleOperatorSelection = (ev) => setSelectedOperator(ev.target.value);
+  const handleProviderSelection = (ev) => {
+    setSelectedLocation("");
+    setSelectedProvider(ev.target.value);
+  };
+  const handleLocationSelection = (ev) => {
+    setSelectedLocation(ev.target.value);
+    onLocationSelected(ev.target.value);
+  };
 
-  const handleDateSelection = (ev) => setSelectedDate(ev.target.value);
+  const handleDateSelection = (date) => setSelectedDate(date);
 
   const handleSlotSelection = (ev) => setSelectedSlot(ev.target.value);
   const handleNotesChange = (ev) => setNotes(ev.target.value);
@@ -147,6 +171,7 @@ const AppointmentBookingForm = () => {
       },
     });
     setPatientType(ev.target.value);
+    onPatientTypeChange(ev.target.value);
   };
 
   const handlePatientFirstNameChange = (ev) =>
@@ -165,21 +190,12 @@ const AppointmentBookingForm = () => {
       bio: { ...prev.bio, gender: ev.target.value },
     }));
   };
-
-  /** Resets the form */
-  const resetForm = (ev) => {
-    ev.preventDefault();
-    if (formRef.current) {
-      formRef.current.reset();
-      const selects = Array.from(formRef.current.querySelectorAll("select"));
-      selects.forEach((select) => (select.selectedIndex = 0));
-    }
-  };
+  /** handlers */
 
   /** Handler to submit the form */
   const submitForm = (ev) => {
     ev.preventDefault();
-    const bookAppointment = async () => {
+    const bookAppointment = () => {
       try {
         let patientData = null;
 
@@ -198,33 +214,17 @@ const AppointmentBookingForm = () => {
             },
           };
         }
-
-        const request = await fetch(`${API}/appointments/book-appointment`, {
-          credentials: "include",
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
+        onSubmit({
+          appt: {
+            ...patientData,
+            provider_id: selectedProvider,
+            operatory_id: selectedLocation,
+            start_time: selectedSlot,
+            confirmed: true,
+            patient_confirmed: true,
+            note: notes,
           },
-          body: JSON.stringify({
-            appt: {
-              ...patientData,
-              provider_id: selectedProvider,
-              operatory_id: selectedOperator,
-              start_time: selectedSlot,
-              confirmed: true,
-              patient_confirmed: true,
-              note: notes,
-            },
-          }),
         });
-
-        const result = await request.json();
-
-        if (result.code) {
-          alert("Appointment booked successfully!");
-        } else {
-          alert(`Appointment booking failed!\n${result.error}`);
-        }
       } catch (error) {
         onError(error);
       }
@@ -250,62 +250,19 @@ const AppointmentBookingForm = () => {
           patients={patients}
         />
 
-        {/* provider */}
-        <div className={commonStyles.form_field}>
-          <Select
-            label="Provider"
-            options={providers}
-            onChange={handleProviderSelection}
-            id="provider"
-            placeholder="Select a provider"
-          />
-        </div>
-
-        {/* operatory */}
-        <div className={commonStyles.form_field}>
-          <Select
-            label="Location"
-            options={operators}
-            onChange={handleOperatorSelection}
-            id="location"
-            placeholder="Select a location"
-          />
-        </div>
-
-        {/* provider */}
-        <div className={commonStyles.form_field}>
-          <label className={commonStyles.label} htmlFor="provider">
-            Choose a date
-          </label>
-          <input
-            type="date"
-            id="start_time"
-            aria-label="start time"
-            className={commonStyles.input}
-            onChange={handleDateSelection}
-          />
-        </div>
-
-        <div className={commonStyles.form_field}>
-          <Select
-            label="Slot"
-            options={slots}
-            onChange={handleSlotSelection}
-            id="slot"
-            placeholder="Select a slot"
-          />
-        </div>
-
-        <div className={commonStyles.form_field}>
-          <label className={commonStyles.label} htmlFor="notes">
-            Note
-          </label>
-          <textarea
-            className={commonStyles.textarea}
-            id="notes"
-            onChange={handleNotesChange}
-          />
-        </div>
+        <BookingFields
+          slots={slots}
+          providers={providers}
+          locations={locations}
+          handleDateSelection={handleDateSelection}
+          handleProviderSelection={handleProviderSelection}
+          handleSlotSelection={handleSlotSelection}
+          handleNotesChange={handleNotesChange}
+          handleLocationSelection={handleLocationSelection}
+          disabledDays={disabledDays}
+          patientType={patientType}
+          ref={bookingFieldsRef}
+        />
 
         {/* button controls */}
         <div className={commonStyles.controls}>
@@ -319,13 +276,19 @@ const AppointmentBookingForm = () => {
           >
             Book Appointment
           </button>
-          <button className={commonStyles.button} onClick={resetForm}>
+          <button
+            className={commonStyles.button}
+            onClick={(ev) => {
+              ev.preventDefault();
+              resetForm();
+            }}
+          >
             Reset
           </button>
         </div>
       </form>
     </div>
   );
-};
+});
 
 export { AppointmentBookingForm };

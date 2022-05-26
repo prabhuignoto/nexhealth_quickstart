@@ -38,6 +38,33 @@ appointmentRouter.get("/", async (req, res) => {
   }
 });
 
+appointmentRouter.get("/filter-by-provider/:id", async (req, res) => {
+  try {
+    const params = new URLSearchParams({
+      ...nexHealthParams,
+      page: 1,
+      per_page: 50,
+      start: req.query.startDate,
+      end: req.query.endDate,
+      "provider_ids[]": req.params.id,
+      // "operatory_ids[]": req.query.operatoryId,
+    });
+
+    const response = await fetch(
+      `${process.env.API_URL}/appointments?${params}`,
+      {
+        headers: getHeaders(false, req.session.token),
+      }
+    );
+
+    const appointments = await response.json();
+
+    res.json(appointments);
+  } catch (error) {
+    console.log(error);
+  }
+});
+
 appointmentRouter.get("/slots", async (req, res) => {
   try {
     const params = new URLSearchParams({
@@ -45,6 +72,7 @@ appointmentRouter.get("/slots", async (req, res) => {
       start_date: req.query.startDate,
       "lids[]": req.query.locationId,
       "pids[]": req.query.providerId,
+      "operatory_ids[]": req.query.operatoryId,
       days: 1,
       slot_length: 30,
     });
@@ -80,6 +108,23 @@ appointmentRouter.post("/book-appointment", async (req, res) => {
 
   const appointment = await response.json();
 
+  res.json(appointment);
+});
+
+appointmentRouter.patch("/cancel-appointment/:id", async (req, res) => {
+  const params = new URLSearchParams({
+    ...nexHealthParams,
+  });
+
+  const response = await fetch(
+    `${process.env.API_URL}/appointments/${req.params.id}?${params}`,
+    {
+      method: "PATCH",
+      headers: getHeaders(false, req.session.token),
+      body: JSON.stringify(req.body),
+    }
+  );
+  const appointment = await response.json();
   res.json(appointment);
 });
 

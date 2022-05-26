@@ -1,12 +1,20 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
+import { apiGET } from "../../api-helpers";
+import { HomeContext } from "../../helpers/protected-route";
 import styles from "../../styles/list.module.css";
-import { getData } from "../../utils";
 import { ListItem } from "./availability-list-item";
 
 const API = process.env.REACT_APP_API;
 
 const AvailabilitiesList = ({ availabilities = [], onDelete }) => {
   const queriedOperatories = useRef({});
+  const { onError } = useContext(HomeContext);
 
   const [operatoriesDetails, setOperatoriesDetails] = useState({});
 
@@ -16,12 +24,13 @@ const AvailabilitiesList = ({ availabilities = [], onDelete }) => {
   };
 
   const getOperatoryDetails = useCallback(async (id) => {
-    const result = await getData(`${API}/operatories/${id}`);
-    const operatory = await result.json();
-
-    if (operatory.code) {
-      setOperatoriesDetails((prev) => ({ ...prev, [id]: operatory.data.name }));
-    }
+    apiGET({
+      url: `${API}/operatories/${id}`,
+      onSuccess: (data) => {
+        setOperatoriesDetails((prev) => ({ ...prev, [id]: data.name }));
+      },
+      onError,
+    });
   }, []);
 
   useEffect(() => {

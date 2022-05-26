@@ -1,9 +1,9 @@
 import classNames from "classnames";
 import React, { useContext, useEffect, useMemo, useRef, useState } from "react";
+import { apiGET } from "../../api-helpers";
 import { Select } from "../../components/select";
 import { HomeContext } from "../../helpers/protected-route";
 import commonStyles from "../../styles/common.module.css";
-import { getData } from "../../utils";
 import styles from "./create-availability.module.css";
 
 const days = [
@@ -49,18 +49,18 @@ const CreateAvailability = () => {
   useEffect(() => {
     const getProviders = async () => {
       try {
-        const request = await getData(`${process.env.REACT_APP_API}/providers`);
-
-        const result = await request.json();
-
-        if (result.code && result.data.length) {
-          setProviders(
-            result.data.map((provider) => ({
-              ...provider,
-              name: provider.doctor_name,
-            }))
-          );
-        }
+        apiGET({
+          url: `${process.env.REACT_APP_API}/providers`,
+          onSuccess: (data) => {
+            setProviders(
+              data.map((provider) => ({
+                ...provider,
+                name: provider.doctor_name,
+              }))
+            );
+          },
+          onError,
+        });
       } catch (error) {
         onError(error);
       }
@@ -68,15 +68,13 @@ const CreateAvailability = () => {
 
     const getOperatories = async () => {
       try {
-        const request = await getData(
-          `${process.env.REACT_APP_API}/operatories`
-        );
-
-        const result = await request.json();
-
-        if (result.code && result.data.length) {
-          setOperatories(result.data);
-        }
+        apiGET({
+          url: `${process.env.REACT_APP_API}/operatories`,
+          onSuccess: (data) => {
+            setOperatories(data);
+          },
+          onError,
+        });
       } catch (error) {
         onError(error);
       }

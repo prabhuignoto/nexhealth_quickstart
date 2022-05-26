@@ -5,9 +5,9 @@ import React, {
   useRef,
   useState,
 } from "react";
+import { apiGET } from "../../api-helpers";
 import { Loader } from "../../components/loader";
-import { FAILURE_MESSAGES } from "../../messages";
-import { getData } from "../../utils";
+import { patchData } from "../../utils";
 import { HomeContext } from "./../../helpers/protected-route";
 import { AppointmentsList } from "./appointments-list";
 import styles from "./appointments.module.css";
@@ -44,29 +44,28 @@ const Appointments = () => {
     }
   }, []);
 
+  const fetchAppointments = async (startDate, endDate) => {
+    try {
+      setIsLoadingData(true);
+      apiGET({
+        url: `${API}/appointments?startDate=${startDate}&endDate=${endDate}`,
+        onSuccess: (data) => {
+          setAppointments(data.filter((appointment) => !appointment.cancelled));
+          setIsLoadingData(false);
+          // setDateFilter(() => ({ startDate: "", endDate: "" }));
+        },
+        onError,
+      });
+    } catch (error) {
+      setIsLoadingData(false);
+      onError(error);
+    }
+  };
+
   useEffect(() => {
     if (dateFilter.startDate && dateFilter.endDate) {
-      const fetchAppointments = async () => {
-        try {
-          setIsLoadingData(true);
-          const request = await getData(
-            `${API}/appointments?startDate=${dateFilter.startDate}&endDate=${dateFilter.endDate}`
-          );
-          const result = await request.json();
-
-          if (result.code) {
-            setAppointments(result.data);
-            setIsLoadingData(false);
-
-            setDateFilter(() => ({ startDate: "", endDate: "" }));
-          }
-        } catch (error) {
-          setIsLoadingData(false);
-          onError(FAILURE_MESSAGES.SERVER_DOWN);
-        }
-      };
-
-      fetchAppointments();
+      const { startDate, endDate } = dateFilter;
+      fetchAppointments(startDate, endDate);
     }
   }, [dateFilter.startDate, dateFilter.endDate]);
 
@@ -85,6 +84,40 @@ const Appointments = () => {
         startDate: startDateRef.current.value,
         endDate: e.target.value,
       }));
+    }
+  };
+
+  const handleCancelAppointment = async (
+    id,
+    patient_id,
+    operatory_id,
+    provider_id,
+    start_time
+  ) => {
+    try {
+      const request = await patchData(
+        `${API}/appointments/cancel-appointment/${id}`,
+        {
+          appt: {
+            patient_id,
+            operatory_id,
+            provider_id,
+            start_time,
+            cancelled: true,
+          },
+        }
+      );
+
+      const result = await request.json();
+
+      if (result.code) {
+        window.alert("Appointment cancelled successfully");
+        fetchAppointments(dateFilter.startDate, dateFilter.endDate);
+      } else {
+        window.alert(`Failed to cancel appointment\n${result.error}`);
+      }
+    } catch (error) {
+      onError(error);
     }
   };
 
@@ -119,7 +152,10 @@ const Appointments = () => {
             <Loader />
           </div>
         ) : (
-          <AppointmentsList appointments={appointments} />
+          <AppointmentsList
+            appointments={appointments}
+            onCancel={handleCancelAppointment}
+          />
         )}
       </div>
     </div>

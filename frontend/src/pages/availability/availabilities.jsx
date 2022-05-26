@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
+import { apiGET } from "../../api-helpers";
 import { Loader } from "../../components/loader";
 import { HomeContext } from "../../helpers/protected-route";
-import { getData } from "../../utils";
 import { AvailabilitiesList } from "./availabilities-list";
 import styles from "./availabilities.module.css";
 
@@ -55,13 +55,14 @@ const Availabilities = () => {
     const fetchAvailabilities = async () => {
       try {
         setIsLoadingData(true);
-        const request = await getData(`${API}/availabilities`);
-        const result = await request.json();
-
-        if (result.code) {
-          setIsLoadingData(false);
-          setAvailabilities(parseData(result.data));
-        }
+        apiGET({
+          url: `${API}/availabilities`,
+          onSuccess: (data) => {
+            setIsLoadingData(false);
+            setAvailabilities(parseData(data));
+          },
+          onError,
+        });
       } catch (error) {
         setIsLoadingData(false);
         onError(error);
@@ -99,11 +100,13 @@ const Availabilities = () => {
           <div className={styles.loader_wrapper}>
             <Loader />
           </div>
-        ) : (
+        ) : availabilities.length ? (
           <AvailabilitiesList
             availabilities={availabilities}
             onDelete={handleDelete}
           />
+        ) : (
+          <span className={styles.no_data}>No Availabilities found</span>
         )}
       </div>
     </div>

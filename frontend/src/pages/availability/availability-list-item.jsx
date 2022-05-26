@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useMemo, useState } from "react";
+import { apiGET } from "../../api-helpers";
 import { HomeContext } from "../../helpers/protected-route";
 import styles from "../../styles/list.module.css";
-import { getData } from "../../utils";
 
 const API = process.env.REACT_APP_API;
 
@@ -18,12 +18,13 @@ const ListItem = ({
   useEffect(() => {
     const getProviderDetails = async () => {
       try {
-        const result = await getData(`${API}/providers/${provider_id}`);
-        const provider = await result.json();
-
-        if (provider.code) {
-          setName(provider.data.name);
-        }
+        apiGET({
+          url: `${API}/providers/${provider_id}`,
+          onSuccess: (data) => {
+            setName(data.name);
+          },
+          onError,
+        });
       } catch (error) {
         onError(error);
       }
