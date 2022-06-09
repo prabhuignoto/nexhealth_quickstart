@@ -3,6 +3,7 @@ import cors from "cors";
 import express from "express";
 import session from "express-session";
 import url from "url";
+import { appointmentCategoriesRouter } from "./routers/appointment-categories-router.js";
 import { appointmentRouter } from "./routers/appointment-router.js";
 import { authRouter } from "./routers/auth-router.js";
 import { availabilitiesRouter } from "./routers/availabilities-router.js";
@@ -56,6 +57,7 @@ app.use(function (req, res, next) {
 app.use("/api", router);
 app.use("/api/auth", authRouter);
 app.use("/api/appointments", appointmentRouter);
+app.use("/api/appointment-categories", appointmentCategoriesRouter);
 app.use("/api/availabilities", availabilitiesRouter);
 app.use("/api/providers", providersRouter);
 app.use("/api/operatories", operatoriesRouter);

@@ -47,7 +47,6 @@ appointmentRouter.get("/filter-by-provider/:id", async (req, res) => {
       start: req.query.startDate,
       end: req.query.endDate,
       "provider_ids[]": req.params.id,
-      // "operatory_ids[]": req.query.operatoryId,
     });
 
     const response = await fetch(
