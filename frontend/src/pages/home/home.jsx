@@ -1,6 +1,7 @@
 import classNames from "classnames";
-import React, { useState } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
+import { AddAppointmentCategory } from "../appointment-categories/add-appointment-category";
 import { Appointments } from "../appointments/appointments";
 import { Availabilities } from "../availability/availabilities";
 import { CreateAvailability } from "../availability/create-availability";
@@ -9,9 +10,10 @@ import styles from "./home.module.css";
 
 const tabs = [
   { name: "appointments", label: "Appointments" },
+  { name: "appointmentCategory", label: "Add Appointment Category" },
   { name: "booking", label: "Book Appointment" },
-  { name: "availability", label: "Add Provider Availability" },
   { name: "availabilities", label: "Provider Availabilities" },
+  { name: "availability", label: "Add Provider Availability" },
 ];
 
 const Home = () => {
@@ -47,6 +49,7 @@ const Home = () => {
           {activeTab === "booking" && <BookingContainer />}
           {activeTab === "availability" && <CreateAvailability />}
           {activeTab === "availabilities" && <Availabilities />}
+          {activeTab === "appointmentCategory" && <AddAppointmentCategory />}
         </div>
       </section>
     </div>
