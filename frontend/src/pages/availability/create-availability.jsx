@@ -1,5 +1,5 @@
 import classNames from "classnames";
-import React, { useContext, useEffect, useMemo, useRef, useState } from "react";
+import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { apiGET } from "../../api-helpers";
 import { Select } from "../../components/select";
 import { HomeContext } from "../../helpers/protected-route";
@@ -20,10 +20,13 @@ const days = [
 const CreateAvailability = () => {
   const [providers, setProviders] = useState([]);
   const [operatories, setOperatories] = useState([]);
+  const [appointmentCategories, setAppointmentCategories] = useState([]);
 
   const [selectedProvider, setSelectedProvider] = useState(null);
   const [selectedOperatory, setSelectedOperatory] = useState(null);
   const [selectedDays, setSelectedDays] = useState([]);
+  const [selectedAppointmentCategory, setSelectedAppointmentCategory] =
+    useState([]);
 
   const [selectedStartTime, setSelectedStartTime] = useState(null);
   const [selectedEndTime, setSelectedEndTime] = useState(null);
@@ -46,6 +49,13 @@ const CreateAvailability = () => {
   const handleSelectStartTime = (ev) => setSelectedStartTime(ev.target.value);
 
   const handleSelectEndTime = (ev) => setSelectedEndTime(ev.target.value);
+
+  const handleSelectedAppointmentCategory = (ev) => {
+    const options = Array.from(ev.target.options);
+    setSelectedAppointmentCategory(
+      options.filter((option) => option.selected).map((v) => +v.value)
+    );
+  };
 
   useEffect(() => {
     const getProviders = async () => {
@@ -81,8 +91,23 @@ const CreateAvailability = () => {
       }
     };
 
+    const getAppointmentCategories = async () => {
+      try {
+        apiGET({
+          url: `${process.env.REACT_APP_API}/appointment-categories`,
+          onSuccess: (data) => {
+            setAppointmentCategories(data);
+          },
+          onError,
+        });
+      } catch (error) {
+        onError(error);
+      }
+    };
+
     getProviders();
     getOperatories();
+    getAppointmentCategories();
   }, []);
 
   /** resets the form */
@@ -91,6 +116,12 @@ const CreateAvailability = () => {
     if (formRef.current) {
       formRef.current.reset();
       const selects = formRef.current.querySelectorAll("select");
+      setSelectedAppointmentCategory([]);
+      setSelectedDays([]);
+      setSelectedEndTime(null);
+      setSelectedOperatory(null);
+      setSelectedProvider(null);
+      setSelectedStartTime(null);
       Array.from(selects).forEach((select) => {
         select.selectedIndex = 0;
       });
@@ -104,6 +135,7 @@ const CreateAvailability = () => {
       selectedStartTime &&
       selectedEndTime &&
       selectedOperatory &&
+      selectedAppointmentCategory.length &&
       selectedProvider,
     [
       selectedDays.length,
@@ -111,6 +143,7 @@ const CreateAvailability = () => {
       selectedStartTime,
       selectedEndTime,
       selectedOperatory,
+      selectedAppointmentCategory.length,
     ]
   );
 
@@ -130,6 +163,7 @@ const CreateAvailability = () => {
               end_time: selectedEndTime,
               operatory_id: selectedOperatory,
               provider_id: selectedProvider,
+              appointment_category_ids: selectedAppointmentCategory,
             },
           }
         );
@@ -216,6 +250,17 @@ const CreateAvailability = () => {
               />
             </div>
           </div>
+        </div>
+
+        <div className={commonStyles.form_field}>
+          <Select
+            label="Choose Appointment Category"
+            options={appointmentCategories}
+            placeholder="Select a category"
+            id="appointment-category"
+            onChange={handleSelectedAppointmentCategory}
+            multiple
+          />
         </div>
 
         <div className={commonStyles.controls}>

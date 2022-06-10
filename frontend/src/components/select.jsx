@@ -1,8 +1,17 @@
+import classNames from "classnames";
 import React, { useImperativeHandle, useRef } from "react";
 import styles from "./select.module.css";
 
 const Select = React.forwardRef((props, ref) => {
-  const { label, options = [], placeholder, id, onChange, children } = props;
+  const {
+    label,
+    options = [],
+    placeholder,
+    id,
+    onChange,
+    children,
+    multiple = false,
+  } = props;
   const selectRef = useRef(null);
 
   useImperativeHandle(ref, () => ({
@@ -20,10 +29,11 @@ const Select = React.forwardRef((props, ref) => {
       )}
       <select
         id={id}
-        className={styles.select}
+        className={classNames(styles.select, multiple ? styles.multiple : "")}
         onChange={onChange}
-        defaultValue={"placeholder"}
+        defaultValue={!multiple ? "placeholder" : [0]}
         ref={selectRef}
+        multiple={multiple}
       >
         <option
           value="placeholder"
