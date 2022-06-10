@@ -5,7 +5,15 @@
 
 .select {
   width: 300px;
-  height: 34px;
   border-radius: 4px;
   border: 1px solid #ccc;
+}
+
+.select:not(.multiple) {
+  height: 34px;
+}
+
+.select.multiple {
+  height: auto;
+  min-height: 180px;
 }
