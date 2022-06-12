@@ -1,8 +1,9 @@
-import React, { useContext, useEffect, useMemo, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { apiGET } from "../../api-helpers";
 import { HomeContext } from "../../helpers/protected-route";
-import commonStyles from "../../styles/common.module.css";
+import TrashIcon from "../../icons/trash";
 import styles from "../../styles/list.module.css";
+import availabilityStyles from "./availabilities.module.css";
 
 const API = process.env.REACT_APP_API;
 
@@ -34,24 +35,49 @@ const ListItem = ({
     getProviderDetails();
   }, [provider_id]);
 
-  const getText = (id, days, beginTime, endTime) =>
-    `Available at <b>${operatoryDetails[id]}</b> on ${days.map((day) =>
-      day.slice(0, 3)
-    )} from ${beginTime} to ${endTime}`;
+  console.log(operatoryDetails);
 
   const getAvailabilityContent = useMemo(
     () =>
       name && (
         <ul style={{ padding: 0, margin: 0 }}>
+          <li className={availabilityStyles.grid_item}>
+            <div className={availabilityStyles.grid_cell}>Location</div>
+            <div className={availabilityStyles.grid_cell}>Days</div>
+            <div className={availabilityStyles.grid_cell}>Timings</div>
+            <div className={availabilityStyles.grid_cell}>Appointment Category</div>
+            <div className={availabilityStyles.grid_cell}></div>
+          </li>
           {details.map(
-            ({ days, operatory_id, timings: { beginTime, endTime } }, index) =>
+            (
+              { days, operatory_id, timings: { beginTime, endTime }, id },
+              index
+            ) =>
               operatoryDetails[operatory_id] && (
-                <li
-                  key={index}
-                  dangerouslySetInnerHTML={{
-                    __html: getText(operatory_id, days, beginTime, endTime),
-                  }}
-                ></li>
+                <li key={id} className={availabilityStyles.grid_item}>
+                  <div className={availabilityStyles.grid_cell}>
+                    {operatoryDetails[operatory_id].name}
+                  </div>
+                  <div className={availabilityStyles.grid_cell}>
+                    {days.map((day) => day.slice(0, 3)).join(", ")}
+                  </div>
+                  <div
+                    className={availabilityStyles.grid_cell}
+                  >{`${beginTime} - ${endTime}`}</div>
+                  <div className={availabilityStyles.grid_cell}>
+                    {operatoryDetails[operatory_id].appt_categories
+                      .map((cat) => cat.name)
+                      .join(", ")}
+                  </div>
+                  <div className={availabilityStyles.grid_cell}>
+                    <button
+                      onClick={() => onDeleteClick(id)}
+                      className={availabilityStyles.delete_button_wrapper}
+                    >
+                      <TrashIcon />
+                    </button>
+                  </div>
+                </li>
               )
           )}
         </ul>
@@ -64,14 +90,14 @@ const ListItem = ({
       <li key={id} className={styles.item}>
         <div className={styles.item_field}>{name}</div>
         <div className={styles.item_field}>{getAvailabilityContent}</div>
-        <div>
+        {/* <div>
           <button
             onClick={() => onDeleteClick(details.map((det) => det.id))}
-            className={commonStyles.button}
+            className={styles.delete_button_wrapper}
           >
-            Delete
+            <TrashIcon />
           </button>
-        </div>
+        </div> */}
       </li>
     )
   );

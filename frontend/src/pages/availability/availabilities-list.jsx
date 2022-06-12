@@ -1,10 +1,4 @@
-import React, {
-  useCallback,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { apiGET } from "../../api-helpers";
 import { HomeContext } from "../../helpers/protected-route";
 import styles from "../../styles/list.module.css";
@@ -18,16 +12,22 @@ const AvailabilitiesList = ({ availabilities = [], onDelete }) => {
 
   const [operatoriesDetails, setOperatoriesDetails] = useState({});
 
-  const onDeleteClick = (ids) => {
+  const onDeleteClick = (id) => {
     window.confirm("Are you sure you want to delete this availability?") &&
-      onDelete(ids);
+      onDelete(id);
   };
 
   const getOperatoryDetails = useCallback(async (id) => {
     apiGET({
       url: `${API}/operatories/${id}`,
-      onSuccess: (data) => {
-        setOperatoriesDetails((prev) => ({ ...prev, [id]: data.name }));
+      onSuccess: ({ name, appt_categories }) => {
+        setOperatoriesDetails((prev) => ({
+          ...prev,
+          [id]: {
+            name,
+            appt_categories,
+          },
+        }));
       },
       onError,
     });

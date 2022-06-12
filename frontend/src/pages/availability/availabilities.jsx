@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { apiGET } from "../../api-helpers";
 import { Loader } from "../../components/loader";
 import { HomeContext } from "../../helpers/protected-route";
@@ -73,7 +73,7 @@ const Availabilities = () => {
     fetchAvailabilities();
   }, [refetch]);
 
-  const handleDelete = (ids) => {
+  const handleDelete = (id) => {
     try {
       const deleteAvailability = async (id) => {
         const request = await fetch(`${API}/availabilities/delete/${id}`, {
@@ -88,7 +88,7 @@ const Availabilities = () => {
         }
       };
 
-      ids.forEach((id) => deleteAvailability(id));
+      deleteAvailability(id);
     } catch (error) {
       onError(error);
     }
