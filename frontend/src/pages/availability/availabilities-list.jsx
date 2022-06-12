@@ -18,9 +18,9 @@ const AvailabilitiesList = ({ availabilities = [], onDelete }) => {
 
   const [operatoriesDetails, setOperatoriesDetails] = useState({});
 
-  const onDeleteClick = (ids) => {
+  const onDeleteClick = (id) => {
     window.confirm("Are you sure you want to delete this availability?") &&
-      onDelete(ids);
+      onDelete(id);
   };
 
   const getOperatoryDetails = useCallback(async (id) => {
