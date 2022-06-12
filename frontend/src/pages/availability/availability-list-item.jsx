@@ -35,6 +35,8 @@ const ListItem = ({
     getProviderDetails();
   }, [provider_id]);
 
+  console.log(operatoryDetails);
+
   const getAvailabilityContent = useMemo(
     () =>
       name && (
@@ -43,6 +45,7 @@ const ListItem = ({
             <div className={availabilityStyles.grid_cell}>Location</div>
             <div className={availabilityStyles.grid_cell}>Days</div>
             <div className={availabilityStyles.grid_cell}>Timings</div>
+            <div className={availabilityStyles.grid_cell}>Appointment Category</div>
             <div className={availabilityStyles.grid_cell}></div>
           </li>
           {details.map(
@@ -53,7 +56,7 @@ const ListItem = ({
               operatoryDetails[operatory_id] && (
                 <li key={id} className={availabilityStyles.grid_item}>
                   <div className={availabilityStyles.grid_cell}>
-                    {operatoryDetails[operatory_id]}
+                    {operatoryDetails[operatory_id].name}
                   </div>
                   <div className={availabilityStyles.grid_cell}>
                     {days.map((day) => day.slice(0, 3)).join(", ")}
@@ -61,6 +64,11 @@ const ListItem = ({
                   <div
                     className={availabilityStyles.grid_cell}
                   >{`${beginTime} - ${endTime}`}</div>
+                  <div className={availabilityStyles.grid_cell}>
+                    {operatoryDetails[operatory_id].appt_categories
+                      .map((cat) => cat.name)
+                      .join(", ")}
+                  </div>
                   <div className={availabilityStyles.grid_cell}>
                     <button
                       onClick={() => onDeleteClick(id)}
