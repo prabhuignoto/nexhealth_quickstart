@@ -1,9 +1,8 @@
-import React from "react";
 import { Route, Routes } from "react-router-dom";
 import "./App.css";
 import { ErrorBoundary } from "./helpers/error-boundary";
 import { ProtectedRoute } from "./helpers/protected-route";
-import { Home } from "./pages/home/home";
+import { Home } from "./pages/home";
 import { Logout } from "./pages/home/logout";
 import { LoginPage } from "./pages/login/login";
 

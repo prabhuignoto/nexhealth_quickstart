@@ -1,7 +1,6 @@
-import React from "react";
 import { Select } from "../../components/select";
 import commonStyles from "../../styles/common.module.css";
-import styles from "./booking.module.css";
+import styles from "./styles.module.css";
 
 const AddPatient = ({
   patientType,

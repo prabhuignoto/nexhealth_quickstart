@@ -49,7 +49,7 @@
   font-weight: 500;
 }
 
-.grid_cell:not(:nth-child(5)) {
+.grid_cell:not(:nth-child(5)):not(:nth-child(4)) {
   border-right: 1px solid #ccc;
 }
 
@@ -61,8 +61,8 @@
   font-size: 0.85rem;
 }
 
-.grid_cell:nth-child(4) {
-  justify-items: center;
+.grid_cell:nth-child(5) {
+  justify-content: center;
 }
 
 .delete_button_wrapper {

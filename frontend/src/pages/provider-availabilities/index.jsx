@@ -3,7 +3,7 @@ import { apiGET } from "../../api-helpers";
 import { Loader } from "../../components/loader";
 import { HomeContext } from "../../helpers/protected-route";
 import { AvailabilitiesList } from "./availabilities-list";
-import styles from "./availabilities.module.css";
+import styles from "./styles.module.css";
 
 const API = process.env.REACT_APP_API;
 

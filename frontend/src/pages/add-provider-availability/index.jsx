@@ -5,7 +5,7 @@ import { Select } from "../../components/select";
 import { HomeContext } from "../../helpers/protected-route";
 import commonStyles from "../../styles/common.module.css";
 import { postData } from "../../utils";
-import styles from "./create-availability.module.css";
+import styles from "./styles.module.css";
 
 const days = [
   "Monday",
@@ -25,8 +25,10 @@ const CreateAvailability = () => {
   const [selectedProvider, setSelectedProvider] = useState(null);
   const [selectedOperatory, setSelectedOperatory] = useState(null);
   const [selectedDays, setSelectedDays] = useState([]);
-  const [selectedAppointmentCategory, setSelectedAppointmentCategory] =
-    useState([]);
+  const [
+    selectedAppointmentCategory,
+    setSelectedAppointmentCategory,
+  ] = useState([]);
 
   const [selectedStartTime, setSelectedStartTime] = useState(null);
   const [selectedEndTime, setSelectedEndTime] = useState(null);
@@ -200,10 +202,10 @@ const CreateAvailability = () => {
         </div>
         <div className={commonStyles.form_field}>
           <Select
-            label="Location"
+            label="Operatory"
             options={operatories}
-            placeholder="Select a location"
-            id="location"
+            placeholder="Select a Operatory"
+            id="operatory"
             onChange={handleOperatorySelection}
           />
         </div>

@@ -1,8 +1,8 @@
 import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { apiGET } from "../../api-helpers";
+import styles from "../../common-styles/list.module.css";
 import { HomeContext } from "../../helpers/protected-route";
-import styles from "../../styles/list.module.css";
-import { ListItem } from "./availability-list-item";
+import { ListItem } from "./availabilities-list-item";
 
 const API = process.env.REACT_APP_API;
 

@@ -1,12 +1,12 @@
 import { default as dayjs } from "dayjs";
 import utc from "dayjs/plugin/utc";
-import React, { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { apiGET } from "../../api-helpers";
 import { OverlayLoader } from "../../components/overlay-loader";
 import { HomeContext } from "../../helpers/protected-route";
 import { formatDate, postData } from "../../utils";
-import { AppointmentBookingForm } from "./booking";
-import styles from "./booking.module.css";
+import { AppointmentBookingForm } from "./book-appt-form";
+import styles from "./styles.module.css";
 
 dayjs.extend(utc);
 
@@ -16,7 +16,7 @@ const BookingContainer = () => {
   const [patients, setPatients] = useState([]);
   const [providers, setProviders] = useState([]);
   const [operators, setOperators] = useState([]);
-  const [locations, setLocations] = useState([]);
+  const [operatories, setOperatories] = useState([]);
 
   const [slots, setSlots] = useState([]);
   const { onError } = useContext(HomeContext);
@@ -25,7 +25,7 @@ const BookingContainer = () => {
 
   const reset = () => {
     setOperators([]);
-    setLocations([]);
+    setOperatories([]);
     setSlots([]);
   };
 
@@ -113,7 +113,7 @@ const BookingContainer = () => {
             if (operators.length === count) {
               setShowOverlayLoader(false);
             }
-            setLocations((prev) => {
+            setOperatories((prev) => {
               const exists = prev.some((location) => location.id === data.id);
               if (!exists) {
                 return prev.concat({ id: data.id, name: data.name });
@@ -159,7 +159,7 @@ const BookingContainer = () => {
       <AppointmentBookingForm
         patients={patients}
         providers={providers}
-        locations={locations}
+        operatories={operatories}
         operators={operators}
         onSubmit={onSubmit}
         onFetchSlots={handleFetchSlots}

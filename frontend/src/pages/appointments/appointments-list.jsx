@@ -1,6 +1,5 @@
-import React from "react";
-import commonStyles from "../../styles/common.module.css";
-import styles from "../../styles/list.module.css";
+import commonStyles from "../../common-styles/common.module.css";
+import styles from "../../common-styles/list.module.css";
 import { formatDate } from "./../../utils";
 
 const AppointmentsList = ({ appointments = [], onCancel }) => {
