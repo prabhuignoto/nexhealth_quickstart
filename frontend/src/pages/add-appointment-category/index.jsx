@@ -1,6 +1,6 @@
 import classNames from "classnames";
 import { useMemo, useState } from "react";
-import commonStyles from "../../styles/common.module.css";
+import commonStyles from "../../common-styles/common.module.css";
 import { postData } from "../../utils";
 import styles from "./styles.module.css";
 
@@ -13,11 +13,10 @@ const AddAppointmentCategory = () => {
   const handleCategoryChange = (e) => setCategory(e.target.value);
   const handleMinutesChange = (e) => setMinutes(e.target.value);
 
-  const canSubmit = useMemo(() => name && category && minutes, [
-    name,
-    category,
-    minutes,
-  ]);
+  const canSubmit = useMemo(
+    () => name && category && minutes,
+    [name, category, minutes]
+  );
 
   const submitData = async (data) => {
     try {

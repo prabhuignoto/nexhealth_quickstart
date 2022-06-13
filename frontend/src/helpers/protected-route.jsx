@@ -1,8 +1,8 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import commonStyles from "../common-styles/common.module.css";
 import { Loader } from "../components/loader";
 import { FAILURE_MESSAGES } from "../messages.js";
-import commonStyles from "../styles/common.module.css";
 import { getData } from "../utils";
 
 export const HomeContext = React.createContext({
@@ -30,10 +30,10 @@ const ProtectedRoute = ({ children }) => {
     setIsAuthenticated(false);
   };
 
-  const canShowFailureMessage = useMemo(() => errorOccurred || authFailed, [
-    errorOccurred,
-    authFailed,
-  ]);
+  const canShowFailureMessage = useMemo(
+    () => errorOccurred || authFailed,
+    [errorOccurred, authFailed]
+  );
 
   useEffect(() => {
     const check = async () => {

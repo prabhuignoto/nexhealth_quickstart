@@ -1,9 +1,9 @@
 import classNames from "classnames";
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import commonStyles from "../../common-styles/common.module.css";
 import { Loader } from "../../components/loader";
 import { FAILURE_MESSAGES } from "../../messages";
-import commonStyles from "../../styles/common.module.css";
 import styles from "./styles.module.css";
 
 const API = process.env.REACT_APP_API;

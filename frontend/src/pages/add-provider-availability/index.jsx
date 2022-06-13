@@ -1,9 +1,9 @@
 import classNames from "classnames";
 import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { apiGET } from "../../api-helpers";
+import commonStyles from "../../common-styles/common.module.css";
 import { Select } from "../../components/select";
 import { HomeContext } from "../../helpers/protected-route";
-import commonStyles from "../../styles/common.module.css";
 import { postData } from "../../utils";
 import styles from "./styles.module.css";
 
@@ -25,10 +25,8 @@ const CreateAvailability = () => {
   const [selectedProvider, setSelectedProvider] = useState(null);
   const [selectedOperatory, setSelectedOperatory] = useState(null);
   const [selectedDays, setSelectedDays] = useState([]);
-  const [
-    selectedAppointmentCategory,
-    setSelectedAppointmentCategory,
-  ] = useState([]);
+  const [selectedAppointmentCategory, setSelectedAppointmentCategory] =
+    useState([]);
 
   const [selectedStartTime, setSelectedStartTime] = useState(null);
   const [selectedEndTime, setSelectedEndTime] = useState(null);
