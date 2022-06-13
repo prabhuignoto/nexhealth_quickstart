@@ -1,19 +1,19 @@
 import React, { useEffect, useImperativeHandle, useRef, useState } from "react";
 import { DayPicker } from "react-day-picker";
 import "react-day-picker/dist/style.css";
+import commonStyles from "../../common-styles/common.module.css";
 import { Select } from "../../components/select";
-import commonStyles from "../../styles/common.module.css";
 
 const BookingFields = React.forwardRef((props, ref) => {
   const {
     providers,
     slots,
-    locations,
+    operatories,
     handleDateSelection,
     handleNotesChange,
     handleSlotSelection,
     handleProviderSelection,
-    handleLocationSelection,
+    handleOperatorySelection,
     disabledDays = [],
     patientType,
   } = props;
@@ -56,14 +56,14 @@ const BookingFields = React.forwardRef((props, ref) => {
         />
       </div>
 
-      {/* locations */}
+      {/* operatories */}
       <div className={commonStyles.form_field}>
         <Select
-          label="Location"
-          options={locations}
-          onChange={handleLocationSelection}
-          id="location"
-          placeholder="Select a location"
+          label="Operatory"
+          options={operatories}
+          onChange={handleOperatorySelection}
+          id="operatory"
+          placeholder="Select a Operatory"
           ref={locationRef}
         />
       </div>

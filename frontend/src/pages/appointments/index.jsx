@@ -1,11 +1,11 @@
 import dayjs from "dayjs";
-import React, { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { apiGET } from "../../api-helpers";
 import { Loader } from "../../components/loader";
+import { HomeContext } from "../../helpers/protected-route";
 import { patchData } from "../../utils";
-import { HomeContext } from "./../../helpers/protected-route";
 import { AppointmentsList } from "./appointments-list";
-import styles from "./appointments.module.css";
+import styles from "./styles.module.css";
 
 const API = process.env.REACT_APP_API;
 

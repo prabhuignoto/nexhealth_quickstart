@@ -1,9 +1,9 @@
 import { useContext, useEffect, useMemo, useState } from "react";
 import { apiGET } from "../../api-helpers";
+import styles from "../../common-styles/list.module.css";
 import { HomeContext } from "../../helpers/protected-route";
 import TrashIcon from "../../icons/trash";
-import styles from "../../styles/list.module.css";
-import availabilityStyles from "./availabilities.module.css";
+import availabilityStyles from "./styles.module.css";
 
 const API = process.env.REACT_APP_API;
 
@@ -35,17 +35,17 @@ const ListItem = ({
     getProviderDetails();
   }, [provider_id]);
 
-  console.log(operatoryDetails);
-
   const getAvailabilityContent = useMemo(
     () =>
       name && (
         <ul style={{ padding: 0, margin: 0 }}>
           <li className={availabilityStyles.grid_item}>
-            <div className={availabilityStyles.grid_cell}>Location</div>
+            <div className={availabilityStyles.grid_cell}>Operatory</div>
             <div className={availabilityStyles.grid_cell}>Days</div>
             <div className={availabilityStyles.grid_cell}>Timings</div>
-            <div className={availabilityStyles.grid_cell}>Appointment Category</div>
+            <div className={availabilityStyles.grid_cell}>
+              Appointment Category
+            </div>
             <div className={availabilityStyles.grid_cell}></div>
           </li>
           {details.map(
@@ -90,14 +90,6 @@ const ListItem = ({
       <li key={id} className={styles.item}>
         <div className={styles.item_field}>{name}</div>
         <div className={styles.item_field}>{getAvailabilityContent}</div>
-        {/* <div>
-          <button
-            onClick={() => onDeleteClick(details.map((det) => det.id))}
-            className={styles.delete_button_wrapper}
-          >
-            <TrashIcon />
-          </button>
-        </div> */}
       </li>
     )
   );

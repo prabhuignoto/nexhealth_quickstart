@@ -1,11 +1,11 @@
 import classNames from "classnames";
 import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { apiGET } from "../../api-helpers";
+import commonStyles from "../../common-styles/common.module.css";
 import { Select } from "../../components/select";
 import { HomeContext } from "../../helpers/protected-route";
-import commonStyles from "../../styles/common.module.css";
 import { postData } from "../../utils";
-import styles from "./create-availability.module.css";
+import styles from "./styles.module.css";
 
 const days = [
   "Monday",
@@ -200,10 +200,10 @@ const CreateAvailability = () => {
         </div>
         <div className={commonStyles.form_field}>
           <Select
-            label="Location"
+            label="Operatory"
             options={operatories}
-            placeholder="Select a location"
-            id="location"
+            placeholder="Select a Operatory"
+            id="operatory"
             onChange={handleOperatorySelection}
           />
         </div>

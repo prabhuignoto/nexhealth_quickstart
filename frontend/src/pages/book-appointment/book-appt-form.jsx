@@ -7,12 +7,12 @@ import React, {
   useRef,
   useState,
 } from "react";
+import commonStyles from "../../common-styles/common.module.css";
 import { HomeContext } from "../../helpers/protected-route";
-import commonStyles from "../../styles/common.module.css";
 import { Days } from "../../utils";
-import { AddPatient } from "./add-patient-field";
-import { BookingFields } from "./booking-fields";
-import styles from "./booking.module.css";
+import { BookingFields } from "./book-appt-fields";
+import { AddPatient } from "./new-patient-field";
+import styles from "./styles.module.css";
 
 const AppointmentBookingForm = React.forwardRef((props, ref) => {
   const {
@@ -23,13 +23,13 @@ const AppointmentBookingForm = React.forwardRef((props, ref) => {
     onProviderSelected,
     onFetchSlots,
     slots,
-    locations,
+    operatories,
     onPatientTypeChange,
   } = props;
 
   const [selectedPatient, setSelectedPatient] = useState(null);
   const [selectedProvider, setSelectedProvider] = useState(null);
-  const [selectedLocation, setSelectedLocation] = useState(null);
+  const [selectedOperatory, setSelectedOperatory] = useState(null);
 
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedSlot, setSelectedSlot] = useState(null);
@@ -54,7 +54,7 @@ const AppointmentBookingForm = React.forwardRef((props, ref) => {
       bookingFieldsRef.current.reset();
       const selects = Array.from(formRef.current.querySelectorAll("select"));
       selects.forEach((select) => (select.selectedIndex = 0));
-      setSelectedLocation("");
+      setSelectedOperatory("");
       setSelectedProvider("");
       setSelectedPatient("");
       setPatientInfo({});
@@ -79,7 +79,7 @@ const AppointmentBookingForm = React.forwardRef((props, ref) => {
   useEffect(() => {
     const fetchSlots = async () => {
       try {
-        if (selectedLocation) {
+        if (selectedOperatory) {
           const locations = locationsData.locations;
 
           if (!locations.length) {
@@ -92,7 +92,7 @@ const AppointmentBookingForm = React.forwardRef((props, ref) => {
             locationId,
             providerId: selectedProvider,
             startDate: selectedDate,
-            operatoryId: selectedLocation,
+            operatoryId: selectedOperatory,
           });
         }
       } catch (error) {
@@ -101,10 +101,10 @@ const AppointmentBookingForm = React.forwardRef((props, ref) => {
     };
 
     // start fetching slots once the date and location are selected
-    if (selectedDate && selectedLocation) {
+    if (selectedDate && selectedOperatory) {
       fetchSlots();
     }
-  }, [selectedDate, locationsData, selectedLocation]);
+  }, [selectedDate, locationsData, selectedOperatory]);
 
   const patientDataEntered = useMemo(
     () => selectedPatient || (patientInfo.firstName && patientInfo.lastName),
@@ -114,9 +114,9 @@ const AppointmentBookingForm = React.forwardRef((props, ref) => {
   const disabledDays = useMemo(() => {
     let disabledDays = [];
 
-    if (operators.length && selectedLocation) {
+    if (operators.length && selectedOperatory) {
       const availableDays = operators
-        .filter((op) => op.operatory_id === +selectedLocation)
+        .filter((op) => op.operatory_id === +selectedOperatory)
         .flatMap((op) => op.days);
 
       Days.forEach((day, index) => {
@@ -129,7 +129,7 @@ const AppointmentBookingForm = React.forwardRef((props, ref) => {
     }
 
     return disabledDays;
-  }, [operators.length, selectedLocation]);
+  }, [operators.length, selectedOperatory]);
 
   /** Checks whether the form can be submitted or not */
   const canSubmit = useMemo(
@@ -147,11 +147,11 @@ const AppointmentBookingForm = React.forwardRef((props, ref) => {
   /** handlers */
   const handlePatientSelection = (ev) => setSelectedPatient(ev.target.value);
   const handleProviderSelection = (ev) => {
-    setSelectedLocation("");
+    setSelectedOperatory("");
     setSelectedProvider(ev.target.value);
   };
-  const handleLocationSelection = (ev) => {
-    setSelectedLocation(ev.target.value);
+  const handleOperatorySelection = (ev) => {
+    setSelectedOperatory(ev.target.value);
   };
 
   const handleDateSelection = (date) => setSelectedDate(date);
@@ -216,7 +216,7 @@ const AppointmentBookingForm = React.forwardRef((props, ref) => {
           appt: {
             ...patientData,
             provider_id: selectedProvider,
-            operatory_id: selectedLocation,
+            operatory_id: selectedOperatory,
             start_time: selectedSlot,
             confirmed: true,
             patient_confirmed: true,
@@ -251,12 +251,12 @@ const AppointmentBookingForm = React.forwardRef((props, ref) => {
         <BookingFields
           slots={slots}
           providers={providers}
-          locations={locations}
+          operatories={operatories}
           handleDateSelection={handleDateSelection}
           handleProviderSelection={handleProviderSelection}
           handleSlotSelection={handleSlotSelection}
           handleNotesChange={handleNotesChange}
-          handleLocationSelection={handleLocationSelection}
+          handleOperatorySelection={handleOperatorySelection}
           disabledDays={disabledDays}
           patientType={patientType}
           ref={bookingFieldsRef}

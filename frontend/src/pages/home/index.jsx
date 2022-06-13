@@ -1,12 +1,12 @@
 import classNames from "classnames";
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { AddAppointmentCategory } from "../appointment-categories/add-appointment-category";
-import { Appointments } from "../appointments/appointments";
-import { Availabilities } from "../availability/availabilities";
-import { CreateAvailability } from "../availability/create-availability";
-import { BookingContainer } from "../booking/booking-container";
-import styles from "./home.module.css";
+import { AddAppointmentCategory } from "../add-appointment-category";
+import { CreateAvailability } from "../add-provider-availability";
+import { Appointments } from "../appointments";
+import { BookingContainer } from "../book-appointment";
+import { Availabilities } from "../provider-availabilities";
+import styles from "./styles.module.css";
 
 const tabs = [
   { name: "appointments", label: "Appointments" },

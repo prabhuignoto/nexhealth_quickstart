@@ -91,7 +91,7 @@
   cursor: pointer;
   padding: 0.5rem 0.75rem;
   margin: 0 0.5rem;
-  border-radius: 20px;
+  border-radius: 4px;
   text-transform: capitalize;
   user-select: none;
 }
