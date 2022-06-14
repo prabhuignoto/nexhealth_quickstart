@@ -30,10 +30,10 @@ const ProtectedRoute = ({ children }) => {
     setIsAuthenticated(false);
   };
 
-  const canShowFailureMessage = useMemo(
-    () => errorOccurred || authFailed,
-    [errorOccurred, authFailed]
-  );
+  const canShowFailureMessage = useMemo(() => errorOccurred || authFailed, [
+    errorOccurred,
+    authFailed,
+  ]);
 
   useEffect(() => {
     const check = async () => {

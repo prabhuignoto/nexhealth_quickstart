@@ -7,6 +7,14 @@ dayjs.extend(utc);
 dayjs.extend(timezone);
 dayjs.extend(advancedFormat);
 
+const fetchProps = {
+  credentials: "include",
+  headers: {
+    "Content-Type": "application/json",
+    Accept: "application/json",
+  },
+};
+
 export function formatDate(date) {
   return dayjs.utc(date).format("MMM DD, YYYY hh:mm A");
 }
@@ -14,22 +22,14 @@ export function formatDate(date) {
 export function getData(url) {
   return fetch(url, {
     method: "GET",
-    credentials: "include",
-    headers: {
-      "Content-Type": "application/json",
-      Accept: "application/json",
-    },
+    ...fetchProps,
   });
 }
 
 export function postData(url, data) {
   return fetch(url, {
     method: "POST",
-    credentials: "include",
-    headers: {
-      "Content-Type": "application/json",
-      Accept: "application/json",
-    },
+    ...fetchProps,
     body: JSON.stringify(data),
   });
 }
@@ -37,22 +37,14 @@ export function postData(url, data) {
 export function deleteData(url) {
   return fetch(url, {
     method: "DELETE",
-    credentials: "include",
-    headers: {
-      "Content-Type": "application/json",
-      Accept: "application/json",
-    },
+    ...fetchProps,
   });
 }
 
 export function patchData(url, data) {
   return fetch(url, {
     method: "PATCH",
-    credentials: "include",
-    headers: {
-      "Content-Type": "application/json",
-      Accept: "application/json",
-    },
+    ...fetchProps,
     body: JSON.stringify(data),
   });
 }

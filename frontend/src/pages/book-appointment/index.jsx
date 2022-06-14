@@ -17,6 +17,7 @@ const BookingContainer = () => {
   const [providers, setProviders] = useState([]);
   const [operators, setOperators] = useState([]);
   const [operatories, setOperatories] = useState([]);
+  const [apptCategories, setApptCategories] = useState([]);
 
   const [slots, setSlots] = useState([]);
   const { onError } = useContext(HomeContext);
@@ -143,6 +144,8 @@ const BookingContainer = () => {
                 name: provider.doctor_name,
               }))
             );
+          } else if (type === "appointment-categories") {
+            setApptCategories(data);
           }
         },
         onError,
@@ -152,6 +155,7 @@ const BookingContainer = () => {
     // fetch patients, providers
     fetchData("patients");
     fetchData("providers");
+    fetchData("appointment-categories");
   }, []);
 
   return (
@@ -161,6 +165,7 @@ const BookingContainer = () => {
         providers={providers}
         operatories={operatories}
         operators={operators}
+        apptCategories={apptCategories}
         onSubmit={onSubmit}
         onFetchSlots={handleFetchSlots}
         onProviderSelected={onProviderSelected}

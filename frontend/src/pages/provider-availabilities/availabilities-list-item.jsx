@@ -38,7 +38,7 @@ const ListItem = ({
   const getAvailabilityContent = useMemo(
     () =>
       name && (
-        <ul style={{ padding: 0, margin: 0 }}>
+        <ul style={{ padding: 0, margin: 0, width: "100%" }}>
           <li className={availabilityStyles.grid_item}>
             <div className={availabilityStyles.grid_cell}>Operatory</div>
             <div className={availabilityStyles.grid_cell}>Days</div>

@@ -30,7 +30,6 @@ const AppointmentsList = ({ appointments = [], onCancel }) => {
             ({
               id,
               patient_name,
-              note,
               provider_name,
               start_time,
               patient_id,
