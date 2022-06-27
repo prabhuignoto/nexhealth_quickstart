@@ -68,7 +68,7 @@ const CreateAvailability = () => {
             setProviders(
               data.map((provider) => ({
                 ...provider,
-                name: provider.doctor_name,
+                name: provider.first_name + " " + provider.last_name,
               }))
             );
           },

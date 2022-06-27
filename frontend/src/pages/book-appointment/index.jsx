@@ -141,7 +141,7 @@ const BookingContainer = () => {
             setProviders(
               data.map((provider) => ({
                 ...provider,
-                name: provider.doctor_name,
+                name: provider.first_name + " " + provider.last_name,
               }))
             );
           } else if (type === "appointment-categories") {
@@ -179,3 +179,4 @@ const BookingContainer = () => {
 };
 
 export { BookingContainer };
+

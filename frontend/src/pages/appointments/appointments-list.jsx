@@ -29,7 +29,8 @@ const AppointmentsList = ({ appointments = [], onCancel }) => {
           {appointments.map(
             ({
               id,
-              patient_name,
+              patient: {name: patient_name},
+              note,
               provider_name,
               start_time,
               patient_id,
@@ -70,3 +71,4 @@ const AppointmentsList = ({ appointments = [], onCancel }) => {
 };
 
 export { AppointmentsList };
+
