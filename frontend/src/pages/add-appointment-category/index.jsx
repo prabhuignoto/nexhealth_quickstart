@@ -13,11 +13,10 @@ const AddAppointmentCategory = () => {
   const handleCategoryChange = (e) => setCategory(e.target.value);
   const handleMinutesChange = (e) => setMinutes(e.target.value);
 
-  const canSubmit = useMemo(() => name && category && minutes, [
-    name,
-    category,
-    minutes,
-  ]);
+  const canSubmit = useMemo(
+    () => name && category && minutes,
+    [name, category, minutes]
+  );
 
   const submitData = async (data) => {
     try {
@@ -34,17 +33,6 @@ const AddAppointmentCategory = () => {
           alert(`Appointment category creation failed!\n${error}`);
         },
       });
-      // const request = await postData(
-      //   `${process.env.REACT_APP_API}/appointment-categories`,
-      //   data
-      // );
-
-      // const result = await request.json();
-
-      // if (result.code) {
-      // } else {
-      //   alert(`Appointment category creation failed!\n${result.error}`);
-      // }
     } catch (error) {
       console.log(error);
     }
@@ -58,7 +46,7 @@ const AddAppointmentCategory = () => {
           name,
           category,
           minutes: +minutes,
-          parent_type: "Institution",
+          parent_type: "Location",
           bookable_online: true,
         },
       };
