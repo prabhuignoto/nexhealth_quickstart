@@ -59,6 +59,17 @@ const Fields = React.forwardRef((props, ref) => {
         />
       </div>
 
+      <div className={commonStyles.form_field}>
+        <Select
+          label="Appointment Category"
+          options={apptCategories}
+          onChange={handleApptCategorySelection}
+          id="appt-category"
+          placeholder="Select an appointment category"
+          ref={apptCategoryRef}
+        />
+      </div>
+
       {/* operatories */}
       <div className={commonStyles.form_field}>
         <Select
@@ -66,19 +77,8 @@ const Fields = React.forwardRef((props, ref) => {
           options={operatories}
           onChange={handleOperatorySelection}
           id="operatory"
-          placeholder="Select a Operatory"
+          placeholder="Choose an Operatory"
           ref={locationRef}
-        />
-      </div>
-
-      <div className={commonStyles.form_field}>
-        <Select
-          label="Appointment Category"
-          options={apptCategories}
-          onChange={handleApptCategorySelection}
-          id="appt-category"
-          placeholder="Select a Appointment Category"
-          ref={apptCategoryRef}
         />
       </div>
 
