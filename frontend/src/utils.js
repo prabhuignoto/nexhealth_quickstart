@@ -58,3 +58,15 @@ export const Days = [
   "Friday",
   "Saturday",
 ];
+
+export const removeDuplicates = (arr, prop) => {
+  return arr.filter((value, index) => {
+    const _value = JSON.stringify(value);
+    return (
+      index ===
+      arr.findIndex((obj) => {
+        return JSON.stringify(obj) === _value;
+      })
+    );
+  });
+};

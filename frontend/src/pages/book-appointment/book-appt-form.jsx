@@ -298,4 +298,6 @@ const AppointmentBookingForm = React.forwardRef((props, ref) => {
   );
 });
 
+AppointmentBookingForm.displayName = "AppointmentBookingForm";
+
 export { AppointmentBookingForm };

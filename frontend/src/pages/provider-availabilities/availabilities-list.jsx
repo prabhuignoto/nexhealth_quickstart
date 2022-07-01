@@ -2,6 +2,7 @@ import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { apiGET } from "../../api-helpers";
 import styles from "../../common-styles/list.module.css";
 import { HomeContext } from "../../helpers/protected-route";
+import { removeDuplicates } from "./../../utils";
 import { ListItem } from "./availabilities-list-item";
 
 const API = process.env.REACT_APP_API;
@@ -25,7 +26,7 @@ const AvailabilitiesList = ({ availabilities = [], onDelete }) => {
           ...prev,
           [id]: {
             name,
-            appt_categories,
+            appt_categories: removeDuplicates(appt_categories),
           },
         }));
       },
