@@ -4,22 +4,25 @@ import "react-day-picker/dist/style.css";
 import commonStyles from "../../common-styles/common.module.css";
 import { Select } from "../../components/select";
 
-const BookingFields = React.forwardRef((props, ref) => {
+const Fields = React.forwardRef((props, ref) => {
   const {
-    providers,
-    slots,
-    operatories,
+    apptCategories = [],
+    disabledDays = [],
+    handleApptCategorySelection,
     handleDateSelection,
     handleNotesChange,
-    handleSlotSelection,
-    handleProviderSelection,
     handleOperatorySelection,
-    disabledDays = [],
+    handleProviderSelection,
+    handleSlotSelection,
+    operatories = [],
     patientType,
+    providers = [],
+    slots = [],
   } = props;
 
   const locationRef = useRef(null);
   const providerRef = useRef(null);
+  const apptCategoryRef = useRef(null);
   const [selectedDay, setSelectedDay] = useState(null);
 
   const resetFields = () => {
@@ -56,6 +59,17 @@ const BookingFields = React.forwardRef((props, ref) => {
         />
       </div>
 
+      <div className={commonStyles.form_field}>
+        <Select
+          label="Appointment Category"
+          options={apptCategories}
+          onChange={handleApptCategorySelection}
+          id="appt-category"
+          placeholder="Select an appointment category"
+          ref={apptCategoryRef}
+        />
+      </div>
+
       {/* operatories */}
       <div className={commonStyles.form_field}>
         <Select
@@ -63,7 +77,7 @@ const BookingFields = React.forwardRef((props, ref) => {
           options={operatories}
           onChange={handleOperatorySelection}
           id="operatory"
-          placeholder="Select a Operatory"
+          placeholder="Choose an Operatory"
           ref={locationRef}
         />
       </div>
@@ -113,4 +127,4 @@ const BookingFields = React.forwardRef((props, ref) => {
   );
 });
 
-export { BookingFields };
+export { Fields };

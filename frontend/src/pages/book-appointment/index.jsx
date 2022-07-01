@@ -1,10 +1,11 @@
 import { default as dayjs } from "dayjs";
 import utc from "dayjs/plugin/utc";
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { apiGET } from "../../api-helpers";
 import { OverlayLoader } from "../../components/overlay-loader";
 import { HomeContext } from "../../helpers/protected-route";
 import { formatDate, postData } from "../../utils";
+import { removeDuplicates } from "./../../utils";
 import { AppointmentBookingForm } from "./book-appt-form";
 import styles from "./styles.module.css";
 
@@ -116,7 +117,11 @@ const BookingContainer = () => {
             setOperatories((prev) => {
               const exists = prev.some((location) => location.id === data.id);
               if (!exists) {
-                return prev.concat({ id: data.id, name: data.name });
+                return prev.concat({
+                  id: data.id,
+                  name: data.name,
+                  appt_categories: data.appt_categories,
+                });
               } else {
                 return prev;
               }
@@ -152,7 +157,18 @@ const BookingContainer = () => {
     // fetch patients, providers
     fetchData("patients");
     fetchData("providers");
+    fetchData("appointment-categories");
   }, []);
+
+  const apptCategories = useMemo(() => {
+    const operatoriesFlat = operatories.flatMap(
+      (operatory) => operatory.appt_categories
+    );
+
+    return removeDuplicates(operatoriesFlat);
+  }, [operatories.length]);
+
+  apptCategories.displayName = "apptCategories";
 
   return (
     <div className={styles.booking_container}>
@@ -161,6 +177,7 @@ const BookingContainer = () => {
         providers={providers}
         operatories={operatories}
         operators={operators}
+        apptCategories={apptCategories}
         onSubmit={onSubmit}
         onFetchSlots={handleFetchSlots}
         onProviderSelected={onProviderSelected}
@@ -173,5 +190,6 @@ const BookingContainer = () => {
   );
 };
 
-export { BookingContainer };
+BookingContainer.displayName = "BookingContainer";
 
+export { BookingContainer };

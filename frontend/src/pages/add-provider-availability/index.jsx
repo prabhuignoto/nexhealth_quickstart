@@ -25,8 +25,10 @@ const CreateAvailability = () => {
   const [selectedProvider, setSelectedProvider] = useState(null);
   const [selectedOperatory, setSelectedOperatory] = useState(null);
   const [selectedDays, setSelectedDays] = useState([]);
-  const [selectedAppointmentCategory, setSelectedAppointmentCategory] =
-    useState([]);
+  const [
+    selectedAppointmentCategory,
+    setSelectedAppointmentCategory,
+  ] = useState([]);
 
   const [selectedStartTime, setSelectedStartTime] = useState(null);
   const [selectedEndTime, setSelectedEndTime] = useState(null);

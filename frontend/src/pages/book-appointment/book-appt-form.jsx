@@ -10,26 +10,28 @@ import React, {
 import commonStyles from "../../common-styles/common.module.css";
 import { HomeContext } from "../../helpers/protected-route";
 import { Days } from "../../utils";
-import { BookingFields } from "./book-appt-fields";
+import { Fields } from "./book-appt-fields";
 import { AddPatient } from "./new-patient-field";
 import styles from "./styles.module.css";
 
 const AppointmentBookingForm = React.forwardRef((props, ref) => {
   const {
+    apptCategories,
+    onFetchSlots,
+    onPatientTypeChange,
+    onProviderSelected,
+    onSubmit,
+    operatories,
+    operators,
     patients,
     providers,
-    operators,
-    onSubmit,
-    onProviderSelected,
-    onFetchSlots,
     slots,
-    operatories,
-    onPatientTypeChange,
   } = props;
 
   const [selectedPatient, setSelectedPatient] = useState(null);
   const [selectedProvider, setSelectedProvider] = useState(null);
   const [selectedOperatory, setSelectedOperatory] = useState(null);
+  const [selectedApptCategory, setSelectedApptCategory] = useState(null);
 
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedSlot, setSelectedSlot] = useState(null);
@@ -153,6 +155,9 @@ const AppointmentBookingForm = React.forwardRef((props, ref) => {
   const handleOperatorySelection = (ev) => {
     setSelectedOperatory(ev.target.value);
   };
+  const handleApptCategorySelection = (ev) => {
+    setSelectedApptCategory(ev.target.value);
+  };
 
   const handleDateSelection = (date) => setSelectedDate(date);
 
@@ -199,12 +204,12 @@ const AppointmentBookingForm = React.forwardRef((props, ref) => {
 
         if (patientType === "existing") {
           patientData = {
-            patient_id: selectedPatient,
+            patient_id: +selectedPatient,
           };
         } else {
           patientData = {
             is_guardian: true,
-            patient_id: patients[0].id,
+            patient_id: +patients[0].id,
             patient: {
               first_name: patientInfo.firstName,
               last_name: patientInfo.lastName,
@@ -215,8 +220,9 @@ const AppointmentBookingForm = React.forwardRef((props, ref) => {
         onSubmit({
           appt: {
             ...patientData,
-            provider_id: selectedProvider,
-            operatory_id: selectedOperatory,
+            provider_id: +selectedProvider,
+            operatory_id: +selectedOperatory,
+            appointment_type_id: +selectedApptCategory,
             start_time: selectedSlot,
             confirmed: true,
             patient_confirmed: true,
@@ -238,28 +244,30 @@ const AppointmentBookingForm = React.forwardRef((props, ref) => {
       <form className={commonStyles.form} ref={formRef}>
         {/* patient */}
         <AddPatient
-          patientType={patientType}
-          onTypeChange={handlePatientTypeChange}
-          onFirstNameChange={handlePatientFirstNameChange}
-          onLastNameChange={handlePatientLastNameChange}
           onDOBChange={handlePatientDOBChange}
+          onFirstNameChange={handlePatientFirstNameChange}
           onGenderChange={handlePatientGenderChange}
+          onLastNameChange={handlePatientLastNameChange}
           onPatientSelection={handlePatientSelection}
+          onTypeChange={handlePatientTypeChange}
+          patientType={patientType}
           patients={patients}
         />
 
-        <BookingFields
-          slots={slots}
-          providers={providers}
-          operatories={operatories}
+        <Fields
+          disabledDays={disabledDays}
           handleDateSelection={handleDateSelection}
-          handleProviderSelection={handleProviderSelection}
-          handleSlotSelection={handleSlotSelection}
           handleNotesChange={handleNotesChange}
           handleOperatorySelection={handleOperatorySelection}
-          disabledDays={disabledDays}
+          handleProviderSelection={handleProviderSelection}
+          handleSlotSelection={handleSlotSelection}
+          handleApptCategorySelection={handleApptCategorySelection}
+          operatories={operatories}
           patientType={patientType}
+          providers={providers}
+          apptCategories={apptCategories}
           ref={bookingFieldsRef}
+          slots={slots}
         />
 
         {/* button controls */}
@@ -289,5 +297,7 @@ const AppointmentBookingForm = React.forwardRef((props, ref) => {
     </div>
   );
 });
+
+AppointmentBookingForm.displayName = "AppointmentBookingForm";
 
 export { AppointmentBookingForm };

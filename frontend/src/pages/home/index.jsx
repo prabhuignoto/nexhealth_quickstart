@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { AddAppointmentCategory } from "../add-appointment-category";
 import { CreateAvailability } from "../add-provider-availability";
+import { AppointmentCategories } from "../appointment-categories";
 import { Appointments } from "../appointments";
 import { BookingContainer } from "../book-appointment";
 import { Availabilities } from "../provider-availabilities";
@@ -10,7 +11,8 @@ import styles from "./styles.module.css";
 
 const tabs = [
   { name: "appointments", label: "Appointments" },
-  { name: "appointmentCategory", label: "Add Appointment Category" },
+  { name: "addAppointmentCategory", label: "Add Appointment Category" },
+  { name: "appointmentCategories", label: "Appointment Categories" },
   { name: "booking", label: "Book Appointment" },
   { name: "availabilities", label: "Provider Availabilities" },
   { name: "availability", label: "Add Provider Availability" },
@@ -49,7 +51,8 @@ const Home = () => {
           {activeTab === "booking" && <BookingContainer />}
           {activeTab === "availability" && <CreateAvailability />}
           {activeTab === "availabilities" && <Availabilities />}
-          {activeTab === "appointmentCategory" && <AddAppointmentCategory />}
+          {activeTab === "addAppointmentCategory" && <AddAppointmentCategory />}
+          {activeTab === "appointmentCategories" && <AppointmentCategories />}
         </div>
       </section>
     </div>
