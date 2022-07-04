@@ -21,6 +21,7 @@ availabilitiesRouter.get("/", async (req, res) => {
       per_page: 20,
       active: true,
       ignore_past_dates: false,
+      "include[]": "appointment_types",
     });
 
     const response = await fetch(
@@ -94,6 +95,28 @@ availabilitiesRouter.post("/create", async (req, res) => {
         method: "POST",
         headers: getHeaders(true, req.session.token),
         body: JSON.stringify(req.body),
+      }
+    );
+
+    const availability = await response.json();
+
+    res.json(availability);
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+availabilitiesRouter.get("/:id", async (req, res) => {
+  try {
+    const params = new URLSearchParams({
+      ...nexHealthParams,
+      "include[]": "appointment_types",
+    });
+
+    const response = await fetch(
+      `${process.env.API_URL}/availabilities/${req.params.id}?${params}`,
+      {
+        headers: getHeaders(false, req.session.token),
       }
     );
 
