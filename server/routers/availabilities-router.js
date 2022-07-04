@@ -21,6 +21,7 @@ availabilitiesRouter.get("/", async (req, res) => {
       per_page: 20,
       active: true,
       ignore_past_dates: false,
+      "include[]": "appointment_types",
     });
 
     const response = await fetch(
@@ -109,6 +110,7 @@ availabilitiesRouter.get("/:id", async (req, res) => {
   try {
     const params = new URLSearchParams({
       ...nexHealthParams,
+      "include[]": "appointment_types",
     });
 
     const response = await fetch(

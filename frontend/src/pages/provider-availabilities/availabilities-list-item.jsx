@@ -50,7 +50,13 @@ const ListItem = ({
           </li>
           {details.map(
             (
-              { days, operatory_id, timings: { beginTime, endTime }, id },
+              {
+                days,
+                operatory_id,
+                timings: { beginTime, endTime },
+                id,
+                appointment_types,
+              },
               index
             ) =>
               operatoryDetails[operatory_id] && (
@@ -65,9 +71,10 @@ const ListItem = ({
                     className={availabilityStyles.grid_cell}
                   >{`${beginTime} - ${endTime}`}</div>
                   <div className={availabilityStyles.grid_cell}>
-                    {operatoryDetails[operatory_id].appt_categories
+                    {/* {operatoryDetails[operatory_id].appt_categories
                       .map((cat) => cat.name)
-                      .join(", ")}
+                      .join(", ")} */}
+                    {appointment_types.map((type) => type.name).join(", ")}
                   </div>
                   <div className={availabilityStyles.grid_cell}>
                     <button
