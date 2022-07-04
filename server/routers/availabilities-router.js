@@ -105,4 +105,25 @@ availabilitiesRouter.post("/create", async (req, res) => {
   }
 });
 
+availabilitiesRouter.get("/:id", async (req, res) => {
+  try {
+    const params = new URLSearchParams({
+      ...nexHealthParams,
+    });
+
+    const response = await fetch(
+      `${process.env.API_URL}/availabilities/${req.params.id}?${params}`,
+      {
+        headers: getHeaders(false, req.session.token),
+      }
+    );
+
+    const availability = await response.json();
+
+    res.json(availability);
+  } catch (error) {
+    console.log(error);
+  }
+});
+
 export { availabilitiesRouter };
