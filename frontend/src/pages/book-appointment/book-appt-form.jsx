@@ -22,7 +22,7 @@ const AppointmentBookingForm = React.forwardRef((props, ref) => {
     onProviderSelected,
     onSubmit,
     operatories,
-    operators,
+    availabilities,
     patients,
     providers,
     slots,
@@ -116,8 +116,8 @@ const AppointmentBookingForm = React.forwardRef((props, ref) => {
   const disabledDays = useMemo(() => {
     let disabledDays = [];
 
-    if (operators.length && selectedOperatory) {
-      const availableDays = operators
+    if (availabilities.length && selectedOperatory) {
+      const availableDays = availabilities
         .filter((op) => op.operatory_id === +selectedOperatory)
         .flatMap((op) => op.days);
 
@@ -131,7 +131,7 @@ const AppointmentBookingForm = React.forwardRef((props, ref) => {
     }
 
     return disabledDays;
-  }, [operators.length, selectedOperatory]);
+  }, [availabilities.length, selectedOperatory]);
 
   /** Checks whether the form can be submitted or not */
   const canSubmit = useMemo(

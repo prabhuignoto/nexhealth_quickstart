@@ -47,6 +47,7 @@ availabilitiesRouter.get("/provider/:id", async (req, res) => {
       per_page: 50,
       active: true,
       provider_id: req.params.id,
+      "include[]": "appointment_types",
     });
 
     const response = await fetch(

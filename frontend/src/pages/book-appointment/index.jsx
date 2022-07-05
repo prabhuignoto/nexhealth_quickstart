@@ -16,7 +16,7 @@ const API = process.env.REACT_APP_API;
 const BookingContainer = () => {
   const [patients, setPatients] = useState([]);
   const [providers, setProviders] = useState([]);
-  const [operators, setOperators] = useState([]);
+  const [availabilities, setAvailabilities] = useState([]);
   const [operatories, setOperatories] = useState([]);
 
   const [slots, setSlots] = useState([]);
@@ -25,7 +25,7 @@ const BookingContainer = () => {
   const formRef = useRef(null);
 
   const reset = () => {
-    setOperators([]);
+    setAvailabilities([]);
     setOperatories([]);
     setSlots([]);
   };
@@ -91,7 +91,7 @@ const BookingContainer = () => {
         url: `${API}/availabilities/provider/${providerId}`,
         onSuccess: (data) => {
           setShowOverlayLoader(false);
-          setOperators(data);
+          setAvailabilities(data);
         },
         onError,
       });
@@ -102,16 +102,16 @@ const BookingContainer = () => {
   };
 
   useEffect(() => {
-    if (operators.length) {
+    if (availabilities.length) {
       let count = 0;
       setShowOverlayLoader(true);
 
-      operators.forEach((operator) => {
+      availabilities.forEach((operator) => {
         apiGET({
           url: `${API}/operatories/${operator.operatory_id}`,
           onSuccess: (data) => {
             count += 1;
-            if (operators.length === count) {
+            if (availabilities.length === count) {
               setShowOverlayLoader(false);
             }
             setOperatories((prev) => {
@@ -131,7 +131,7 @@ const BookingContainer = () => {
         });
       });
     }
-  }, [JSON.stringify(operators)]);
+  }, [JSON.stringify(availabilities)]);
 
   // on load fetch the patients and providers
   useEffect(() => {
@@ -157,16 +157,15 @@ const BookingContainer = () => {
     // fetch patients, providers
     fetchData("patients");
     fetchData("providers");
-    fetchData("appointment-categories");
   }, []);
 
   const apptCategories = useMemo(() => {
-    const operatoriesFlat = operatories.flatMap(
-      (operatory) => operatory.appt_categories
+    const operatoriesFlat = availabilities.flatMap(
+      (availability) => availability.appointment_types
     );
 
     return removeDuplicates(operatoriesFlat);
-  }, [operatories.length]);
+  }, [availabilities.length]);
 
   apptCategories.displayName = "apptCategories";
 
@@ -176,7 +175,7 @@ const BookingContainer = () => {
         patients={patients}
         providers={providers}
         operatories={operatories}
-        operators={operators}
+        availabilities={availabilities}
         apptCategories={apptCategories}
         onSubmit={onSubmit}
         onFetchSlots={handleFetchSlots}
