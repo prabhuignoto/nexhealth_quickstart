@@ -100,4 +100,25 @@ appointmentCategoriesRouter.delete("/:id", async (req, res) => {
   }
 });
 
+appointmentCategoriesRouter.get("/operatories/:id", async (req, res) => {
+  try {
+    const params = new URLSearchParams({
+      ...nexHealthParams,
+    });
+
+    const response = await fetch(
+      `${process.env.API_URL}/appointment_categories/${req.params.id}/operatories?${params}`,
+      {
+        headers: getHeaders(false, req.session.token),
+      }
+    );
+
+    const categories = await response.json();
+
+    res.json(categories);
+  } catch (error) {
+    console.log(error);
+  }
+});
+
 export { appointmentCategoriesRouter };

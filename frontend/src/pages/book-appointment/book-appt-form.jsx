@@ -20,6 +20,7 @@ const AppointmentBookingForm = React.forwardRef((props, ref) => {
     onFetchSlots,
     onPatientTypeChange,
     onProviderSelected,
+    onCategorySelected,
     onSubmit,
     operatories,
     availabilities,
@@ -77,6 +78,12 @@ const AppointmentBookingForm = React.forwardRef((props, ref) => {
       onProviderSelected(selectedProvider);
     }
   }, [selectedProvider]);
+
+  useEffect(() => {
+    if (selectedApptCategory) {
+      onCategorySelected(selectedApptCategory);
+    }
+  }, [selectedApptCategory]);
 
   useEffect(() => {
     const fetchSlots = async () => {
@@ -150,7 +157,9 @@ const AppointmentBookingForm = React.forwardRef((props, ref) => {
   const handlePatientSelection = (ev) => setSelectedPatient(ev.target.value);
   const handleProviderSelection = (ev) => {
     setSelectedOperatory("");
+    setSelectedApptCategory("");
     setSelectedProvider(ev.target.value);
+    formRef.current.querySelector("#appt-category").selectedIndex = 0;
   };
   const handleOperatorySelection = (ev) => {
     setSelectedOperatory(ev.target.value);

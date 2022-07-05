@@ -1,6 +1,13 @@
 import { default as dayjs } from "dayjs";
 import utc from "dayjs/plugin/utc";
-import { useContext, useEffect, useMemo, useRef, useState } from "react";
+import {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { apiGET } from "../../api-helpers";
 import { OverlayLoader } from "../../components/overlay-loader";
 import { HomeContext } from "../../helpers/protected-route";
@@ -19,6 +26,8 @@ const BookingContainer = () => {
   const [availabilities, setAvailabilities] = useState([]);
   const [operatories, setOperatories] = useState([]);
 
+  const [availOperatories, setAvailOperatories] = useState([]);
+
   const [slots, setSlots] = useState([]);
   const { onError } = useContext(HomeContext);
   const [showOverlayLoader, setShowOverlayLoader] = useState(false);
@@ -26,8 +35,8 @@ const BookingContainer = () => {
 
   const reset = () => {
     setAvailabilities([]);
-    setOperatories([]);
     setSlots([]);
+    setAvailOperatories([]);
   };
 
   const onSubmit = async (data) => {
@@ -101,39 +110,33 @@ const BookingContainer = () => {
     }
   };
 
-  useEffect(() => {
-    if (availabilities.length) {
-      let count = 0;
-      setShowOverlayLoader(true);
+  const onCategorySelected = useCallback(
+    (categoryId) => {
+      try {
+        const selected = availabilities
+          .filter((avail) =>
+            avail.appointment_types.some((type) => type.id === +categoryId)
+          )
+          .map((avail) => avail.operatory_id);
 
-      availabilities.forEach((operator) => {
-        apiGET({
-          url: `${API}/operatories/${operator.operatory_id}`,
-          onSuccess: (data) => {
-            count += 1;
-            if (availabilities.length === count) {
-              setShowOverlayLoader(false);
-            }
-            setOperatories((prev) => {
-              const exists = prev.some((location) => location.id === data.id);
-              if (!exists) {
-                return prev.concat({
-                  id: data.id,
-                  name: data.name,
-                  appt_categories: data.appt_categories,
-                });
-              } else {
-                return prev;
-              }
-            });
-          },
-          onError,
-        });
-      });
-    }
-  }, [JSON.stringify(availabilities)]);
+        const deDupedOperatories = [...new Set(selected)];
 
-  // on load fetch the patients and providers
+        setAvailOperatories(deDupedOperatories);
+      } catch (error) {
+        setShowOverlayLoader(false);
+        onError(error);
+      }
+    },
+    [operatories.length, availabilities.length]
+  );
+
+  const filteredOperatories = useMemo(() => {
+    return operatories.filter(
+      (operatory) => availOperatories.indexOf(operatory.id) > -1
+    );
+  }, [JSON.stringify(availOperatories), operatories.length]);
+
+  // on load fetch the patients, providers and, operatories
   useEffect(() => {
     const fetchData = (type) => {
       apiGET({
@@ -148,6 +151,8 @@ const BookingContainer = () => {
                 name: provider.first_name + " " + provider.last_name,
               }))
             );
+          } else if (type === "operatories") {
+            setOperatories(data);
           }
         },
         onError,
@@ -157,6 +162,7 @@ const BookingContainer = () => {
     // fetch patients, providers
     fetchData("patients");
     fetchData("providers");
+    fetchData("operatories");
   }, []);
 
   const apptCategories = useMemo(() => {
@@ -174,12 +180,13 @@ const BookingContainer = () => {
       <AppointmentBookingForm
         patients={patients}
         providers={providers}
-        operatories={operatories}
+        operatories={filteredOperatories}
         availabilities={availabilities}
         apptCategories={apptCategories}
         onSubmit={onSubmit}
         onFetchSlots={handleFetchSlots}
         onProviderSelected={onProviderSelected}
+        onCategorySelected={onCategorySelected}
         slots={slots}
         onPatientTypeChange={handlePatientTypeChange}
         ref={formRef}
