@@ -21,6 +21,7 @@ const AppointmentBookingForm = React.forwardRef((props, ref) => {
     onPatientTypeChange,
     onProviderSelected,
     onCategorySelected,
+    onOperatorySelected,
     onSubmit,
     operatories,
     availabilities,
@@ -84,6 +85,12 @@ const AppointmentBookingForm = React.forwardRef((props, ref) => {
       onCategorySelected(selectedApptCategory);
     }
   }, [selectedApptCategory]);
+
+  useEffect(() => {
+    if (selectedOperatory) {
+      onOperatorySelected(selectedOperatory);
+    }
+  }, [selectedOperatory]);
 
   useEffect(() => {
     const fetchSlots = async () => {
