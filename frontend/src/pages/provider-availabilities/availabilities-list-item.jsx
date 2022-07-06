@@ -71,9 +71,6 @@ const ListItem = ({
                     className={availabilityStyles.grid_cell}
                   >{`${beginTime} - ${endTime}`}</div>
                   <div className={availabilityStyles.grid_cell}>
-                    {/* {operatoryDetails[operatory_id].appt_categories
-                      .map((cat) => cat.name)
-                      .join(", ")} */}
                     {appointment_types.map((type) => type.name).join(", ")}
                   </div>
                   <div className={availabilityStyles.grid_cell}>

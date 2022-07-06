@@ -20,9 +20,10 @@ const AppointmentBookingForm = React.forwardRef((props, ref) => {
     onFetchSlots,
     onPatientTypeChange,
     onProviderSelected,
+    onCategorySelected,
     onSubmit,
     operatories,
-    operators,
+    availabilities,
     patients,
     providers,
     slots,
@@ -79,6 +80,12 @@ const AppointmentBookingForm = React.forwardRef((props, ref) => {
   }, [selectedProvider]);
 
   useEffect(() => {
+    if (selectedApptCategory) {
+      onCategorySelected(selectedApptCategory);
+    }
+  }, [selectedApptCategory]);
+
+  useEffect(() => {
     const fetchSlots = async () => {
       try {
         if (selectedOperatory) {
@@ -116,9 +123,16 @@ const AppointmentBookingForm = React.forwardRef((props, ref) => {
   const disabledDays = useMemo(() => {
     let disabledDays = [];
 
-    if (operators.length && selectedOperatory) {
-      const availableDays = operators
-        .filter((op) => op.operatory_id === +selectedOperatory)
+    if (availabilities.length && selectedOperatory) {
+      const availableDays = availabilities
+        .filter(
+          (op) =>
+            op.operatory_id === +selectedOperatory &&
+            op.provider_id === +selectedProvider &&
+            op.appointment_types.some(
+              (type) => type.id === +selectedApptCategory
+            )
+        )
         .flatMap((op) => op.days);
 
       Days.forEach((day, index) => {
@@ -131,7 +145,7 @@ const AppointmentBookingForm = React.forwardRef((props, ref) => {
     }
 
     return disabledDays;
-  }, [operators.length, selectedOperatory]);
+  }, [availabilities.length, selectedOperatory]);
 
   /** Checks whether the form can be submitted or not */
   const canSubmit = useMemo(
@@ -147,22 +161,41 @@ const AppointmentBookingForm = React.forwardRef((props, ref) => {
   );
 
   /** handlers */
+
+  /**👤 handler for patient selection */
   const handlePatientSelection = (ev) => setSelectedPatient(ev.target.value);
+
+  /**👩‍⚕️ handler for provider selection */
   const handleProviderSelection = (ev) => {
     setSelectedOperatory("");
+    setSelectedApptCategory("");
     setSelectedProvider(ev.target.value);
+    formRef.current.querySelector("#appt-category").selectedIndex = 0;
   };
+
+  /** 🏥 handler for operatory selection */
   const handleOperatorySelection = (ev) => {
     setSelectedOperatory(ev.target.value);
   };
+
+  /** ⌚ handler for appointment category selection */
   const handleApptCategorySelection = (ev) => {
     setSelectedApptCategory(ev.target.value);
+    setSelectedDate(null);
+    setSelectedOperatory("");
+    formRef.current.querySelector("#operatory").selectedIndex = 0;
   };
 
+  /** 📅 handler for date selection */
   const handleDateSelection = (date) => setSelectedDate(date);
 
+  /** 📅 handler for slot selection */
   const handleSlotSelection = (ev) => setSelectedSlot(ev.target.value);
+
+  /** 📝 handler for notes input */
   const handleNotesChange = (ev) => setNotes(ev.target.value);
+
+  /** 👤 handler for patient type selection */
   const handlePatientTypeChange = (ev) => {
     setSelectedPatient("");
     setPatientInfo({
@@ -177,6 +210,7 @@ const AppointmentBookingForm = React.forwardRef((props, ref) => {
     onPatientTypeChange(ev.target.value);
   };
 
+  /** handler for capturing patient personal info */
   const handlePatientFirstNameChange = (ev) =>
     setPatientInfo((prev) => ({ ...prev, firstName: ev.target.value }));
   const handlePatientLastNameChange = (ev) =>
@@ -193,6 +227,7 @@ const AppointmentBookingForm = React.forwardRef((props, ref) => {
       bio: { ...prev.bio, gender: ev.target.value },
     }));
   };
+
   /** handlers */
 
   /** Handler to submit the form */
@@ -268,6 +303,7 @@ const AppointmentBookingForm = React.forwardRef((props, ref) => {
           apptCategories={apptCategories}
           ref={bookingFieldsRef}
           slots={slots}
+          selectedDate={selectedDate}
         />
 
         {/* button controls */}
