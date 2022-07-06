@@ -167,15 +167,22 @@ const AppointmentBookingForm = React.forwardRef((props, ref) => {
 
   /**👩‍⚕️ handler for provider selection */
   const handleProviderSelection = (ev) => {
+    setSelectedProvider(ev.target.value);
+
     setSelectedOperatory("");
     setSelectedApptCategory("");
-    setSelectedProvider(ev.target.value);
+    setSelectedSlot(null);
+    formRef.current.querySelector("#slot").selectedIndex = 0;
     formRef.current.querySelector("#appt-category").selectedIndex = 0;
   };
 
   /** 🏥 handler for operatory selection */
   const handleOperatorySelection = (ev) => {
     setSelectedOperatory(ev.target.value);
+
+    setSelectedSlot(null);
+    setSelectedDate(null);
+    formRef.current.querySelector("#slot").selectedIndex = 0;
   };
 
   /** ⌚ handler for appointment category selection */
@@ -183,6 +190,8 @@ const AppointmentBookingForm = React.forwardRef((props, ref) => {
     setSelectedApptCategory(ev.target.value);
     setSelectedDate(null);
     setSelectedOperatory("");
+    setSelectedSlot(null);
+    formRef.current.querySelector("#slot").selectedIndex = 0;
     formRef.current.querySelector("#operatory").selectedIndex = 0;
   };
 
