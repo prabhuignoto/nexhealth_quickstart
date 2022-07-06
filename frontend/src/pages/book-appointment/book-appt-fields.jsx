@@ -1,4 +1,4 @@
-import React, { useEffect, useImperativeHandle, useRef, useState } from "react";
+import React, { useEffect, useImperativeHandle, useRef } from "react";
 import { DayPicker } from "react-day-picker";
 import "react-day-picker/dist/style.css";
 import commonStyles from "../../common-styles/common.module.css";
@@ -18,15 +18,16 @@ const Fields = React.forwardRef((props, ref) => {
     patientType,
     providers = [],
     slots = [],
+    selectedDate,
   } = props;
 
   const locationRef = useRef(null);
   const providerRef = useRef(null);
   const apptCategoryRef = useRef(null);
-  const [selectedDay, setSelectedDay] = useState(null);
+  // const [selectedDay, setSelectedDay] = useState(null);
 
   const resetFields = () => {
-    setSelectedDay(null);
+    // setSelectedDay(null);
     locationRef.current.reset();
     providerRef.current.reset();
   };
@@ -38,7 +39,6 @@ const Fields = React.forwardRef((props, ref) => {
   }));
 
   useEffect(() => {
-    //reset
     resetFields();
   }, [patientType]);
 
@@ -98,8 +98,7 @@ const Fields = React.forwardRef((props, ref) => {
               before: new Date(),
             },
           ]}
-          selected={selectedDay}
-          onSelect={setSelectedDay}
+          selected={selectedDate}
         />
       </div>
 
@@ -126,5 +125,7 @@ const Fields = React.forwardRef((props, ref) => {
     </>
   );
 });
+
+Fields.displayName = "Booking form fields";
 
 export { Fields };
