@@ -113,6 +113,7 @@ const BookingContainer = () => {
   const onCategorySelected = useCallback(
     (categoryId) => {
       try {
+        setSlots([]);
         const selected = availabilities
           .filter((avail) =>
             avail.appointment_types.some((type) => type.id === +categoryId)
@@ -129,6 +130,10 @@ const BookingContainer = () => {
     },
     [operatories.length, availabilities.length]
   );
+
+  const onOperatorySelected = useCallback(() => {
+    setSlots([]);
+  }, []);
 
   const filteredOperatories = useMemo(() => {
     return operatories.filter(
@@ -187,6 +192,7 @@ const BookingContainer = () => {
         onFetchSlots={handleFetchSlots}
         onProviderSelected={onProviderSelected}
         onCategorySelected={onCategorySelected}
+        onOperatorySelected={onOperatorySelected}
         slots={slots}
         onPatientTypeChange={handlePatientTypeChange}
         ref={formRef}

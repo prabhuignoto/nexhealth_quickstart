@@ -4,13 +4,13 @@
   box-shadow: 0 0 20px 2px rgba(0, 0, 0, 0.1);
   border-radius: 4px;
   min-height: 650px;
+  padding-bottom: 1rem;
 }
 
 .list_wrapper {
   display: flex;
   align-items: flex-start;
   justify-content: center;
-  max-height: 750px;
   overflow-y: auto;
   width: 100%;
   min-height: 200px;
